@@ -1,6 +1,6 @@
 # Starter Projects Localization
 
-The modules within `utils/translation` can be used to add text localization to a erosion-map-demo based application.
+The modules within `utils/translation` can be used to add text localization to a erosion-interactive based application.
 
 ### How to use
 

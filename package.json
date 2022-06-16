@@ -1,10 +1,10 @@
 {
-  "name": "erosion-map-demo",
+  "name": "erosion-interactive",
   "version": "0.0.1",
   "description": "Concord Consortium starter projects",
   "main": "index.js",
   "jest": {
-    "testURL": "https://erosion-map-demo.unexisting.url.com",
+    "testURL": "https://erosion-interactive.unexisting.url.com",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -55,14 +55,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/concord-consortium/erosion-map-demo.git"
+    "url": "git+https://github.com/concord-consortium/erosion-interactive.git"
   },
   "author": "Concord Consortium",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/concord-consortium/erosion-map-demo/issues"
+    "url": "https://github.com/concord-consortium/erosion-interactive/issues"
   },
-  "homepage": "https://github.com/concord-consortium/erosion-map-demo#readme",
+  "homepage": "https://github.com/concord-consortium/erosion-interactive#readme",
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
