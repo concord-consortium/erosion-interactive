@@ -1,8 +1,8 @@
 import * as React from "react";
 const { useEffect } = React;
-import ResizeObserver from "resize-observer-polyfill";
+// import ResizeObserver from "resize-observer-polyfill";
 
-import { useInitMessage, setSupportedFeatures, setHeight } from "@concord-consortium/lara-interactive-api";
+import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-interactive-api";
 import { AuthoringComponent } from "./authoring";
 import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
@@ -15,21 +15,21 @@ export const AppComponent = (props:Props) => {
   const initMessage = useInitMessage<IInteractiveState, IAuthoredState>();
 
   // TODO: this should really be moved into a client hook file so it can be reused
-  useEffect(() => {
-    if (initMessage) {
-      const body = document.getElementsByTagName("BODY")[0];
-      const updateHeight = () => {
-        if (body?.clientHeight) {
-          setHeight(body.clientHeight);
-        }
-      };
-      const observer = new ResizeObserver(() => updateHeight());
-      if (body) {
-        observer.observe(body);
-      }
-      return () => observer.disconnect();
-    }
-  }, [initMessage]);
+  // useEffect(() => {
+  //   if (initMessage) {
+  //     const body = document.getElementsByTagName("BODY")[0];
+  //     const updateHeight = () => {
+  //       if (body?.clientHeight) {
+  //         setHeight(body.clientHeight);
+  //       }
+  //     };
+  //     const observer = new ResizeObserver(() => updateHeight());
+  //     if (body) {
+  //       observer.observe(body);
+  //     }
+  //     return () => observer.disconnect();
+  //   }
+  // }, [initMessage]);
 
   useEffect(() => {
     if (initMessage) {

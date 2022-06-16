@@ -5,7 +5,7 @@ import { Terrain } from "./terrain";
 import { Water } from "./water";
 import { fakeAggregatedData } from "../data/fake-data";
 
-import "./app.scss";
+import "./three-d-view.scss";
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -24,7 +24,7 @@ const CameraController = () => {
   return null;
 };
 
-export const App = () => {
+export const ThreeDView = () => {
   const data = fakeAggregatedData;
   const cameraPos: [number, number, number] = [-60, 20, 10];
   return (
