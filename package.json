@@ -1,10 +1,10 @@
 {
-  "name": "erosion-map-demo",
+  "name": "erosion-interactive",
   "version": "0.0.1",
   "description": "Concord Consortium starter projects",
   "main": "index.js",
   "jest": {
-    "testURL": "https://erosion-map-demo.unexisting.url.com",
+    "testURL": "https://erosion-interactive.unexisting.url.com",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -55,14 +55,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/concord-consortium/erosion-map-demo.git"
+    "url": "git+https://github.com/concord-consortium/erosion-interactive.git"
   },
   "author": "Concord Consortium",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/concord-consortium/erosion-map-demo/issues"
+    "url": "https://github.com/concord-consortium/erosion-interactive/issues"
   },
-  "homepage": "https://github.com/concord-consortium/erosion-map-demo#readme",
+  "homepage": "https://github.com/concord-consortium/erosion-interactive#readme",
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
@@ -120,9 +120,11 @@
     "webpack-dev-server": "^4.7.2"
   },
   "dependencies": {
+    "@concord-consortium/lara-interactive-api": "^1.6.1",
+    "@concord-consortium/token-service": "^2.1.0",
     "@react-three/fiber": "^7.0.29",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-three-fiber": "^6.0.13",
     "three": "^0.141.0"
   }

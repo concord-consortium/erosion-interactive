@@ -7,7 +7,7 @@
 1. Create a new public repository for your project (e.g. `new-repository`)
 2. Create a clone of the starter repo
     ```
-    git clone --single-branch https://github.com/concord-consortium/erosion-map-demo.git new-repository
+    git clone --single-branch https://github.com/concord-consortium/erosion-interactive.git new-repository
     ```
 3. Update the starter repo
 
@@ -41,7 +41,7 @@
     git remote add origin https://github.com/concord-consortium/new-repository.git
     git push -u origin master
     ```
-7. Open your new repository and update all instances of `erosion-map-demo` to `new-repository` and `Starter Projects` to `New Repository`.
+7. Open your new repository and update all instances of `erosion-interactive` to `new-repository` and `Starter Projects` to `New Repository`.
    Note: this will do some of the configuration for GitHub Actions deployment to S3, but you'll still need to follow
    the instructions [here](https://docs.google.com/document/d/e/2PACX-1vTpYjbGmUMxk_FswUmapK_RzVyEtm1WdnFcNByp9mqwHnp0nR_EzRUOiubuUCsGwzQgOnut_UiabYOM/pub).
 8. To record the cypress tests results to the cypress dashboard service:
@@ -90,9 +90,9 @@ You *do not* need to build to deploy the code, that is automatic.  See more info
 Production releases to S3 are based on the contents of the /dist folder and are built automatically by GitHub Actions
 for each branch pushed to GitHub and each merge into production.
 
-Merges into production are deployed to http://erosion-map-demo.concord.org.
+Merges into production are deployed to http://erosion-interactive.concord.org.
 
-Other branches are deployed to http://erosion-map-demo.concord.org/branch/<name>.
+Other branches are deployed to http://erosion-interactive.concord.org/branch/<name>.
 
 To deploy a production release:
 
@@ -106,7 +106,7 @@ To deploy a production release:
 8. Checkout production
 9. Run `git merge master --no-ff`
 10. Push production to GitHub
-11. Use https://github.com/concord-consortium/erosion-map-demo/releases to create a new release tag
+11. Use https://github.com/concord-consortium/erosion-interactive/releases to create a new release tag
 
 ### Testing
 
