@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Terrain } from "./terrain";
-import { Water } from "./water";
 import { fakeAggregatedData } from "../data/fake-data";
 
 import "./three-d-view.scss";
@@ -32,11 +31,9 @@ export const ThreeDView = () => {
       <Canvas camera={{ fov: 33, position: cameraPos, near: 0.1 }}>
         <CameraController/>
         <color attach="background" args={["white"]}/>
-        <directionalLight color="white" position={[20, 10, 0]} />
+        <directionalLight color="white" position={[80, 40, 0]} intensity={.75} />
         <ambientLight intensity={0.15}/>
         <Terrain data={data} />
-
-        <Water/>
       </Canvas>
     </div>
   );
