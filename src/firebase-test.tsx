@@ -1,9 +1,10 @@
 import * as React from "react";
-// const { useEffect } = React;
 const { useState } = React;
-import { getAuth, signOut, signInAnonymously, signInWithCustomToken} from "firebase/auth";
-import { initializeApp } from "firebase/app";
+import { FirebaseApp, initializeApp } from "firebase/app";
+import { getAuth, signOut, signInWithCustomToken} from "firebase/auth";
+import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
 import jwt_decode from "jwt-decode";
 
 import { JWTLink } from "./jwt-link";
@@ -11,8 +12,11 @@ import { JWTLink } from "./jwt-link";
 
 /*
 
+Here is a nice tool for inspecting JWTs: https://jwt.io/
+
 Here where we get the typing hints for our JWT claims:
 https://github.com/concord-consortium/rigse/blob/07d35a5d1a414af1c8cd43c47124426ecbb646fe/rails/app/controllers/api/v1/jwt_controller.rb#L170-L207
+
 
 ```ruby
 
@@ -45,9 +49,10 @@ interface IPortalFireStoreClaims {
 interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
   user_type: "learner" | "teacher";
   class_hash: string;
-  offering: string; // In truth this will be null for teachers, but ignore that.
+  offering: string; // This will be null for teachers, but ignore that for now.
 }
 
+/*******************************************************************/
 const firebaseConfig = {
   apiKey: "AIzaSyDeGdz7cSe9ut5Vovcv7P9hcTf-DDwOo94",
   authDomain: "ep-erosion-dev.firebaseapp.com",
@@ -60,14 +65,51 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+/*******************************************************************/
+
+
+const FirestoreCollection = (params: {app:FirebaseApp}) => {
+  const {app} = params;
+  const fireStore = getFirestore(app);
+  const [value, loading, error] = useCollection(
+    collection(fireStore, 'playground'),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
+  const updateText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    const newDoc = {text};
+    setDoc(doc(fireStore, 'playground/this-example'), newDoc);
+  }
+
+  return (
+    <div>
+      <p>
+        {error && <strong>Error: {JSON.stringify(error)}</strong>}
+        {loading && <span>Collection: Loading...</span>}
+        {value && (
+          <span>
+            Collection:
+            {value.docs.map((d) => (
+              <React.Fragment key={d.id}>
+                {JSON.stringify(d.data())},{' '}
+              </React.Fragment>
+            ))}
+          </span>
+        )}
+        <hr/>
+        <textarea onChange={updateText} />
+      </p>
+    </div>
+  );
+};
+
 
 export const Test = () => {
   const [user, loading, error] = useAuthState(auth);
   const [concordJWT, setConcordJWT] = useState("");
-
-  const login = () => {
-    signInAnonymously(auth);
-  };
 
   const loginWithConcordJWT = () => {
     signInWithCustomToken(auth, concordJWT);
@@ -82,23 +124,14 @@ export const Test = () => {
   };
 
   if (loading) {
-    return (
-      <div>
-        <p>Initialising User...</p>
-      </div>
-    );
+    return (<div> <p>Authenticating ...</p> </div> );
   }
+
   if (error) {
-    return (
-      <div>
-        <p>Error: {error}</p>
-      </div>
-    );
+    return (<div> <p>Error: {error}</p></div> );
   }
   if (user) {
-    console.log(user);
-    console.log(auth);
-    const accessToken:string  = (user as any).accessToken; // Really its there.
+    const accessToken:string  = (user as any).accessToken; // Really its there
     if(accessToken) {
       const claims: ILearnerFireStoreClaims = jwt_decode(accessToken);
       console.log(claims);
@@ -106,6 +139,9 @@ export const Test = () => {
         <div>
           <p>Current User: {claims.platform_user_id}</p>
           <button onClick={logout}>Log out</button>
+          <br/>
+          <hr/>
+          <FirestoreCollection app={firebaseApp}/>
         </div>
       );
     }
@@ -121,8 +157,6 @@ export const Test = () => {
   }
   return (
     <div>
-      <button onClick={login}>Log in</button>
-      <br/>
       <hr/>
       <JWTLink appName="ep-erosion-dev" host="https://learn.staging.concord.org" />
       <br />
@@ -132,4 +166,3 @@ export const Test = () => {
     </div>
   );
 };
-
