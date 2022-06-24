@@ -30,7 +30,7 @@ export const renderPlane = (
       <meshStandardMaterial
         side={side || THREE.FrontSide}
         map={texture}
-        // flatShading
+        flatShading
       />
     </mesh>
   );
