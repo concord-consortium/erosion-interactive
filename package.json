@@ -123,8 +123,12 @@
     "@concord-consortium/lara-interactive-api": "^1.6.1",
     "@concord-consortium/token-service": "^2.1.0",
     "@react-three/fiber": "^7.0.29",
+    "@types/jwt-decode": "^3.1.0",
+    "firebase": "^9.8.4",
+    "jwt-decode": "^3.1.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-firebase-hooks": "^5.0.3",
     "react-three-fiber": "^6.0.13",
     "three": "^0.141.0"
   }
