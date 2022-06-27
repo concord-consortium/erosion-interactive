@@ -3,7 +3,7 @@ const { useEffect, useState } = React;
 import { IRuntimeInitInteractive, getFirebaseJwt, useCustomMessages, ICustomMessage,
          getInteractiveSnapshot } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState } from "./types";
-import { TransceptTable } from "./components/transcept-table";
+import { TransectTable } from "./components/transect-table";
 
 interface IInteractiveState {}
 
@@ -50,7 +50,7 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
 
   return (
     <div className="padded">
-      <TransceptTable />
+      <TransectTable />
       <fieldset>
         <legend>Runtime Init Message</legend>
         <div className="padded monospace pre">{JSON.stringify(initMessage, null, 2)}</div>
