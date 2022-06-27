@@ -28,8 +28,8 @@ export const TransectTable = () => {
 
   return (
     <div className="transect-table">
-      <div className="selector" onChange={handleSelectTransect}>
-        <select>
+      <div className="selector">
+        <select onChange={handleSelectTransect}>
           <option hidden selected disabled>Select a transect</option>
           {transects.map((t) => {
             return <option key={t} value={t}>{`Transect ${t}`}</option>;
@@ -44,7 +44,7 @@ export const TransectTable = () => {
           </div>
         );
       })}
-      <div className="debugging">TransecttData: {JSON.stringify(transectData)}</div>
+      <div className="debugging">TransectData: {JSON.stringify(transectData)}</div>
     </div>
   );
 };
