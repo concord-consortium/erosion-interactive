@@ -6,7 +6,7 @@ import { useState } from "react";
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
   platform_user_id: string;
-  base_path: string;
+  basePath: string;
   shape?: documentInterface;
 }
 
@@ -22,10 +22,10 @@ const points = [1, 2, 3, 4, 5, 6, 7];
 
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
-  const {app, platform_user_id, base_path} = params;
+  const {app, platform_user_id, basePath} = params;
   const fireStore = getFirestore(app);
 
-  const docPath = `${base_path}/${platform_user_id}`;
+  const docPath = `${basePath}/${platform_user_id}`;
   const emptyData: Record<string,number|undefined> = {};
 
   for(const letter in "ABCD".split("")) {
@@ -77,17 +77,14 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   };
 
 
-
-
-
   return(
     <div>
     <textarea onChange={updateDoc} defaultValue={editorState.text}/>
     {
       <div className="transect-table">
       <div className="selector">
-        <select defaultValue={"Select a transect"} onChange={handleSelectTransect}>
-          <option hidden selected disabled>Select a transect</option>
+        <select defaultValue={"DEFAULT"} onChange={handleSelectTransect}>
+          <option value="DEFAULT" disabled>Choose a salutation ...</option>
           {transects.map((t) => {
             return <option key={t} value={t}>{`Transect ${t}`}</option>;
           })}

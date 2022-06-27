@@ -1,18 +1,17 @@
 import * as React from "react";
 const { useState } = React;
-import { FirebaseApp } from "firebase/app";
 import { signOut, signInWithCustomToken} from "firebase/auth";
-
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import jwt_decode from "jwt-decode";
 import { JWTLink } from "./jwt-link";
 
 import { FirebaseEditForm } from "./firestore-update-form";
+import { FirestoreCollection } from "./firestore-collection";
 
 // Our DB Config:
 import {auth, firebaseApp } from "./connect-to-firestore";
-import { useLimitedCollection } from "./use-limited-collection";
+
 /*
 
 Here is a nice tool for inspecting JWTs: https://jwt.io/
@@ -56,41 +55,6 @@ interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
 }
 
 
-
-const FirestoreCollection = (params: { app:FirebaseApp, excludeIds?:number[] }) => {
-  const { app } = params;
-  interface myType {
-    text: string;
-    id: string;
-  }
-  const [values, loading, error] = useLimitedCollection<myType>(app, 'playground');
-  console.log(values);
-  return (
-    <div>
-      <p>
-        {error && <strong>Error: {JSON.stringify(error)}</strong>}
-        {loading && <span>Collection: Loading...</span>}
-        {values && (
-          <span>
-            Collection:
-            {values.map((d) => {
-              console.log(d.id);
-              return(
-                <React.Fragment key={d.id}>
-                  {JSON.stringify(d)}
-                </React.Fragment>
-              );
-              })
-            }
-          </span>
-        )}
-        <hr/>
-      </p>
-    </div>
-  );
-};
-
-
 export const Test = () => {
   const [user, loading, error] = useAuthState(auth);
   const [concordJWT, setConcordJWT] = useState("");
@@ -125,8 +89,8 @@ export const Test = () => {
           <button onClick={logout}>Log out</button>
           <br/>
           <hr/>
-          <FirestoreCollection app={firebaseApp}/>
-          <FirebaseEditForm app={firebaseApp} platform_user_id={platform_user_id} base_path="playground"/>
+          <FirestoreCollection app={firebaseApp} basePath="playground"/>
+          <FirebaseEditForm app={firebaseApp} platform_user_id={platform_user_id} basePath="playground"/>
         </div>
       );
     }

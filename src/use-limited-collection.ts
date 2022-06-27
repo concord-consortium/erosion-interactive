@@ -8,6 +8,9 @@ export const useLimitedCollection = <DocShape>(app:FirebaseApp, path: string, sk
   const [value, loading, error] = useCollection(collection(fireStore, path));
   const filteredValues = value?.docs
     .filter((d) => excludeIds.indexOf(d.id) === -1)
-    .map((d) => d.data() as DocShape)
+    .map((d) => {
+      const data = d.data() as DocShape;
+      return ({...data, id: d.id} as DocShape);
+    });
   return [filteredValues||[], loading, error];
 }
