@@ -15,9 +15,12 @@ module.exports = (env, argv) => {
     devServer: {
       static: 'dist',
       hot: true,
-      https: {
-        key: path.resolve(os.homedir(), '.localhost-ssl/localhost.key'),
-        cert: path.resolve(os.homedir(), '.localhost-ssl/localhost.pem'),
+      server: {
+        type: 'https',
+        options: {
+          cert: path.resolve(os.homedir(), '.localhost-ssl/localhost.crt'),
+          key: path.resolve(os.homedir(), '.localhost-ssl/localhost.key'),
+        },
       },
     },
     devtool: devMode ? 'eval-cheap-module-source-map' : 'source-map',
