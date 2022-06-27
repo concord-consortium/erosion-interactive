@@ -6,7 +6,7 @@ import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-i
 import { AuthoringComponent } from "./authoring";
 import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
-import { IAuthoredState } from "./types";
+import { IAuthoredState } from "../common/types";
 
 interface Props {}
 interface IInteractiveState {}

@@ -10,7 +10,7 @@ import { FirebaseEditForm } from "./firestore-update-form";
 import { FirestoreCollection } from "./firestore-collection";
 
 // Our DB Config:
-import {auth, firebaseApp } from "./connect-to-firestore";
+import {auth, firebaseApp } from "../common/connect-to-firestore";
 
 /*
 

@@ -2,7 +2,7 @@ import * as React from "react";
 const { useEffect, useState } = React;
 import { IRuntimeInitInteractive, getFirebaseJwt, useCustomMessages, ICustomMessage,
          getInteractiveSnapshot } from "@concord-consortium/lara-interactive-api";
-import { IAuthoredState } from "./types";
+import { IAuthoredState } from "../common/types";
 import { ThreeDView } from "./components/three-d-view";
 
 interface IInteractiveState {}

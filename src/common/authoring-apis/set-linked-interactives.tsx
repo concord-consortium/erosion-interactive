@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRef } from "react";
 import * as client from "@concord-consortium/lara-interactive-api";
-import { AuthoringApiProps } from "../authoring";
+import { AuthoringApiProps } from "../types";
 import { ILinkedInteractive } from "@concord-consortium/lara-interactive-api";
 
 export const SetLinkedInteractivesComponent: React.FC<AuthoringApiProps> = ({setError, setOutput}) => {
