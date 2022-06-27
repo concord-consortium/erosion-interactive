@@ -1,15 +1,18 @@
 import * as React from "react";
 const { useState } = React;
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { getAuth, signOut, signInWithCustomToken} from "firebase/auth";
-import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore";
-import jwt_decode from "jwt-decode";
+import { FirebaseApp } from "firebase/app";
+import { signOut, signInWithCustomToken} from "firebase/auth";
 
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import jwt_decode from "jwt-decode";
 import { JWTLink } from "./jwt-link";
 
+import { FirebaseEditForm } from "./firestore-update-form";
 
+// Our DB Config:
+import {auth, firebaseApp } from "./connect-to-firestore";
+import { useLimitedCollection } from "./use-limited-collection";
 /*
 
 Here is a nice tool for inspecting JWTs: https://jwt.io/
@@ -52,55 +55,36 @@ interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
   offering: string; // This will be null for teachers, but ignore that for now.
 }
 
-/*******************************************************************/
-const firebaseConfig = {
-  apiKey: "AIzaSyDeGdz7cSe9ut5Vovcv7P9hcTf-DDwOo94",
-  authDomain: "ep-erosion-dev.firebaseapp.com",
-  projectId: "ep-erosion-dev",
-  storageBucket: "ep-erosion-dev.appspot.com",
-  messagingSenderId: "550159635043",
-  appId: "1:550159635043:web:770c00ca3623578b571e56",
-  measurementId: "G-L8J1W753JM"
-};
-
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-/*******************************************************************/
 
 
-const FirestoreCollection = (params: {app:FirebaseApp}) => {
-  const {app} = params;
-  const fireStore = getFirestore(app);
-  const [value, loading, error] = useCollection(
-    collection(fireStore, 'playground'),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
-
-  const updateText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
-    const newDoc = {text};
-    setDoc(doc(fireStore, 'playground/this-example'), newDoc);
+const FirestoreCollection = (params: { app:FirebaseApp, excludeIds?:number[] }) => {
+  const { app } = params;
+  interface myType {
+    text: string;
+    id: string;
   }
-
+  const [values, loading, error] = useLimitedCollection<myType>(app, 'playground');
+  console.log(values);
   return (
     <div>
       <p>
         {error && <strong>Error: {JSON.stringify(error)}</strong>}
         {loading && <span>Collection: Loading...</span>}
-        {value && (
+        {values && (
           <span>
             Collection:
-            {value.docs.map((d) => (
-              <React.Fragment key={d.id}>
-                {JSON.stringify(d.data())},{' '}
-              </React.Fragment>
-            ))}
+            {values.map((d) => {
+              console.log(d.id);
+              return(
+                <React.Fragment key={d.id}>
+                  {JSON.stringify(d)}
+                </React.Fragment>
+              );
+              })
+            }
           </span>
         )}
         <hr/>
-        <textarea onChange={updateText} />
       </p>
     </div>
   );
@@ -134,14 +118,15 @@ export const Test = () => {
     const accessToken:string  = (user as any).accessToken; // Really its there
     if(accessToken) {
       const claims: ILearnerFireStoreClaims = jwt_decode(accessToken);
-      console.log(claims);
+      const { platform_user_id } = claims;
       return (
         <div>
-          <p>Current User: {claims.platform_user_id}</p>
+          <p>Current User: {platform_user_id}</p>
           <button onClick={logout}>Log out</button>
           <br/>
           <hr/>
           <FirestoreCollection app={firebaseApp}/>
+          <FirebaseEditForm app={firebaseApp} platform_user_id={platform_user_id} base_path="playground"/>
         </div>
       );
     }
@@ -152,9 +137,8 @@ export const Test = () => {
         </div>
       )
     }
-
-
   }
+
   return (
     <div>
       <hr/>
