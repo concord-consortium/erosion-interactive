@@ -25,12 +25,13 @@ module.exports = (env, argv) => {
     },
     devtool: devMode ? 'eval-cheap-module-source-map' : 'source-map',
     entry: {
-      "3dview": './src/3d-view/index.tsx'
+      "3dview": './src/3d-view/index.tsx',
+      "data-table": "./src/data-table/index.tsx"
     },
     mode: 'development',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'assets/index.[contenthash].js',
+      filename: 'assets/[name].[contenthash].js',
     },
     performance: { hints: false },
     module: {
@@ -136,7 +137,14 @@ module.exports = (env, argv) => {
         filename: devMode ? 'assets/[name].css' : 'assets/[name].[contenthash].css',
       }),
       new HtmlWebpackPlugin({
-        filename: 'index.html',
+        filename: '3dview-index.html',
+        chunks: ['3dview'],
+        template: 'src/3d-view/index.html',
+        favicon: 'src/public/favicon.ico',
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'data-table-index.html',
+        chunks: ['data-table'],
         template: 'src/3d-view/index.html',
         favicon: 'src/public/favicon.ico',
       }),
