@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import { IAuthoringInitInteractive, IAuthoringClientMessage, useAuthoredState } from "@concord-consortium/lara-interactive-api";
-import { GetInteractiveListComponent } from "./authoring-apis/get-interactive-list";
-import { SetLinkedInteractivesComponent } from "./authoring-apis/set-linked-interactives";
+import { GetInteractiveListComponent } from "../authoring-apis/get-interactive-list";
+import { SetLinkedInteractivesComponent } from "../authoring-apis/set-linked-interactives";
 import { IAuthoredState } from "./types";
 
 interface Props {

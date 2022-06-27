@@ -21,7 +21,7 @@ module.exports = (env, argv) => {
       },
     },
     devtool: devMode ? 'eval-cheap-module-source-map' : 'source-map',
-    entry: './src/index.tsx',
+    entry: './src/transcept-table/index.tsx',
     mode: 'development',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -132,7 +132,7 @@ module.exports = (env, argv) => {
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: 'src/index.html',
+        template: 'src/transcept-table/index.html',
         favicon: 'src/public/favicon.ico',
       }),
       new CleanWebpackPlugin(),

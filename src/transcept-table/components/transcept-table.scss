@@ -1,0 +1,15 @@
+.transcept-table {
+  display: flex;
+  flex-direction: column;
+
+  .point-input {
+    display: flex;
+    padding-top: 5px;
+    label {
+      margin-right: 5px;
+    }
+    input {
+      width: 25px;
+    }
+  }
+}
