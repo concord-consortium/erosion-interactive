@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {Test} from "./firebase-test";
+import {AppComponent} from "./app";
 
-ReactDOM.render(<Test />, document.getElementById("app"));
+ReactDOM.render(<AppComponent />, document.getElementById("app"));
 

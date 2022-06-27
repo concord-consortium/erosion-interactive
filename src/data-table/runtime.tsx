@@ -2,6 +2,14 @@ import * as React from "react";
 const { useState } = React;
 import { signOut, signInWithCustomToken} from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { IRuntimeInitInteractive, getFirebaseJwt } from "@concord-consortium/lara-interactive-api";
+import { IAuthoredState } from "../common/types";
+
+interface IInteractiveState {}
+
+interface IRuntimeProps {
+  initMessage: IRuntimeInitInteractive<IInteractiveState, IAuthoredState>;
+}
 
 import jwt_decode from "jwt-decode";
 import { JWTLink } from "./jwt-link";
@@ -55,7 +63,8 @@ interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
 }
 
 
-export const Test = () => {
+export const RuntimeComponent = (props: IRuntimeProps) => {
+  console.log(props.initMessage);
   const [user, loading, error] = useAuthState(auth);
   const [concordJWT, setConcordJWT] = useState("");
 
