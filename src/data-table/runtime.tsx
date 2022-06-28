@@ -60,7 +60,8 @@ interface IPortalFireStoreClaims {
 interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
   user_type: "learner" | "teacher";
   class_hash: string;
-  offering: string; // This will be null for teachers, but ignore that for now.
+  learner_id: string;
+  offering_id: string; // This will be null for teachers, but ignore that for now.
 }
 
 
@@ -72,15 +73,13 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
 
   useEffect(() => {
-    if (authoredState?.firebaseApp) {
-      getFirebaseJwt(authoredState.firebaseApp)
-        .then(response => {
-          setRawFirebaseJWT(response.token);
-        })
-        .catch(e => {
-          setRawFirebaseJWT(`ERROR: ${e.toString()}`);
-        });
-    }
+    getFirebaseJwt("ep-erosion-dev")
+      .then(response => {
+        setRawFirebaseJWT(response.token);
+      })
+      .catch(e => {
+        setRawFirebaseJWT(`ERROR: ${e.toString()}`);
+      });
   }, [authoredState]);
 
   useEffect(() => {
@@ -114,15 +113,21 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
     const accessToken:string  = (user as any).accessToken; // Really its there
     if(accessToken) {
       const claims: ILearnerFireStoreClaims = jwt_decode(accessToken);
-      const { platform_user_id } = claims;
+      const rawJWTObj = jwt_decode(rawFirebaseJwt!) as any; // it's there!
+      const { platform_user_id, class_hash, offering_id } = claims;
       return (
         <div>
           <p>Current User: {platform_user_id}</p>
+          <p>Class hash: {class_hash}</p>
+          <p>Offering id: {offering_id}</p>
+          <div>
+            {JSON.stringify(rawJWTObj)}
+          </div>
           <button onClick={logout}>Log out</button>
           <br/>
           <hr/>
-          <FirestoreCollection app={firebaseApp} basePath="playground"/>
-          <FirebaseEditForm app={firebaseApp} platform_user_id={platform_user_id} basePath="playground"/>
+          <FirestoreCollection app={firebaseApp} basePath={`playground/${class_hash}/${offering_id}`}/>
+          <FirebaseEditForm app={firebaseApp} externalId={rawJWTObj.externalId} basePath={`playground/${class_hash}/${offering_id}`}/>
         </div>
       );
     }

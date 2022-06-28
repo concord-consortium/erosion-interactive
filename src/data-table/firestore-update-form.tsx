@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
-  platform_user_id: string;
+  externalId: string;
   basePath: string;
   shape?: documentInterface;
 }
@@ -13,7 +13,7 @@ interface IFirebaseEditParams<documentInterface> {
 interface IErosionDoc {
   text?: string;
   transept?: string;
-  platform_user_id: string;
+  externalId: string;
   data: Record<string,number|undefined>;
 }
 
@@ -22,10 +22,10 @@ const points = [1, 2, 3, 4, 5, 6, 7];
 
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
-  const {app, platform_user_id, basePath} = params;
+  const {app, externalId, basePath} = params;
   const fireStore = getFirestore(app);
 
-  const docPath = `${basePath}/${platform_user_id}`;
+  const docPath = `${basePath}/${externalId}`; // basePath/class_hash/offering_id/externalId
   const emptyData: Record<string,number|undefined> = {};
 
   for(const letter in "ABCD".split("")) {
@@ -37,7 +37,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
 
   const initialEmptyState: IErosionDoc = {
     text:"",
-    platform_user_id: "",
+    externalId,
     data:emptyData
   }
 
@@ -45,7 +45,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   React.useEffect( () => {
     getDoc(doc(fireStore, docPath)).then(d => {
       const document: IErosionDoc = d.data() as IErosionDoc;
-      setEditorState(document);
+      setEditorState(document || initialEmptyState);
     });
   }, [docPath, fireStore]);
 
@@ -79,7 +79,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
 
   return(
     <div>
-    <textarea onChange={updateDoc} defaultValue={editorState.text}/>
+    <textarea onChange={updateDoc} defaultValue={editorState?.text}/>
     {
       <div className="transect-table">
       <div className="selector">
@@ -94,11 +94,11 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
         return (
           <div key={selectedTransect + p + "div"} className="point-input">
             <label>{`P${p}:`}</label>
-            <input type="number" step="0.01" value={editorState.data[selectedTransect + p]} key={selectedTransect + p} id={selectedTransect + p} onChange={handleInput}></input>
+            <input type="number" step="0.01" value={editorState?.data[selectedTransect + p]} key={selectedTransect + p} id={selectedTransect + p} onChange={handleInput}></input>
           </div>
         );
       })}
-      <div className="debugging">TransectData: {JSON.stringify(editorState.data)}</div>
+      <div className="debugging">TransectData: {JSON.stringify(editorState?.data)}</div>
       </div>
     }
     </div>
