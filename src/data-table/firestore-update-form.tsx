@@ -2,6 +2,7 @@ import * as React from "react";
 import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc} from 'firebase/firestore';
 import { useState } from "react";
+import { BarGraph } from "./bar-graph";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
@@ -101,6 +102,10 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
       <div className="debugging">TransectData: {JSON.stringify(editorState?.data)}</div>
       </div>
     }
+      <BarGraph
+        selectedTransect={selectedTransect}
+        transectData={editorState?.data}
+      />
     </div>
 
   );
