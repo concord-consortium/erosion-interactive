@@ -1,6 +1,6 @@
 import * as React from "react";
 const { useState } = React;
-import { signOut, signInWithCustomToken} from "firebase/auth";
+import { signOut, signInWithCustomToken } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { IRuntimeInitInteractive, getFirebaseJwt } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState } from "../common/types";
@@ -19,6 +19,7 @@ import { FirestoreCollection } from "./firestore-collection";
 
 // Our DB Config:
 import {auth, firebaseApp } from "../common/connect-to-firestore";
+import { useEffect } from "react";
 
 /*
 
@@ -65,17 +66,39 @@ interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
 
 export const RuntimeComponent = (props: IRuntimeProps) => {
   console.log(props.initMessage);
+  const { initMessage } = props;
+  const { authoredState } = initMessage;
   const [user, loading, error] = useAuthState(auth);
-  const [concordJWT, setConcordJWT] = useState("");
+  const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
 
-  const loginWithConcordJWT = () => {
-    signInWithCustomToken(auth, concordJWT);
+  useEffect(() => {
+    if (authoredState?.firebaseApp) {
+      getFirebaseJwt(authoredState.firebaseApp)
+        .then(response => {
+          setRawFirebaseJWT(response.token);
+        })
+        .catch(e => {
+          setRawFirebaseJWT(`ERROR: ${e.toString()}`);
+        });
+    }
+  }, [authoredState]);
+
+  useEffect(() => {
+    if (rawFirebaseJwt) {
+      signInWithCustomToken(auth, rawFirebaseJwt);
+      // signInAnonymously(auth);
+    }
+  }, [rawFirebaseJwt]);
+
+  const manuallyLogIn = () => {
+    if(rawFirebaseJwt) {
+      signInWithCustomToken(auth, rawFirebaseJwt);
+    }
+    else {
+      alert("No JWT");
+    }
   }
 
-  const handleJWTInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setConcordJWT(e.target.value);
-  }
-  
   const logout = () => {
     signOut(auth);
   };
@@ -112,14 +135,16 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
     }
   }
 
+  // <something>/class-hash/offering/learner
+  // activities (it can be run) ==> assign ==> offering.  ==> learner
   return (
     <div>
       <hr/>
       <JWTLink appName="ep-erosion-dev" host="https://learn.staging.concord.org" />
       <br />
-      <textarea onChange={handleJWTInputChange}>{concordJWT}</textarea>
+      {/* <textarea onChange={handleJWTInputChange}>{concordJWT}</textarea> */}
       <br/>
-      <button onClick={loginWithConcordJWT}>Log in with JWT ^^</button>
+      <button onClick={manuallyLogIn}>Log in with JWT ^^</button>
     </div>
   );
 };
