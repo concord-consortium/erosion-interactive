@@ -1,4 +1,4 @@
-import { useLimitedCollection } from "./use-limited-collection";
+import { useLimitedCollection } from "../helpers/use-limited-collection";
 import { FirebaseApp } from "firebase/app";
 import * as React from "react";
 
