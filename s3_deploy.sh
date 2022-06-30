@@ -5,7 +5,7 @@
 # Can be set to an empty string for working at the top level of the bucket
 S3_BUCKET_PREFIX='erosion-interactive/'
 # AWS CloudFront distribution ID
-DISTRIBUTION_ID='E1YPVV3YLYS4J7'
+DISTRIBUTION_ID='E1N1YYO3GO3WNB'
 # AWS CloudFront distribution domain
 DISTRIBUTION_DOMAIN='erosion-interactive.concord.org'
 # name of branch to deploy to root of site
