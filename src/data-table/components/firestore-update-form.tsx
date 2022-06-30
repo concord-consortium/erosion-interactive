@@ -1,7 +1,10 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { FirebaseApp } from "firebase/app";
-import { getFirestore,  setDoc, doc, getDoc} from 'firebase/firestore';
-import { useState } from "react";
+import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
+import { BarGraphContainer } from "./graph-container";
+import { DataTable } from "./data-table";
+
+import "./container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
@@ -16,9 +19,6 @@ interface IErosionDoc {
   externalId: string;
   data: Record<string,number|undefined>;
 }
-
-const transects = ["A", "B", "C", "D"];
-const points = [1, 2, 3, 4, 5, 6, 7];
 
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
@@ -71,36 +71,18 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update);
   }
 
-  const updateDoc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
-    updateFirestore({text});
-  };
-
-
   return(
-    <div>
-    <textarea onChange={updateDoc} defaultValue={editorState?.text}/>
-    {
-      <div className="transect-table">
-      <div className="selector">
-        <select defaultValue={"DEFAULT"} onChange={handleSelectTransect}>
-          <option value="DEFAULT" disabled>Choose a salutation ...</option>
-          {transects.map((t) => {
-            return <option key={t} value={t}>{`Transect ${t}`}</option>;
-          })}
-        </select>
-      </div>
-      {selectedTransect && points.map((p) => {
-        return (
-          <div key={selectedTransect + p + "div"} className="point-input">
-            <label>{`P${p}:`}</label>
-            <input type="number" step="0.01" value={editorState?.data[selectedTransect + p]} key={selectedTransect + p} id={selectedTransect + p} onChange={handleInput}></input>
-          </div>
-        );
-      })}
-      <div className="debugging">TransectData: {JSON.stringify(editorState?.data)}</div>
-      </div>
-    }
+    <div className="container">
+      <DataTable
+        data={editorState.data}
+        selectedTransect={selectedTransect}
+        handleSelectTransect={handleSelectTransect}
+        handleDataChange={handleInput}
+      />
+      <BarGraphContainer
+        selectedTransect={selectedTransect}
+        transectData={editorState?.data}
+      />
     </div>
 
   );
