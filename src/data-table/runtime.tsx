@@ -5,6 +5,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { IRuntimeInitInteractive, getFirebaseJwt } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState } from "../common/types";
 
+import "./runtime.scss";
+
 interface IInteractiveState {}
 
 interface IRuntimeProps {
@@ -116,16 +118,9 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
       const rawJWTObj = jwt_decode(rawFirebaseJwt!) as any; // it's there!
       const { platform_user_id, class_hash, offering_id } = claims;
       return (
-        <div>
+        <div className={"main"}>
           <p>Current User: {platform_user_id}</p>
-          <p>Class hash: {class_hash}</p>
-          <p>Offering id: {offering_id}</p>
-          <div>
-            {JSON.stringify(rawJWTObj)}
-          </div>
           <button onClick={logout}>Log out</button>
-          <br/>
-          <hr/>
           <FirestoreCollection app={firebaseApp} basePath={`playground/${class_hash}/${offering_id}`}/>
           <FirebaseEditForm app={firebaseApp} externalId={rawJWTObj.externalId} basePath={`playground/${class_hash}/${offering_id}`}/>
         </div>
