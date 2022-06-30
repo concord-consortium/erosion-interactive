@@ -3,7 +3,7 @@ const { useEffect } = React;
 // import ResizeObserver from "resize-observer-polyfill";
 
 import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-interactive-api";
-// import { AuthoringComponent } from "./authoring";
+import { AuthoringComponent } from "./authoring";
 // import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
 import { IAuthoredState } from "../common/types";
@@ -51,8 +51,8 @@ export const AppComponent = (props:Props) => {
   }
 
   switch (initMessage.mode) {
-    // case "authoring":
-    //   return <AuthoringComponent initMessage={initMessage} />;
+    case "authoring":
+      return <AuthoringComponent initMessage={initMessage} />;
     // case "report":
     //   return <ReportComponent initMessage={initMessage} />;
     case "runtime":

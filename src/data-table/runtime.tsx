@@ -14,12 +14,12 @@ interface IRuntimeProps {
 }
 
 import jwt_decode from "jwt-decode";
-import { JWTLink } from "./jwt-link";
+import { JWTLink } from "./components/jwt-link";
 
-import { FirebaseEditForm } from "./firestore-update-form";
-import { FirestoreCollection } from "./firestore-collection";
+import { FirebaseEditForm } from "./components/firestore-update-form";
+import { FirestoreCollection } from "./components/firestore-collection";
 
-// Our DB Config:
+// Our DB Config:./components/firestore-collection
 import {auth, firebaseApp } from "../common/connect-to-firestore";
 import { useEffect } from "react";
 
