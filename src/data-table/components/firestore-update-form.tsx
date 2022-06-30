@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
-import { BarGraphContainer } from "./graph-container";
-import { DataTable } from "./data-table";
-
-import "./container.scss";
+import { BarGraphContainer } from "../graph-container";
+import { DataTable } from "../data-table";
+import { IErosionDoc } from "../../common/types";
+import "../container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
@@ -13,33 +13,27 @@ interface IFirebaseEditParams<documentInterface> {
   shape?: documentInterface;
 }
 
-interface IErosionDoc {
-  text?: string;
-  transept?: string;
-  externalId: string;
-  data: Record<string,number|undefined>;
-}
+const emptyData: Record<string,number|undefined> = {};
 
+for(const letter in "ABCD".split("")) {
+  for(const number in Array(7).keys()) {
+    const key = `${letter}${number}`;
+    emptyData[key] = undefined;
+  }
+}
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const {app, externalId, basePath} = params;
   const fireStore = getFirestore(app);
-
   const docPath = `${basePath}/${externalId}`; // basePath/class_hash/offering_id/externalId
-  const emptyData: Record<string,number|undefined> = {};
 
-  for(const letter in "ABCD".split("")) {
-    for(const number in Array(7).keys()) {
-      const key = `${letter}${number}`;
-      emptyData[key] = undefined;
+  const initialEmptyState: IErosionDoc = useMemo(() => {
+    return {
+      text:"",
+      externalId,
+      data:emptyData
     }
-  }
-
-  const initialEmptyState: IErosionDoc = {
-    text:"",
-    externalId,
-    data:emptyData
-  }
+  }, [externalId]);
 
   const [editorState, setEditorState] = React.useState(initialEmptyState);
   React.useEffect( () => {
@@ -47,7 +41,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
       const document: IErosionDoc = d.data() as IErosionDoc;
       setEditorState(document || initialEmptyState);
     });
-  }, [docPath, fireStore]);
+  }, [docPath, fireStore, initialEmptyState]);
 
   const [selectedTransect, setSelectedTransect] = useState<string>();
 

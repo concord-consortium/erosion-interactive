@@ -15,7 +15,6 @@ export const FirestoreCollection = (params: IFireStoreCollectionParams) => {
     id: string;
   }
   const [values, loading, error] = useLimitedCollection<myType>(app, basePath);
-  console.log(values);
   return (
     <div>
       <p>
@@ -25,7 +24,6 @@ export const FirestoreCollection = (params: IFireStoreCollectionParams) => {
           <span>
             Collection:
             {values.map((d) => {
-              console.log(d.id);
               return(
                 <React.Fragment key={d.id}>
                   {JSON.stringify(d)}

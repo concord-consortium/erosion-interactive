@@ -68,7 +68,6 @@ interface ILearnerFireStoreClaims extends IPortalFireStoreClaims {
 
 
 export const RuntimeComponent = (props: IRuntimeProps) => {
-  console.log(props.initMessage);
   const { initMessage } = props;
   const { authoredState } = initMessage;
   const [user, loading, error] = useAuthState(auth);

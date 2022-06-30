@@ -28,7 +28,7 @@ export const BarGraph = (props: IBarGraphProps) => {
   const [chartData, setChartData] = useState<IChartData>();
 
   useEffect(() => {
-    if (data && data.length) {
+    if (data?.length) {
     setChartData({
         labels: data.map(transectPoint => Object.keys(transectPoint)[0]),
         datasets: [{

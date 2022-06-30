@@ -1,5 +1,3 @@
-import { IRuntimeInitInteractive } from "@concord-consortium/lara-interactive-api";
-
 export interface IAuthoredState {
   firebaseApp?: string;
 }
@@ -9,4 +7,10 @@ export interface AuthoringApiProps {
   setError: (error: any) => void;
 }
 
+export interface IErosionDoc {
+  text?: string;
+  transept?: string;
+  externalId: string;
+  data: Record<string,number|undefined>;
+}
 
