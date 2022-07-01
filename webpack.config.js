@@ -153,6 +153,12 @@ module.exports = (env, argv) => {
         template: 'src/3d-view/index.html',
         favicon: 'src/public/favicon.ico',
       }),
+      new HtmlWebpackPlugin({
+        filename: 'ipad-index.html',
+        chunks: ['ipad'],
+        template: 'src/ipad/index.html',
+        favicon: 'src/public/favicon.ico',
+      }),
       new CleanWebpackPlugin(),
     ]
   };

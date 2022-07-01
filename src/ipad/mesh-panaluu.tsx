@@ -5,7 +5,8 @@ import * as React from "react";
 import THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import meshFile from "../assets/mesh-panaluu.glb";
+import meshFile from "./assets/mesh-panaluu.glb";
+
 type GLTFResult = GLTF & {
   nodes: {
     Cube: THREE.Mesh

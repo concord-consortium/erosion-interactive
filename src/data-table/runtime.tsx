@@ -14,8 +14,6 @@ interface IRuntimeProps {
 }
 
 import jwt_decode from "jwt-decode";
-import { JWTLink } from "./components/jwt-link";
-
 import { FirebaseEditForm } from "./components/firestore-update-form";
 import { FirestoreCollection } from "./components/firestore-collection";
 
@@ -90,15 +88,6 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
     }
   }, [rawFirebaseJwt]);
 
-  const manuallyLogIn = () => {
-    if(rawFirebaseJwt) {
-      signInWithCustomToken(auth, rawFirebaseJwt);
-    }
-    else {
-      alert("No JWT");
-    }
-  }
-
   const logout = () => {
     signOut(auth);
   };
@@ -108,8 +97,9 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
   }
 
   if (error) {
-    return (<div> <p>Error: {error}</p></div> );
+    return (<div>Error!</div>);
   }
+
   if (user) {
     const accessToken:string  = (user as any).accessToken; // Really its there
     if(accessToken) {
@@ -125,6 +115,7 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
         </div>
       );
     }
+
     else {
       return(
         <div>
@@ -134,16 +125,9 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
     }
   }
 
-  // <something>/class-hash/offering/learner
-  // activities (it can be run) ==> assign ==> offering.  ==> learner
-  return (
-    <div>
-      <hr/>
-      <JWTLink appName="ep-erosion-dev" host="https://learn.staging.concord.org" />
-      <br />
-      {/* <textarea onChange={handleJWTInputChange}>{concordJWT}</textarea> */}
-      <br/>
-      <button onClick={manuallyLogIn}>Log in with JWT ^^</button>
-    </div>
-  );
+  else {
+    return (
+      <div>Error.</div>
+    )
+  }
 };
