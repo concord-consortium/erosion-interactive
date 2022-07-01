@@ -4,9 +4,9 @@ const { useEffect } = React;
 
 import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-interactive-api";
 import { AuthoringComponent } from "./authoring";
-import { ReportComponent } from "./report";
+// import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
-import { IAuthoredState } from "./types";
+import { IAuthoredState } from "../common/types";
 
 interface Props {}
 interface IInteractiveState {}
@@ -53,8 +53,8 @@ export const AppComponent = (props:Props) => {
   switch (initMessage.mode) {
     case "authoring":
       return <AuthoringComponent initMessage={initMessage} />;
-    case "report":
-      return <ReportComponent initMessage={initMessage} />;
+    // case "report":
+    //   return <ReportComponent initMessage={initMessage} />;
     case "runtime":
       return <RuntimeComponent initMessage={initMessage} />;
     default:

@@ -1,18 +1,14 @@
 import * as React from "react";
 import { useState } from "react";
 import { IAuthoringInitInteractive, IAuthoringClientMessage, useAuthoredState } from "@concord-consortium/lara-interactive-api";
-import { GetInteractiveListComponent } from "./authoring-apis/get-interactive-list";
-import { SetLinkedInteractivesComponent } from "./authoring-apis/set-linked-interactives";
-import { IAuthoredState } from "./types";
+import { GetInteractiveListComponent } from "../common/authoring-apis/get-interactive-list";
+import { SetLinkedInteractivesComponent } from "../common/authoring-apis/set-linked-interactives";
+import { IAuthoredState } from "../common/types";
 
 interface Props {
   initMessage: IAuthoringInitInteractive<IAuthoredState>;
 }
 
-export interface AuthoringApiProps {
-  setOutput: (output: any) => void;
-  setError: (error: any) => void;
-}
 
 export const AuthoringComponent: React.FC<Props> = ({initMessage}) => {
   const [selectedAuthoringApi, setSelectedAuthoringApi] = useState<IAuthoringClientMessage>("getInteractiveList");

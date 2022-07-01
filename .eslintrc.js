@@ -39,7 +39,7 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "curly": ["error", "multi-line", "consistent"],
     "dot-notation": "error",
-    "eol-last": "warn",
+    "eol-last": "off",
     "eqeqeq": ["error", "smart"],
     "eslint-comments/no-unused-disable": "warn",
     "jsx-quotes": ["error", "prefer-double"],
@@ -63,7 +63,7 @@ module.exports = {
     "prefer-regex-literals": "error",
     "prefer-rest-params": "error",
     "prefer-spread": "error",
-    "quotes": ["error", "double", { allowTemplateLiterals: true, avoidEscape: true }],
+    "quotes": "off",
     "radix": "error",
     "react/jsx-closing-tag-location": "error",
     "react/jsx-handler-names": "off",
@@ -73,7 +73,7 @@ module.exports = {
     "react/no-unsafe": ["off", { checkAliases: true }],
     "react/no-unused-state": "error",
     "react/prop-types": "off",
-    "semi": ["error", "always"]
+    "semi": "off"
   },
   overrides: [
     { // rules specific to Jest tests

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRef } from "react";
 import * as client from "@concord-consortium/lara-interactive-api";
-import { AuthoringApiProps } from "../authoring";
+import { AuthoringApiProps } from "../types";
 
 export const GetInteractiveListComponent: React.FC<AuthoringApiProps> = ({setError, setOutput}) => {
   const scopeRef = useRef<HTMLSelectElement|null>(null);

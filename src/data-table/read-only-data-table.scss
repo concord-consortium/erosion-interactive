@@ -1,0 +1,15 @@
+
+.data-table {
+  td {
+    font-family: monospace;
+    border: 1px solid black;
+    width: 7em;
+    .key {
+      font-weight: 100;
+    }
+    .value {
+      text-align: right;
+      font-weight: bold;
+    }
+  }
+}
