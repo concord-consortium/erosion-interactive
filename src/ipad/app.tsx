@@ -3,10 +3,9 @@ const { useEffect } = React;
 // import ResizeObserver from "resize-observer-polyfill";
 
 import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-interactive-api";
-import { AuthoringComponent } from "./authoring";
+import { AuthoringComponent, IAuthoredState } from "./authoring";
 import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
-import { IAuthoredState } from "../common/types";
 
 interface Props {}
 interface IInteractiveState {}

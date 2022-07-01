@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
-import { BarGraphContainer } from "../graph-container";
-import { DataTable } from "../data-table";
+import { BarGraphContainer } from "./graph-container";
+import { DataTable } from "./data-table";
 import { IErosionDoc } from "../../common/types";
-import "../container.scss";
+import "./container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;

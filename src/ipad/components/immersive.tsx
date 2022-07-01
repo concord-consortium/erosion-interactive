@@ -4,6 +4,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import MeshPanaluu from "./mesh-panaluu";
 import "./immersive.scss";
 
+interface IProps {
+  selectedBeach?: string
+}
+
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -25,10 +29,13 @@ const CameraController = () => {
 };
 
 
-export const Immersive = () => {
+export const Immersive = (props: IProps) => {
+  const {selectedBeach} = props;
   const PleaseWait = () => <div>Please wait...</div>;
+
   return (
     <div className="canvas-container">
+      {selectedBeach && <div>Selected Beach: {selectedBeach}</div>}
       <Suspense fallback={<PleaseWait/>}>
         <Canvas camera={ {fov:100, position: [0, 3,-10], near: 0.1}}>
           <CameraController />
