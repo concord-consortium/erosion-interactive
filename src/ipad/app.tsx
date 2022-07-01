@@ -1,42 +1,63 @@
-import React, { Suspense, useEffect } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import MeshPanaluu from "./mesh-panaluu";
-import "./app.scss";
+import * as React from "react";
+const { useEffect } = React;
+// import ResizeObserver from "resize-observer-polyfill";
 
+import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-interactive-api";
+import { AuthoringComponent } from "./authoring";
+import { ReportComponent } from "./report";
+import { RuntimeComponent } from "./runtime";
+import { IAuthoredState } from "../common/types";
 
-const CameraController = () => {
-  const { camera, gl } = useThree();
+interface Props {}
+interface IInteractiveState {}
 
-  useEffect(
-    () => {
-      // camera.rotateZ(Math.PI);
-      const controls = new OrbitControls(camera, gl.domElement);
-      controls.minDistance = 10;
-      controls.maxDistance = 100;
-      controls.enablePan = false;
-      return () => {
-        controls.dispose();
-      };
-    },
-    [camera, gl]
-  );
-  return null;
-};
+export const AppComponent = (props:Props) => {
+  const initMessage = useInitMessage<IInteractiveState, IAuthoredState>();
 
+  // TODO: this should really be moved into a client hook file so it can be reused
+  // useEffect(() => {
+  //   if (initMessage) {
+  //     const body = document.getElementsByTagName("BODY")[0];
+  //     const updateHeight = () => {
+  //       if (body?.clientHeight) {
+  //         setHeight(body.clientHeight);
+  //       }
+  //     };
+  //     const observer = new ResizeObserver(() => updateHeight());
+  //     if (body) {
+  //       observer.observe(body);
+  //     }
+  //     return () => observer.disconnect();
+  //   }
+  // }, [initMessage]);
 
-export const App = () => {
-  const PleaseWait = () => <div>Please wait...</div>;
-  return (
-    <div className="canvas-container">
-      <Suspense fallback={<PleaseWait/>}>
-        <Canvas camera={ {fov:100, position: [0, 3,-10], near: 0.1}}>
-          <CameraController />
-          <ambientLight />
-          {/* <pointLight position={[10, 10, 10]} /> */}
-          <MeshPanaluu position={[0,0,0]} rotation={[0,0,0]}/>
-        </Canvas>
-      </Suspense>
-    </div>
-  );
+  useEffect(() => {
+    if (initMessage) {
+      setSupportedFeatures({
+        authoredState: true,
+        interactiveState: true
+      });
+    }
+  }, [initMessage]);
+
+  if (!initMessage) {
+    return (
+      <div className="centered">
+        <div className="progress">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  switch (initMessage.mode) {
+    case "authoring":
+      return <AuthoringComponent initMessage={initMessage} />;
+    case "report":
+      return <ReportComponent initMessage={initMessage} />;
+    case "runtime":
+      return <RuntimeComponent initMessage={initMessage} />;
+    default:
+      return <>Error: unknown mode: {initMessage.mode}</>;
+  }
 };
