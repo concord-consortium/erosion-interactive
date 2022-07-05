@@ -85,6 +85,10 @@ module.exports = (env, argv) => {
           type: 'asset/resource'
         },
         {
+          test: /\.gltf/,
+          type: 'asset/resource'
+        },
+        {
           test: /\.svg$/i,
           exclude: /\.nosvgo\.svg$/i,
           oneOf: [

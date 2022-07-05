@@ -3,6 +3,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import MeshPanaluu from "./mesh-panaluu";
 import "./immersive.scss";
+import Warbear from "./Warbear";
 
 interface IProps {
   selectedBeach?: string
@@ -42,6 +43,7 @@ export const Immersive = (props: IProps) => {
           <ambientLight />
           {/* <pointLight position={[10, 10, 10]} /> */}
           <MeshPanaluu position={[0,0,0]} rotation={[0,0,0]}/>
+          {selectedBeach === "Alaska" && <Warbear position={[0,0,0]}/>}
         </Canvas>
       </Suspense>
     </div>

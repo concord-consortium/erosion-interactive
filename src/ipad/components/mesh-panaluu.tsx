@@ -9,7 +9,6 @@ import meshFile from "../assets/mesh-panaluu.glb";
 
 type GLTFResult = GLTF & {
   nodes: {
-    Cube: THREE.Mesh
     PunaluuTerrain1: THREE.Mesh
   }
   materials: {
@@ -26,7 +25,6 @@ export default function Model({ ...props }: JSX.IntrinsicElements["group"]) {
       <group name="Scene">
         <group name="Light" position={[4.08, 5.9, -1.01]} rotation={[1.89, 0.88, -2.05]} />
         <group name="Camera" position={[7.36, 4.96, 6.93]} rotation={[1.24, 0.33, -0.76]} />
-        <mesh name="Cube" geometry={nodes.Cube.geometry} material={materials.Material} />
         <mesh name="PunaluuTerrain1" geometry={nodes.PunaluuTerrain1.geometry} material={materials.lambert1} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
       </group>
     </group>
