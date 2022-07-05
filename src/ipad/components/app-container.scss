@@ -1,0 +1,23 @@
+@import "../../common/vars.scss";
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+
+  .window-view {
+    position: relative;
+    left: calc(15%);
+    width: 75%;
+    height: 75vh;
+    border: 15px solid;
+    border-radius: 0px 25px 25px 25px;
+  }
+
+  .position{
+    border-color: $cc-teal-light2;
+  }
+
+  .measurement{
+    border-color: $cc-teal-light3;
+  }
+}

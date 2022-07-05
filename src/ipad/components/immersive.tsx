@@ -36,7 +36,6 @@ export const Immersive = (props: IProps) => {
 
   return (
     <div className="canvas-container">
-      {selectedBeach && <div>Selected Beach: {selectedBeach}</div>}
       <Suspense fallback={<PleaseWait/>}>
         <Canvas camera={ {fov:100, position: [0, 3,-10], near: 0.1}}>
           <CameraController />
