@@ -6,7 +6,7 @@ import React, { useRef, RefObject } from 'react';
 import * as THREE from "three";
 import { GLTF } from "three-stdlib";
 import { useGLTF } from '@react-three/drei';
-import warBear from "../assets/warbear.gltf";
+import warBear from "../../assets/3d-assets/warbear.gltf";
 
 type GLTFResult = GLTF & {
   nodes: {

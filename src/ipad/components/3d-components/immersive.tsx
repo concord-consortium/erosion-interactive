@@ -2,8 +2,9 @@ import React, { Suspense, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import MeshPanaluu from "./mesh-panaluu";
-import "./immersive.scss";
 import Warbear from "./Warbear";
+
+import "./immersive.scss";
 
 interface IProps {
   selectedBeach?: string

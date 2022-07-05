@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Immersive } from "./immersive";
+import { Immersive } from "./3d-components/immersive";
 import { Position } from "./position";
 import { Tabs } from "./tabs";
+import { FullScreenIcon } from "./icons/full-screen";
 
 import "./app-container.scss";
 
@@ -26,9 +27,11 @@ export const AppContainer = (props: IContainerProps) => {
     <div className={"app-container"}>
       <Tabs handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
-        {selectedTab === "position" ? <Position selectedBeach={selectedBeach}/> : <Immersive selectedBeach={selectedBeach}/>}
+        {selectedTab === "position" ?
+        <Position selectedBeach={selectedBeach}/> :
+        <Immersive selectedBeach={selectedBeach}/>}
+        <button className="fullscreen" onClick={handleFullScreen}><FullScreenIcon/></button>
       </div>
-      <button onClick={handleFullScreen}>Go Full Screen</button>
     </div>
   )
 }
