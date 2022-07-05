@@ -16,7 +16,11 @@ export const AppContainer = (props: IContainerProps) => {
 
   const handleClick: (event: React.ChangeEvent<HTMLButtonElement>) => void = e => {
     setSelectedTab(e.target.value);
-  }
+  };
+
+  const handleFullScreen = () => {
+    document.querySelector("#immersive")?.requestFullscreen();
+  };
 
   return (
     <div className={"app-container"}>
@@ -24,6 +28,7 @@ export const AppContainer = (props: IContainerProps) => {
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ? <Position selectedBeach={selectedBeach}/> : <Immersive selectedBeach={selectedBeach}/>}
       </div>
+      <button onClick={handleFullScreen}>Go Full Screen</button>
     </div>
   )
 }

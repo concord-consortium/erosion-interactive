@@ -35,7 +35,7 @@ export const Immersive = (props: IProps) => {
   const PleaseWait = () => <div>Please wait...</div>;
 
   return (
-    <div className="canvas-container">
+    <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas camera={ {fov:100, position: [0, 3,-10], near: 0.1}}>
           <CameraController />
