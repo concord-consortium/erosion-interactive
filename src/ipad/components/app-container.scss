@@ -1,0 +1,40 @@
+@import "../../common/vars.scss";
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+
+  .window-view {
+    position: relative;
+    left: calc(15%);
+    width: 75%;
+    height: 75vh;
+    border: 15px solid;
+    border-radius: 0px 25px 25px 25px;
+  }
+
+  .position{
+    border-color: $cc-teal-light2;
+  }
+
+  .measurement{
+    border-color: $cc-teal-light3;
+  }
+
+  .fullscreen {
+    z-index: 100;
+    position: relative;
+    left: calc(93%);
+    bottom: calc(8%);
+    border: 2px solid $cc-teal-dark1;
+    background-color: $cc-teal-light4;
+    border-radius: 2px;
+    width: fit-content;
+    padding-top: 4px;
+
+    svg {
+      fill: $cc-teal-dark1;
+      width: 15px;
+    }
+  }
+}

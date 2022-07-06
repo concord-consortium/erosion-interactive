@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IErosionDoc } from "../common/types";
-import { Transects, Points } from "../common/constants";
+import { IErosionDoc } from "../../common/types";
+import { Transects, Points } from "../../common/constants";
 import "./read-only-data-table.scss";
 
 export const ReadOnlyDataTable = (params: IErosionDoc) => {

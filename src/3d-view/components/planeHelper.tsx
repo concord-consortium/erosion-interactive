@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Ref } from "react";
 import * as THREE from "three";
 
 type vectorArray = [x: number, y: number, z: number];
@@ -15,7 +15,7 @@ export const renderPlane = (
   rotation: vectorArray,
   args: geoArgs,
   texture: THREE.Texture,
-  ref?: React.MutableRefObject<THREE.BufferGeometry | undefined>,
+  ref?: Ref<THREE.PlaneGeometry> | null,
   side?: THREE.Side) => {
   return (
     <mesh
