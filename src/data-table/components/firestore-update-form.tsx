@@ -7,6 +7,7 @@ import { ErosionData, IErosionDoc } from "../../common/types";
 import "../container.scss";
 import { ReadOnlyDataTable } from "../read-only-data-table";
 import { averageDocs, useLimitedCollection } from "../helpers/use-limited-collection";
+import { CellKeys } from "../../common/constants";
 
 
 interface IFirebaseEditParams<documentInterface> {
@@ -17,20 +18,15 @@ interface IFirebaseEditParams<documentInterface> {
 }
 
 const emptyData: ErosionData = {};
-const allKeys: string[] = [];
-for(const letter in "ABCD".split("")) {
-  for(const number in Array(7).keys()) {
-    const key = `${letter}${number}`;
-    allKeys.push(key);
-    emptyData[key] = null;
-  }
-}
+for(const key in CellKeys) { emptyData[key] = null; }
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const {app, externalId, basePath} = params;
   const fireStore = getFirestore(app);
-  const docPath = `${basePath}/${externalId}`; // basePath/class_hash/offering_id/externalId
+  // basePath = <prefix>/class_hash/offering_id
+  const docPath = `${basePath}/${externalId}`;
 
+  console.warn(docPath);
   const initialEmptyState: IErosionDoc = useMemo(() => {
     return {
       text:"",
@@ -69,8 +65,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update);
   }
 
-
-  const [docs] = useLimitedCollection<IErosionDoc>(app, docPath);
+  const [docs] = useLimitedCollection<IErosionDoc>(app, basePath);
   const data: ErosionData = docs
     ? averageDocs(docs)
     : {};

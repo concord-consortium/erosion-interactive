@@ -1,37 +1,59 @@
 import React from "react";
 import { ErosionData } from "../common/types";
+import { Transects, Points } from "../common/constants";
 
-import "./data-table.scss"
+ import "./data-table.scss"
 
-const transects = ["A", "B", "C", "D"];
-const points = [1, 2, 3, 4, 5, 6, 7];
-
+type anyFunction = (e: any) => void;
 interface IDataTableProps {
-  handleSelectTransect: (e: any) => void;
-  handleDataChange: (e: any) => void;
+  handleSelectTransect?: (e: any) => void;
+  handleDataChange?: (e: any) => void;
   data: ErosionData;
   selectedTransect: string|undefined;
 }
 
+const Transect = (props: {
+  selected:string|undefined,
+  handleSelect:anyFunction|undefined,
+  transects: string[]}) => {
+  const {selected, handleSelect, transects} = props;
+
+  if(handleSelect !== undefined) {
+    return(
+      <div className="selector">
+        <select defaultValue={"DEFAULT"} onChange={handleSelect}>
+          <option value="DEFAULT" disabled>Choose a transect ...</option>
+          {transects.map((t) => {
+            return <option key={t} value={t}>{`Transect ${t}`}</option>;
+          })}
+        </select>
+      </div>
+    );
+  }
+
+  return(
+    <div className="selector">
+      <span>{`Transect ${selected}`}</span>
+    </div>
+  )
+}
+
 export const DataTable = (props: IDataTableProps) => {
-  const {selectedTransect, data} = props;
+  const {selectedTransect, data, handleDataChange, handleSelectTransect} = props;
   return (
     <div className="data-table">
-        <div className="selector">
-          <select defaultValue={"DEFAULT"} onChange={props.handleSelectTransect}>
-            <option value="DEFAULT" disabled>Choose a transect ...</option>
-            {transects.map((t) => {
-              return <option key={t} value={t}>{`Transect ${t}`}</option>;
-            })}
-          </select>
-        </div>
+        <Transect
+          selected={selectedTransect}
+          transects={Transects}
+          handleSelect={handleSelectTransect}
+        />
         { selectedTransect &&
         <div className="input-table">
           <div className="legend">
             <span className="left">Point</span>
             <span className="right">Measurement</span>
           </div>
-          {points.map((p) => {
+          {Points.map((p) => {
             // Convert null values to undefined in the form.
             const key  = selectedTransect + p;
             const value = data[key] === null ? undefined : data[key]!;
@@ -44,7 +66,8 @@ export const DataTable = (props: IDataTableProps) => {
                   value={value}
                   key={key}
                   id={key}
-                  onChange={props.handleDataChange}>
+                  readOnly={handleDataChange === undefined}
+                  onChange={handleDataChange}>
                 </input>
               </div>
             );
