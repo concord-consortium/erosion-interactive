@@ -18,8 +18,8 @@ export const useLimitedCollection = <DocShape>(app:FirebaseApp, path: string, sk
 }
 
 interface keyCounter {
-  total: number|null;
-  count: number
+  total: number;
+  count: number;
 }
 
 /***
