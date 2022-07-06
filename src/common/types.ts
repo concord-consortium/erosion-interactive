@@ -7,10 +7,11 @@ export interface AuthoringApiProps {
   setError: (error: any) => void;
 }
 
+export type ErosionData = Record<string, number|null>;
 export interface IErosionDoc {
   text?: string;
   transept?: string;
   externalId: string;
-  data: Record<string,number|undefined>;
+  data: ErosionData;
 }
 

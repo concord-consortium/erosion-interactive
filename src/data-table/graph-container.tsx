@@ -8,7 +8,7 @@ interface IGraphContainerProps {
   selectedTransect: string|undefined;
 }
 interface ITransectDataPoint {
-  [key: string]: number|undefined;
+  [key: string]: number|null;
 }
 
 export const BarGraphContainer = (props: IGraphContainerProps) => {
@@ -20,7 +20,7 @@ export const BarGraphContainer = (props: IGraphContainerProps) => {
     for (const key in transectData){
       if (key[0] === selectedTransect){
         const newObj: ITransectDataPoint = {};
-        newObj[key] = transectData[key];
+        newObj[key] = transectData[key]||null;
         onlySelectedTransectData.push(newObj);
       }
     }

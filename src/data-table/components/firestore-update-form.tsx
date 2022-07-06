@@ -3,8 +3,11 @@ import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
 import { BarGraphContainer } from "../graph-container";
 import { DataTable } from "../data-table";
-import { IErosionDoc } from "../../common/types";
+import { ErosionData, IErosionDoc } from "../../common/types";
 import "../container.scss";
+import { ReadOnlyDataTable } from "../read-only-data-table";
+import { averageDocs, useLimitedCollection } from "../helpers/use-limited-collection";
+
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
@@ -13,12 +16,13 @@ interface IFirebaseEditParams<documentInterface> {
   shape?: documentInterface;
 }
 
-const emptyData: Record<string,number|undefined> = {};
-
+const emptyData: ErosionData = {};
+const allKeys: string[] = [];
 for(const letter in "ABCD".split("")) {
   for(const number in Array(7).keys()) {
     const key = `${letter}${number}`;
-    emptyData[key] = undefined;
+    allKeys.push(key);
+    emptyData[key] = null;
   }
 }
 
@@ -65,6 +69,13 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update);
   }
 
+
+  const [docs] = useLimitedCollection<IErosionDoc>(app, docPath);
+  const data: ErosionData = docs
+    ? averageDocs(docs)
+    : {};
+
+
   return(
     <div className="container">
       <DataTable
@@ -77,6 +88,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
         selectedTransect={selectedTransect}
         transectData={editorState?.data}
       />
+      <ReadOnlyDataTable data={data}/>
     </div>
 
   );

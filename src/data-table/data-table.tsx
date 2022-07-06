@@ -1,4 +1,5 @@
 import React from "react";
+import { ErosionData } from "../common/types";
 
 import "./data-table.scss"
 
@@ -8,7 +9,7 @@ const points = [1, 2, 3, 4, 5, 6, 7];
 interface IDataTableProps {
   handleSelectTransect: (e: any) => void;
   handleDataChange: (e: any) => void;
-  data: Record<string,number|undefined>;
+  data: ErosionData;
   selectedTransect: string|undefined;
 }
 
@@ -31,10 +32,20 @@ export const DataTable = (props: IDataTableProps) => {
             <span className="right">Measurement</span>
           </div>
           {points.map((p) => {
+            // Convert null values to undefined in the form.
+            const key  = selectedTransect + p;
+            const value = data[key] === null ? undefined : data[key]!;
             return (
               <div key={selectedTransect + p + "div"} className="point-input">
                 <label>{`P${p}:`}</label>
-                <input type="number" step="0.01" value={data[selectedTransect + p]} key={selectedTransect + p} id={selectedTransect + p} onChange={props.handleDataChange}></input>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={value}
+                  key={key}
+                  id={key}
+                  onChange={props.handleDataChange}>
+                </input>
               </div>
             );
           })}
