@@ -1,8 +1,8 @@
 import { getFirestore, collection } from 'firebase/firestore';
 import { FirebaseApp  } from "firebase/app";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { ErosionData, IErosionDoc } from '../../common/types';
-import { CellKeys } from '../../common/constants';
+import { ErosionData, IErosionDoc } from '../common/types';
+import { CellKeys } from '../common/constants';
 
 export const useLimitedCollection = <DocShape>(app:FirebaseApp, path: string, skipIds?:string[]):[DocShape[],boolean,any] => {
   const fireStore = getFirestore(app);

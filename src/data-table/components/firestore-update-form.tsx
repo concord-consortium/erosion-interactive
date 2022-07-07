@@ -6,7 +6,7 @@ import { DataTable } from "../data-table";
 import { ErosionData, IErosionDoc } from "../../common/types";
 import "../container.scss";
 import { ReadOnlyDataTable } from "../read-only-data-table";
-import { averageDocs, useLimitedCollection } from "../helpers/use-limited-collection";
+import { averageDocs, useLimitedCollection } from "../../common/use-limited-collection";
 import { CellKeys } from "../../common/constants";
 
 
@@ -69,7 +69,6 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const data: ErosionData = docs
     ? averageDocs(docs)
     : {};
-
 
   return(
     <div className="container">

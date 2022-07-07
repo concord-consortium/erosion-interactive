@@ -1,4 +1,4 @@
-import { IErosionDoc } from "../../common/types";
+import { IErosionDoc } from "./types";
 import { averageDocs } from "./use-limited-collection";
 
 const docA: IErosionDoc ={
