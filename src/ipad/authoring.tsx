@@ -20,10 +20,6 @@ export const AuthoringComponent: React.FC<Props> = ({initMessage}) => {
 
   return (
     <div className="padded">
-      <fieldset>
-        <legend>Authoring Init Message</legend>
-        <div className="padded monospace pre">{JSON.stringify(initMessage, null, 2)}</div>
-      </fieldset>
 
       <fieldset>
         <legend>Authoring Options</legend>
