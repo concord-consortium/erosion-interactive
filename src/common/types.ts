@@ -19,7 +19,7 @@ export type ErosionData = Record<string, number|null>;
 export interface IErosionDoc {
   text?: string;
   transept?: string;
-  externalId: string;
+  platformUserId: string;
   data: ErosionData;
 }
 

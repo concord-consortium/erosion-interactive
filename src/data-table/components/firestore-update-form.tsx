@@ -13,8 +13,9 @@ import "./container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
-  externalId: string;
-  basePath: string;
+  collectionPath: string;
+  docPath: string;
+  platformUserId: string;
   shape?: documentInterface;
 }
 
@@ -22,19 +23,17 @@ const emptyData: ErosionData = {};
 for(const key in CellKeys) { emptyData[key] = null; }
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
-  const {app, externalId, basePath} = params;
+  const {app, collectionPath, platformUserId, docPath} = params;
   const fireStore = getFirestore(app);
-  // basePath = <prefix>/class_hash/offering_id
-  const docPath = `${basePath}/${externalId}`;
 
   console.warn(docPath);
   const initialEmptyState: IErosionDoc = useMemo(() => {
     return {
       text:"",
-      externalId,
+      platformUserId,
       data:emptyData
     }
-  }, [externalId]);
+  }, [platformUserId]);
 
   const [editorState, setEditorState] = React.useState(initialEmptyState);
   React.useEffect( () => {
@@ -66,7 +65,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update);
   }
 
-  const [docs] = useLimitedCollection<IErosionDoc>(app, basePath);
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
   const data: ErosionData = docs
     ? averageDocs(docs)
     : {};

@@ -15,7 +15,7 @@ interface IRuntimeProps {
 export const RuntimeComponent = (props: IRuntimeProps) => {
   const { initMessage } = props;
   const { authoredState } = initMessage;
-const {platformUserId, collectionPath, externalID, loading, error} = useErosionFirebaseDoc(authoredState);
+  const {platformUserId, collectionPath, loading, error, documentPath } = useErosionFirebaseDoc(authoredState);
 
   if (loading) {
     return (<div> <p>Authenticating ...</p> </div> );
@@ -25,14 +25,15 @@ const {platformUserId, collectionPath, externalID, loading, error} = useErosionF
     return (<div>Error!</div>);
   }
 
-  if (collectionPath && externalID) {
+  if (documentPath && collectionPath && platformUserId) {
     return (
       <div className={"main"}>
         <p>Current User: {platformUserId}</p>
         <FirebaseEditForm
           app={firebaseApp}
-          externalId={externalID}
-          basePath={collectionPath}
+          platformUserId={platformUserId}
+          collectionPath={collectionPath}
+          docPath={documentPath}
         />
       </div>
     );
