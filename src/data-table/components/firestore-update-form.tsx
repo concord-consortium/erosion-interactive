@@ -6,7 +6,8 @@ import { DataTable } from "../data-table";
 import { ErosionData, IErosionDoc } from "../../common/types";
 import "../container.scss";
 import { ReadOnlyDataTable } from "../read-only-data-table";
-import { averageDocs, useLimitedCollection } from "../../common/use-limited-collection";
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { averageDocs } from "../../common/average-collection-docs";
 import { CellKeys } from "../../common/constants";
 
 

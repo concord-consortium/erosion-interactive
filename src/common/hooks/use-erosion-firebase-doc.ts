@@ -34,10 +34,10 @@ export const useErosionFirebaseDoc = (authoredState: IAuthoredState|null) => {
   const [user, loading, authError] = useAuthState(auth);
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
   const fireBaseAppName = "ep-erosion-dev";
+
   // TODO: Load this from authored state, cant find it ATM.
   // const fireBaseAppName = authoredState.firebaseApp || "ep-erosion-dev";
 
-  console.log(fireBaseAppName);
   useEffect(() => {
     getFirebaseJwt(fireBaseAppName)
       .then(response => {

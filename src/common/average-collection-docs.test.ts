@@ -1,5 +1,5 @@
 import { IErosionDoc } from "./types";
-import { averageDocs } from "./use-limited-collection";
+import { averageDocs } from "./average-collection-docs";
 
 const docA: IErosionDoc ={
   transept: "A",
