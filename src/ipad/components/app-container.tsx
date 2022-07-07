@@ -15,11 +15,6 @@ export const AppContainer = (props: IContainerProps) => {
   const selectedBeach = props.selectedBeach;
 
   const [selectedTab, setSelectedTab] = useState<string>("measurement");
-
-  const handleClick: (event: React.ChangeEvent<HTMLButtonElement>) => void = e => {
-    setSelectedTab(e.target.value);
-  };
-
   const [screenMode, setScreenMode] = useState<string>("default");
 
   useEffect(() => {
@@ -28,7 +23,11 @@ export const AppContainer = (props: IContainerProps) => {
     } else {
       // close full screen
     }
-  })
+  }, [screenMode])
+
+  const handleClick: (event: React.ChangeEvent<HTMLButtonElement>) => void = e => {
+    setSelectedTab(e.target.value);
+  };
 
   const handleFullScreen = () => {
     setScreenMode("fullScreen");
