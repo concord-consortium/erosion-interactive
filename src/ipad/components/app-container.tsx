@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Immersive } from "./3d-components/immersive";
 import { Position } from "./position";
 import { Tabs } from "./tabs";
+import { NavigationBar } from "./navigation-bar";
 import { FullScreenIcon } from "./icons/full-screen";
 
 import "./app-container.scss";
@@ -19,9 +20,23 @@ export const AppContainer = (props: IContainerProps) => {
     setSelectedTab(e.target.value);
   };
 
+  const [screenMode, setScreenMode] = useState<string>("default");
+
+  useEffect(() => {
+    if (screenMode === "fullScreen") {
+      document.querySelector("#immersive-container")?.requestFullscreen();
+    } else {
+      // close full screen
+    }
+  })
+
   const handleFullScreen = () => {
-    document.querySelector("#immersive")?.requestFullscreen();
+    setScreenMode("fullScreen");
   };
+
+  const handleExitFullScreen = () => {
+    setScreenMode("default");
+  }
 
   return (
     <div className={"app-container"}>
@@ -29,7 +44,10 @@ export const AppContainer = (props: IContainerProps) => {
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
         <Position selectedBeach={selectedBeach}/> :
-        <Immersive selectedBeach={selectedBeach}/>}
+        <div id="immersive-container">
+          {screenMode === "fullScreen" && <NavigationBar handleExit={handleExitFullScreen}/>}
+          <Immersive selectedBeach={selectedBeach}/>
+        </div>}
         <button className="fullscreen" onClick={handleFullScreen}><FullScreenIcon/></button>
       </div>
     </div>
