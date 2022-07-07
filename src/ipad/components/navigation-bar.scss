@@ -1,4 +1,30 @@
+@import "../../common/vars.scss";
+
 .navbar {
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
   display: flex;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $cc-teal-dark1;
+  border-radius: 10px 10px 0px 0px;
+
+  span {
+    font-weight: bold;
+    color: $cc-teal-light6;
+  }
+
+  img {
+    padding-left: 5px;
+    width: 25px;
+  }
+
+  button {
+    border: 1px solid $cc-teal-light2;
+    background-color: $cc-teal-light3;
+    color: $cc-teal-dark1;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
 }

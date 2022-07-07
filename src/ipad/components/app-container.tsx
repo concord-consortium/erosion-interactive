@@ -3,7 +3,6 @@ import { Immersive } from "./3d-components/immersive";
 import { Position } from "./position";
 import { Tabs } from "./tabs";
 import { NavigationBar } from "./navigation-bar";
-import { FullScreenIcon } from "./icons/full-screen";
 
 import "./app-container.scss";
 
@@ -38,9 +37,9 @@ export const AppContainer = (props: IContainerProps) => {
 
   return (
     <div id="container" className={"app-container"}>
+      <NavigationBar screenMode={screenMode} handleFullScreen={handleFullScreen} handleExit={handleExitFullScreen}/>
       <Tabs handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
-        <NavigationBar screenMode={screenMode} handleFullScreen={handleFullScreen} handleExit={handleExitFullScreen}/>
         {selectedTab === "position" ?
         <Position selectedBeach={selectedBeach}/> :
         <Immersive selectedBeach={selectedBeach}/>}
