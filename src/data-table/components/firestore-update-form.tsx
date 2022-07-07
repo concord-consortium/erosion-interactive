@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
-import { BarGraphContainer } from "../graph-container";
-import { DataTable } from "../data-table";
+import { BarGraphContainer } from "./graph-container";
+import { DataTable } from "./data-table";
 import { ErosionData, IErosionDoc } from "../../common/types";
-import "../container.scss";
-import { ReadOnlyDataTable } from "../read-only-data-table";
+import { ReadOnlyDataTable } from "./read-only-data-table";
 import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
 import { averageDocs } from "../../common/average-collection-docs";
 import { CellKeys } from "../../common/constants";
 
+import "./container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;

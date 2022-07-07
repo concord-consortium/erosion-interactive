@@ -1,6 +1,6 @@
 import React from "react";
-import { ErosionData } from "../common/types";
-import { Transects, Points } from "../common/constants";
+import { ErosionData } from "../../common/types";
+import { Transects, Points } from "../../common/constants";
 
  import "./data-table.scss"
 

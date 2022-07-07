@@ -21,7 +21,7 @@ export const FirestoreCollection = (params: IFireStoreCollectionParams) => {
         {error && <strong>Error: {JSON.stringify(error)}</strong>}
         {loading && <span>Collection: Loading...</span>}
         {values && (
-          <span>
+          <div>
             Collection:
             {values.map((d:any) => {
               return(
@@ -31,7 +31,7 @@ export const FirestoreCollection = (params: IFireStoreCollectionParams) => {
               );
               })
             }
-          </span>
+          </div>
         )}
       </p>
     </div>

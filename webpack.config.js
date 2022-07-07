@@ -26,7 +26,8 @@ module.exports = (env, argv) => {
     devtool: devMode ? 'eval-cheap-module-source-map' : 'source-map',
     entry: {
       "3dview": './src/3d-view/index.tsx',
-      "data-table": "./src/data-table/index.tsx"
+      "data-table": "./src/data-table/index.tsx",
+      "ipad": "./src/ipad/index.tsx"
     },
     mode: 'development',
     output: {
@@ -78,6 +79,14 @@ module.exports = (env, argv) => {
           options: {
             svgo: false,
           }
+        },
+        {
+          test: /\.glb/,
+          type: 'asset/resource'
+        },
+        {
+          test: /\.gltf/,
+          type: 'asset/resource'
         },
         {
           test: /\.svg$/i,
@@ -146,6 +155,12 @@ module.exports = (env, argv) => {
         filename: 'data-table-index.html',
         chunks: ['data-table'],
         template: 'src/3d-view/index.html',
+        favicon: 'src/public/favicon.ico',
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'ipad-index.html',
+        chunks: ['ipad'],
+        template: 'src/ipad/index.html',
         favicon: 'src/public/favicon.ico',
       }),
       new CleanWebpackPlugin(),

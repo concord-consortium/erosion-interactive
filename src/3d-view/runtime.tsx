@@ -1,7 +1,6 @@
 import * as React from "react";
 const { useEffect, useState } = React;
-import { IRuntimeInitInteractive, getFirebaseJwt, useCustomMessages, ICustomMessage,
-         getInteractiveSnapshot } from "@concord-consortium/lara-interactive-api";
+import { IRuntimeInitInteractive, getFirebaseJwt } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState } from "../common/types";
 import { ThreeDView } from "./components/three-d-view";
 import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
@@ -14,8 +13,6 @@ interface Props {
 
 export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
-  const [snapshotSourceId, setSnapshotSourceId] = useState<string>("interactive_123");
-  const [snapshotUrl, setSnapshotUrl] = useState<string>();
   const { authoredState } = initMessage;
   const { collectionPath } = useErosionFirebaseDoc(authoredState);
 
@@ -31,26 +28,6 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
     }
   }, [authoredState]);
 
-  const [customMessages, setCustomMessages] = useState<ICustomMessage[]>([]);
-  useCustomMessages((msg: ICustomMessage) => {
-    setCustomMessages(messages => [...messages, msg]);
-  }, { "*": true });
-
-  const handleSnapshotTargetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSnapshotSourceId(event.target.value);
-  };
-
-  const handleTakeSnapshot = () => {
-    setSnapshotUrl("");
-    getInteractiveSnapshot({ interactiveItemId: snapshotSourceId }).then((response) => {
-      if (response.success) {
-        setSnapshotUrl(response.snapshotUrl);
-      } else {
-        window.alert("Snapshot has failed");
-      }
-    });
-  };
-
   return (
     <div className="padded">
       <ThreeDView collectionPath={collectionPath}/>
@@ -62,41 +39,6 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
         <legend>FirebaseJWT Response</legend>
         <div className="padded monospace pre">{rawFirebaseJwt}</div>
       </fieldset>
-      <fieldset>
-        <legend>Custom Messages Received</legend>
-        <div className="padded monospace pre">
-          <table>
-            <thead>
-              <th>Type</th>
-              <th>Content</th>
-            </thead>
-            <tbody>
-              {customMessages.map((msg, i) => (
-                <tr key={`${i}-${msg.type}`}>
-                  <td>{msg.type}</td>
-                  <td>{msg.content}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Snapshot API</legend>
-        <div>Interactive ID: <input type="text" value={snapshotSourceId} onChange={handleSnapshotTargetChange}/></div>
-        <div><button onClick={handleTakeSnapshot}>Take a snapshot</button></div>
-        {
-          snapshotUrl &&
-          <div>Snapshot URL:
-            <a href={snapshotUrl}
-               rel="noreferrer"
-               target="_blank"
-               style={{fontSize: 10}}>{snapshotUrl}
-            </a>
-          </div>
-        }
-      </fieldset>
-
     </div>
   );
 };

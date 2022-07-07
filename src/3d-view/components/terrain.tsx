@@ -13,14 +13,14 @@ interface TerrainProps {
 export const Terrain = (props: TerrainProps) => {
   const {data} = props;
 
-  const beachTerrainRef = useRef<THREE.BufferGeometry>();
-  const rightSideRef = useRef<THREE.BufferGeometry>();
-  const leftSideRef = useRef<THREE.BufferGeometry>();
-  const backSideRef = useRef<THREE.BufferGeometry>();
+  const beachTerrainRef = useRef<THREE.PlaneGeometry>(null);
+  const rightSideRef = useRef<THREE.PlaneGeometry>(null);
+  const leftSideRef = useRef<THREE.PlaneGeometry>(null);
+  const backSideRef = useRef<THREE.PlaneGeometry>(null);
 
-  const waterRef = useRef<THREE.BufferGeometry>();
-  const waterRightSideRef = useRef<THREE.BufferGeometry>();
-  const waterLeftSideRef = useRef<THREE.BufferGeometry>();
+  const waterRef = useRef<THREE.PlaneGeometry>(null);
+  const waterRightSideRef = useRef<THREE.PlaneGeometry>(null);
+  const waterLeftSideRef = useRef<THREE.PlaneGeometry>(null);
 
   const sandTexture = new THREE.TextureLoader().load(sand);
   const waterTexture = new THREE.TextureLoader().load(water);
@@ -99,7 +99,7 @@ export const Terrain = (props: TerrainProps) => {
   return (
     <>
       {renderPlane([0, 0, 0], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength, gridWidth, gridLength], sandTexture, beachTerrainRef)}
-      {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef)}
+      {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef!)}
       {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, leftSideRef, THREE.BackSide)}
       {renderPlane([0, 0, -terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef, THREE.BackSide)}
 

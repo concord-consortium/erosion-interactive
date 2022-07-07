@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { IRuntimeInitInteractive } from "@concord-consortium/lara-interactive-api";
 import { firebaseApp } from "../common/connect-to-firestore";
-import { JWTLink } from "./components/jwt-link";
 import { IAuthoredState, IInteractiveState } from "../common/types";
 import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
 import { FirebaseEditForm } from "./components/firestore-update-form";
@@ -23,7 +22,7 @@ const {platformUserId, collectionPath, externalID, loading, error} = useErosionF
   }
 
   if (error) {
-    return (<div> <p>Error: {error}</p></div> );
+    return (<div>Error!</div>);
   }
 
   if (collectionPath && externalID) {
@@ -42,8 +41,6 @@ const {platformUserId, collectionPath, externalID, loading, error} = useErosionF
   return (
     <div>
       You are not logged in.
-      <hr/>
-      <JWTLink appName="ep-erosion-dev" host="https://learn.staging.concord.org" />
     </div>
   );
 };
