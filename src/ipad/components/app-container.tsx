@@ -19,9 +19,7 @@ export const AppContainer = (props: IContainerProps) => {
 
   useEffect(() => {
     if (screenMode === "fullScreen") {
-      document.querySelector("#immersive-container")?.requestFullscreen();
-    } else {
-      // close full screen
+      document.querySelector("#container")?.requestFullscreen();
     }
   }, [screenMode])
 
@@ -34,20 +32,18 @@ export const AppContainer = (props: IContainerProps) => {
   };
 
   const handleExitFullScreen = () => {
+    document.exitFullscreen();
     setScreenMode("default");
   }
 
   return (
-    <div className={"app-container"}>
+    <div id="container" className={"app-container"}>
       <Tabs handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
+        <NavigationBar screenMode={screenMode} handleFullScreen={handleFullScreen} handleExit={handleExitFullScreen}/>
         {selectedTab === "position" ?
         <Position selectedBeach={selectedBeach}/> :
-        <div id="immersive-container">
-          {screenMode === "fullScreen" && <NavigationBar handleExit={handleExitFullScreen}/>}
-          <Immersive selectedBeach={selectedBeach}/>
-        </div>}
-        <button className="fullscreen" onClick={handleFullScreen}><FullScreenIcon/></button>
+        <Immersive selectedBeach={selectedBeach}/>}
       </div>
     </div>
   )
