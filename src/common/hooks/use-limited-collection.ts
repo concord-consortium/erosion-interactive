@@ -2,6 +2,7 @@ import { getFirestore, collection } from 'firebase/firestore';
 import { FirebaseApp  } from "firebase/app";
 import { useCollection } from "react-firebase-hooks/firestore";
 
+
 export const useLimitedCollection = <DocShape>(app:FirebaseApp, path: string, skipIds?:string[]):[DocShape[],boolean,any] => {
   const fireStore = getFirestore(app);
   const excludeIds: string[] = skipIds || [];
@@ -14,3 +15,4 @@ export const useLimitedCollection = <DocShape>(app:FirebaseApp, path: string, sk
     });
   return [filteredValues||[], loading, error];
 }
+

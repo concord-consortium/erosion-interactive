@@ -5,7 +5,7 @@ import { Bar } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
 interface ITransectDataPoint {
-  [key: string]: number|undefined;
+  [key: string]: number|null;
 }
 
 interface IBarGraphProps {
