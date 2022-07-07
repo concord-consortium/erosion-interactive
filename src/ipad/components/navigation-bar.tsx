@@ -17,7 +17,7 @@ export const NavigationBar = (props: INavProps) => {
       <span>Precipitating Change: Coastal Erosion</span>
       { screenMode === "default" ?
       <button onClick={handleFullScreen}>Enter fullscreen</button> :
-      <button onClick={handleExit}>Back to activity</button>
+      <button onClick={handleExit}>Return to Lesson</button>
       }
     </div>
   )
