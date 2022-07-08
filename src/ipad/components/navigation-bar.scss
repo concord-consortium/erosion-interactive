@@ -7,24 +7,40 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: $cc-teal-dark1;
-  border-radius: 10px 10px 0px 0px;
+  background-color: $cc-teal-light4;
 
-  span {
-    font-weight: bold;
-    color: $cc-teal-light6;
+  .status {
+    border-radius: 5px;
+    padding: 5px;
+    background-color: $cc-teal-light7;
+    font-size: 14px;
   }
 
-  img {
-    padding-left: 5px;
-    width: 25px;
+  .online {
+    color: $cc-orange;
   }
 
-  button {
-    border: 1px solid $cc-teal-light2;
-    background-color: $cc-teal-light3;
-    color: $cc-teal-dark1;
+  .offline {
+    color: $cc-teal-dark2;
+  }
+
+  .concord-logo {
+    padding-left: 15px;
+    width: 100px;
+  }
+
+  .exit-button {
+    border: 2px solid $cc-teal-light7;
+    background-color: $cc-teal-light7;
+    color: $cc-teal-dark2;
     border-radius: 5px;
     margin-right: 10px;
+    display: flex;
+
+    .exit-icon {
+      width: 15px;
+      margin-right: 5px;
+    }
   }
+
 }
