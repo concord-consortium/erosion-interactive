@@ -1,11 +1,18 @@
 import { IRuntimeInitInteractive } from "@concord-consortium/lara-interactive-api";
 
+export type Transect = string;
 
 export interface IAuthoredState {
   firebaseApp?: string;
 }
 
-export interface IInteractiveState {}
+
+export interface IInteractiveState {
+  lastTransect?: Transect;
+  documentPath: string;
+  collectionPath: string;
+}
+
 export interface AuthoringApiProps {
   setOutput: (output: any) => void;
   setError: (error: any) => void;
