@@ -105,7 +105,6 @@ export const useErosionFirebaseDoc = (authoredState: IAuthoredState|null) => {
     }
   }, [user]);
 
-  console.log(erosionAuthInfo);
   return {
     platformUserId: erosionAuthInfo?.platformUserId || null,
     collectionPath: erosionAuthInfo?.collectionPath || null,
