@@ -3,7 +3,8 @@ import {
   cellIdToIndex,
   cellToTransectIndx,
   cellToPointIndx,
-  cellToTerrainVert
+  cellToTerrainVert,
+  erosionDataToVerts
 } from "./cell-data-helpers";
 
 test('cellIdToIndex returns a numerical index', () => {
@@ -56,4 +57,31 @@ test('cellToTerrainVert returns vertex for mesh', ()=> {
 
   expect(cellToTerrainVert("A4", 10))
     .toEqual({x:-40, y:0, z:10});
+});
+
+test(`erosionDataToVerts, returns geometry verts for cell records`, () => {
+  const cells = {"A1": 0, "A2": 1, "A3": 2};
+  const defaultZValue = 101;
+  const verts = erosionDataToVerts(cells, defaultZValue);
+
+  // Z is set by the student cell values
+  // from our cells collection above
+  expect(verts[0].z).toEqual(0);
+  expect(verts[1].z).toEqual(1);
+  expect(verts[2].z).toEqual(2);
+
+  // X is set by looking up values from GridXValues
+  expect(verts[0].x).toEqual(-40);
+
+  // Y is set by looking up values from GridYValues
+  expect(verts[0].y).toEqual(6);
+  expect(verts[1].y).toEqual(4);
+  expect(verts[2].y).toEqual(2);
+
+  // These values exist for cells that have no data too
+  // by combining GridXValues, GridYValues, and default Z
+  // Our input only defines 3 cells, so these are generated:
+  expect(verts[4].x).toEqual(-40);
+  expect(verts[4].y).toEqual(-2);
+  expect(verts[4].z).toEqual(defaultZValue);
 })

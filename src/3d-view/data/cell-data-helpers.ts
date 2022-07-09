@@ -36,11 +36,17 @@ export const cellToTerrainVert =
     return {... gridVert, z: height};
 }
 
-export const dataForCellID = (cellID: string, docs: ErosionData, defaultValue = 0) => {
-  const value = docs[cellID] || defaultValue;
-  return cellToTerrainVert(cellID, value);
+const hasValue = (thing:any) => {
+  if (thing === undefined) return false;
+  if (thing === null) return false;
+  return true;
 }
 
-export const erosionDataToVerts = (docs: ErosionData, defaultZ = 0): ITerrainVert[] => {
-  return CellKeys.map( (cellID:string) => dataForCellID(cellID, docs, defaultZ));
+export const dataForCellID = (cellID: string, cells: ErosionData, defaultValue = 0) => {
+  const value = hasValue(cells[cellID]) ? cells[cellID] : defaultValue;
+  return cellToTerrainVert(cellID, value!);
+}
+
+export const erosionDataToVerts = (cells: ErosionData, defaultZ = 0): ITerrainVert[] => {
+  return CellKeys.map( (cellID:string) => dataForCellID(cellID, cells, defaultZ));
 }
