@@ -4,7 +4,7 @@ import { IRuntimeInitInteractive, getFirebaseJwt, useInteractiveState } from "@c
 import { IAuthoredState, IInteractiveState } from "../common/types";
 import { ThreeDView } from "./components/three-d-view";
 import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
-
+import { firebaseApp } from "../common/connect-to-firestore";
 interface Props {
   initMessage: IRuntimeInitInteractive<IInteractiveState, IAuthoredState>;
 }
@@ -38,7 +38,10 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
 
   return (
     <div className="padded">
-      <ThreeDView collectionPath={collectionPath}/>
+      { collectionPath &&
+        <ThreeDView app={firebaseApp} collectionPath={collectionPath}/>
+      }
+
       <fieldset>
         <legend>Runtime Init Message</legend>
         <div className="padded monospace pre">{JSON.stringify(initMessage, null, 2)}</div>

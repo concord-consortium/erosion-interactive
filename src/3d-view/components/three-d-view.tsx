@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Terrain } from "./terrain";
-import { fakeAggregatedData } from "../data/fake-data";
+import { FirebaseApp } from "firebase/app";
+// import { fakeAggregatedData } from "../data/fake-data";
 
 import "./three-d-view.scss";
-// import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
-// import { averageDocs } from "../../common/average-collection-docs";
-// import { ErosionData, IErosionDoc } from "../../common/types";
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { averageDocs } from "../../common/average-collection-docs";
+import { IErosionDoc, ITerrainVert } from "../../common/types";
+import { erosionDataToVerts } from "../data/cell-data-helpers";
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -27,19 +29,25 @@ const CameraController = () => {
 };
 
 interface ThreeDViewParams {
-  collectionPath: string|null;
+  collectionPath: string;
+  app: FirebaseApp;
 }
 
 export const ThreeDView = (params: ThreeDViewParams) => {
-  const data = fakeAggregatedData;
-  // NP: Todo, switch fakeAggregateData with read document data:
-  // const [docs] = useLimitedCollection<IErosionDoc>(app, basePath);
-  // const data: ErosionData = docs
-  //   ? averageDocs(docs)
-  //   : {};
+
+  const {app, collectionPath} = params;
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
+  const [data, setData] = useState(erosionDataToVerts(averageDocs(docs), 4))
+
+  useEffect(() => {
+    const d = erosionDataToVerts(averageDocs(docs), 4);
+    setData(d);
+  },[docs]);
 
   const cameraPos: [number, number, number] = [-60, 20, 10];
   return (
+    <>
+    <div className="data-text">{JSON.stringify(data,null,2)}</div>
     <div className="canvas-container">
       <Canvas camera={{ fov: 33, position: cameraPos, near: 0.1 }}>
         <CameraController/>
@@ -49,5 +57,6 @@ export const ThreeDView = (params: ThreeDViewParams) => {
         <Terrain data={data} />
       </Canvas>
     </div>
+    </>
   );
 };

@@ -1,4 +1,5 @@
 import { CellKeys, GridVerts, GridXValues, GridYValues } from "../../common/constants";
+import { ErosionData, ITerrainVert } from "../../common/types";
 
 
 // Convert from "A1"–"D6" to 0-27 for vertex index
@@ -35,3 +36,15 @@ export const cellToTerrainVert =
     return {... gridVert, z: height};
 }
 
+export const dataForCellID = (cellID: string, docs: ErosionData, defaultValue = 0) => {
+  const value = docs[cellID] || defaultValue;
+  // console.log(value);
+  console.log("ID:", cellID);
+  console.log("Value:", docs[cellID]);
+  console.log("Value2:", value);
+  return cellToTerrainVert(cellID, value);
+}
+
+export const erosionDataToVerts = (docs: ErosionData, defaultZ = 0): ITerrainVert[] => {
+  return CellKeys.map( (cellID:string) => dataForCellID(cellID, docs, defaultZ));
+}
