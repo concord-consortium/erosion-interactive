@@ -5,7 +5,8 @@ import { Terrain } from "./terrain";
 import { fakeAggregatedData } from "../data/fake-data";
 
 import "./three-d-view.scss";
-// import { averageDocs, useLimitedCollection } from "../../common/use-limited-collection";
+// import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+// import { averageDocs } from "../../common/average-collection-docs";
 // import { ErosionData, IErosionDoc } from "../../common/types";
 
 const CameraController = () => {
@@ -43,8 +44,8 @@ export const ThreeDView = (params: ThreeDViewParams) => {
       <Canvas camera={{ fov: 33, position: cameraPos, near: 0.1 }}>
         <CameraController/>
         <color attach="background" args={["white"]}/>
-        <directionalLight color="white" position={[80, 40, 0]} intensity={.75} />
-        <ambientLight intensity={0.15}/>
+        <directionalLight color="white" position={[80, 40, 0]} intensity={1.75} />
+        {/* <ambientLight intensity={0.1}/> */}
         <Terrain data={data} />
       </Canvas>
     </div>
