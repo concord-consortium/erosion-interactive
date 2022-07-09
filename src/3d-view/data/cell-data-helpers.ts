@@ -38,10 +38,6 @@ export const cellToTerrainVert =
 
 export const dataForCellID = (cellID: string, docs: ErosionData, defaultValue = 0) => {
   const value = docs[cellID] || defaultValue;
-  // console.log(value);
-  console.log("ID:", cellID);
-  console.log("Value:", docs[cellID]);
-  console.log("Value2:", value);
   return cellToTerrainVert(cellID, value);
 }
 
