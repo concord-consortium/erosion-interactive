@@ -3,7 +3,6 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Terrain } from "./terrain";
 import { FirebaseApp } from "firebase/app";
-// import { fakeAggregatedData } from "../data/fake-data";
 
 import "./three-d-view.scss";
 import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
@@ -46,17 +45,14 @@ export const ThreeDView = (params: ThreeDViewParams) => {
 
   const cameraPos: [number, number, number] = [-60, 20, 10];
   return (
-    <>
-    <div className="data-text">{JSON.stringify(data,null,2)}</div>
     <div className="canvas-container">
       <Canvas camera={{ fov: 33, position: cameraPos, near: 0.1 }}>
         <CameraController/>
         <color attach="background" args={["white"]}/>
         <directionalLight color="white" position={[80, 40, 0]} intensity={1.75} />
-        {/* <ambientLight intensity={0.1}/> */}
+        <ambientLight intensity={0.1}/>
         <Terrain data={data} />
       </Canvas>
     </div>
-    </>
   );
 };

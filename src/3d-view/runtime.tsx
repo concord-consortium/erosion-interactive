@@ -1,10 +1,10 @@
 import * as React from "react";
-const { useEffect, useState, useMemo } = React;
+const { useEffect, useState} = React;
 import { IRuntimeInitInteractive, getFirebaseJwt, useInteractiveState } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState, IInteractiveState } from "../common/types";
 import { ThreeDView } from "./components/three-d-view";
-import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
 import { firebaseApp } from "../common/connect-to-firestore";
+import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
 interface Props {
   initMessage: IRuntimeInitInteractive<IInteractiveState, IAuthoredState>;
 }
@@ -13,7 +13,8 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
   const { interactiveState, setInteractiveState } = useInteractiveState<IInteractiveState>();
   const { authoredState } = initMessage;
-  const { collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
+ const {collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
+
 
   useEffect(() => {
     if (authoredState?.firebaseApp) {
@@ -38,10 +39,7 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
 
   return (
     <div className="padded">
-      { collectionPath &&
-        <ThreeDView app={firebaseApp} collectionPath={collectionPath}/>
-      }
-
+      {collectionPath && <ThreeDView app={firebaseApp} collectionPath={collectionPath}/>}
       <fieldset>
         <legend>Runtime Init Message</legend>
         <div className="padded monospace pre">{JSON.stringify(initMessage, null, 2)}</div>

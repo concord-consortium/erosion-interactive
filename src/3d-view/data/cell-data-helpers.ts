@@ -48,5 +48,5 @@ export const dataForCellID = (cellID: string, cells: ErosionData, defaultValue =
 }
 
 export const erosionDataToVerts = (cells: ErosionData, defaultZ = 0): ITerrainVert[] => {
-  return CellKeys.map( (cellID:string) => dataForCellID(cellID, cells, defaultZ));
+  return CellKeys.map( (cellID:string) => dataForCellID(cellID, cells, defaultZ)).sort((a, b) => b.y - a.y);
 }
