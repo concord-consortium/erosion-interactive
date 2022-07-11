@@ -36,6 +36,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   }, [platformUserId]);
 
   const [editorState, setEditorState] = React.useState(initialEmptyState);
+
   React.useEffect( () => {
     getDoc(doc(fireStore, docPath)).then(d => {
       const document: IErosionDoc = d.data() as IErosionDoc;
@@ -71,19 +72,20 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     : {};
 
   return(
-    <div className="container">
-      <DataTable
-        data={editorState.data}
-        selectedTransect={selectedTransect}
-        handleSelectTransect={handleSelectTransect}
-        handleDataChange={handleInput}
-      />
-      <BarGraphContainer
-        selectedTransect={selectedTransect}
-        transectData={editorState?.data}
-      />
+    <>
+      <div className="container">
+        <DataTable
+          data={editorState.data}
+          selectedTransect={selectedTransect}
+          handleSelectTransect={handleSelectTransect}
+          handleDataChange={handleInput}
+        />
+        <BarGraphContainer
+          selectedTransect={selectedTransect}
+          transectData={editorState?.data}
+        />
+      </div>
       <ReadOnlyDataTable data={data}/>
-    </div>
-
+    </>
   );
 }
