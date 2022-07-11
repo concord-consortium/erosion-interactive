@@ -20,13 +20,14 @@ type GLTFResult = GLTF & {
 export default function Model({ ...props }: JSX.IntrinsicElements["group"]) {
   const group = React.useRef<THREE.Group>() as React.RefObject<THREE.Group>;
   const { nodes, materials } = useGLTF(meshFile) as GLTFResult;
+
+  console.log(nodes.PunaluuTerrain1.geometry);
+
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name="Scene">
-        <group name="Light" position={[4.08, 5.9, -1.01]} rotation={[1.89, 0.88, -2.05]} />
-        <group name="Camera" position={[7.36, 4.96, 6.93]} rotation={[1.24, 0.33, -0.76]} />
-        <mesh name="PunaluuTerrain1" geometry={nodes.PunaluuTerrain1.geometry} material={materials.lambert1} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
-      </group>
+        <mesh name="PunaluuTerrain1" geometry={nodes.PunaluuTerrain1.geometry} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+          <meshStandardMaterial wireframe/>
+        </mesh>
     </group>
   );
 }
