@@ -1,11 +1,10 @@
 import * as React from "react";
-const { useEffect, useState, useMemo } = React;
+const { useEffect, useState} = React;
 import { IRuntimeInitInteractive, getFirebaseJwt, useInteractiveState } from "@concord-consortium/lara-interactive-api";
 import { IAuthoredState, IInteractiveState } from "../common/types";
 import { ThreeDView } from "./components/three-d-view";
 import { firebaseApp } from "../common/connect-to-firestore";
 import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
-
 interface Props {
   initMessage: IRuntimeInitInteractive<IInteractiveState, IAuthoredState>;
 }

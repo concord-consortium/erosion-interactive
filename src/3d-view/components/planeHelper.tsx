@@ -1,8 +1,8 @@
 import React, { Ref } from "react";
 import * as THREE from "three";
 
-type vectorArray = [x: number, y: number, z: number];
-type geoArgs = [
+export type VertexArray = [x: number, y: number, z: number];
+export type GridDimensions = [
   width?: number | undefined,
   height?: number | undefined,
   widthSegments?: number | undefined,
@@ -11,9 +11,9 @@ type geoArgs = [
 
 
 export const renderPlane = (
-  meshPositions: vectorArray,
-  rotation: vectorArray,
-  args: geoArgs,
+  meshPositions: VertexArray,
+  rotation: VertexArray,
+  args: GridDimensions,
   texture: THREE.Texture,
   ref?: Ref<THREE.PlaneGeometry> | null,
   side?: THREE.Side) => {
@@ -30,7 +30,9 @@ export const renderPlane = (
       <meshStandardMaterial
         side={side || THREE.FrontSide}
         map={texture}
-        wireframe
+        flatShading={true}
+        roughness={1}
+        emissive={0}
         // flatShading
       />
     </mesh>

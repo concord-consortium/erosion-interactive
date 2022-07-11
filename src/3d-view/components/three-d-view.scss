@@ -2,3 +2,10 @@
   width: 100%;
   height: 100vh;
 }
+.data-text {
+  white-space: pre;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10pt;
+  height: 100px;
+  overflow: auto;
+}

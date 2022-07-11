@@ -23,6 +23,7 @@ export interface IRuntimeProps {
 }
 
 export type ErosionData = Record<string, number|null>;
+
 export interface IErosionDoc {
   text?: string;
   transept?: string;
@@ -30,3 +31,8 @@ export interface IErosionDoc {
   data: ErosionData;
 }
 
+export interface ITerrainVert {
+  x: number,
+  y: number,
+  z: number
+}
