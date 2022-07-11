@@ -2,12 +2,12 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { renderPlane } from "./planeHelper";
 import { terrainWidth, terrainLength, gridLength, gridWidth, waterLength } from "./helpers";
-import { ITransectPoint } from "../data/fake-data";
+import { ITerrainVert } from "../../common/types";
 import sand from "../assets/sand.png";
 import water from "../assets/water.png";
 
 interface TerrainProps {
-  data: Array<ITransectPoint>
+  data: Array<ITerrainVert>
 }
 
 export const Terrain = (props: TerrainProps) => {
@@ -99,6 +99,7 @@ export const Terrain = (props: TerrainProps) => {
   return (
     <>
       {renderPlane([0, 0, 0], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength, gridWidth, gridLength], sandTexture, beachTerrainRef)}
+      <meshStandardMaterial attach="material" />
       {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef!)}
       {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, leftSideRef, THREE.BackSide)}
       {renderPlane([0, 0, -terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef, THREE.BackSide)}
