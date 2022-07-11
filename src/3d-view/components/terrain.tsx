@@ -5,6 +5,7 @@ import { terrainWidth, terrainLength, gridLength, gridWidth, waterLength } from 
 import { ITerrainVert } from "../../common/types";
 import sand from "../assets/sand.png";
 import water from "../assets/water.png";
+import { useFrame } from "@react-three/fiber";
 
 interface TerrainProps {
   data: Array<ITerrainVert>
@@ -25,7 +26,7 @@ export const Terrain = (props: TerrainProps) => {
   const sandTexture = new THREE.TextureLoader().load(sand);
   const waterTexture = new THREE.TextureLoader().load(water);
 
-  useEffect(() => {
+  useFrame(() => {
     setTerrainElevation();
     setSideElevation("right");
     setSideElevation("left");
@@ -71,6 +72,8 @@ export const Terrain = (props: TerrainProps) => {
     for (let i = 0; i < sideSpecificData.length; i++){
       sidePosArray[i * 3 + 1] = sideSpecificData[i].z;
     }
+
+    side.attributes.position.needsUpdate = true;
   };
 
   const setTerrainElevation = () => {
@@ -79,6 +82,8 @@ export const Terrain = (props: TerrainProps) => {
     for (let i = 0; i < data.length; i++){
       terrainArray[i * 3 + 2] = data[i].z;
     }
+
+    beachTerrainRef.current!.attributes.position.needsUpdate = true;
   };
 
   const setWaterElevation = () => {
@@ -94,12 +99,16 @@ export const Terrain = (props: TerrainProps) => {
 
     const waterLeftSideArray = getPositionArray(waterLeftSideRef.current!);
     waterLeftSideArray[1] = waterData[3].z;
+
+    waterRef.current!.attributes.position.needsUpdate = true;
+    waterRightSideRef.current!.attributes.position.needsUpdate = true;
+    waterLeftSideRef.current!.attributes.position.needsUpdate = true;
+
   };
 
   return (
     <>
       {renderPlane([0, 0, 0], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength, gridWidth, gridLength], sandTexture, beachTerrainRef)}
-      <meshStandardMaterial attach="material" />
       {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef!)}
       {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, leftSideRef, THREE.BackSide)}
       {renderPlane([0, 0, -terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef, THREE.BackSide)}
