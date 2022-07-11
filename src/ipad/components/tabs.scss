@@ -1,25 +1,32 @@
 @import "../../common/vars.scss";
 
 .tabs-container {
-  width: 15%;
+  width: 5%;
   display: flex;
   flex-direction: column;
   position: absolute;
   z-index: 0;
 
   .tab {
-    background-color: $cc-teal-light2;
-    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    background-color: $cc-teal-light5;
+    padding: 15px;
     border-radius: 5px 0px 0px 5px;
     border: 0px;
-    font-size: 18px;
+    font-size: 16px;
+    color: $cc-teal-dark2;
+    font-weight: bold;
 
-    button {
-      color: #444444!important;
+    .vertical {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
     }
   }
 
   .measurement {
-    background-color: $cc-teal-light3;
+    background-color: $cc-teal-light6;
   }
 }

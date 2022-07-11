@@ -3,37 +3,37 @@ import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
 import { BarGraphContainer } from "./graph-container";
 import { DataTable } from "./data-table";
-import { IErosionDoc } from "../../common/types";
+import { ErosionData, IErosionDoc } from "../../common/types";
+import { ReadOnlyDataTable } from "./read-only-data-table";
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { averageDocs } from "../../common/average-collection-docs";
+import { CellKeys } from "../../common/constants";
+
 import "./container.scss";
 
 interface IFirebaseEditParams<documentInterface> {
   app: FirebaseApp;
-  externalId: string;
-  basePath: string;
+  collectionPath: string;
+  docPath: string;
+  platformUserId: string;
   shape?: documentInterface;
 }
 
-const emptyData: Record<string,number|undefined> = {};
-
-for(const letter in "ABCD".split("")) {
-  for(const number in Array(7).keys()) {
-    const key = `${letter}${number}`;
-    emptyData[key] = undefined;
-  }
-}
+const emptyData: ErosionData = {};
+for(const key in CellKeys) { emptyData[key] = null; }
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
-  const {app, externalId, basePath} = params;
+  const {app, collectionPath, platformUserId, docPath} = params;
   const fireStore = getFirestore(app);
-  const docPath = `${basePath}/${externalId}`; // basePath/class_hash/offering_id/externalId
 
+  console.warn(docPath);
   const initialEmptyState: IErosionDoc = useMemo(() => {
     return {
       text:"",
-      externalId,
+      platformUserId,
       data:emptyData
     }
-  }, [externalId]);
+  }, [platformUserId]);
 
   const [editorState, setEditorState] = React.useState(initialEmptyState);
   React.useEffect( () => {
@@ -65,6 +65,11 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update);
   }
 
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
+  const data: ErosionData = docs
+    ? averageDocs(docs)
+    : {};
+
   return(
     <div className="container">
       <DataTable
@@ -77,6 +82,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
         selectedTransect={selectedTransect}
         transectData={editorState?.data}
       />
+      <ReadOnlyDataTable data={data}/>
     </div>
 
   );

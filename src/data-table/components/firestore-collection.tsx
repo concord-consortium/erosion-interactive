@@ -1,4 +1,4 @@
-import { useLimitedCollection } from "../helpers/use-limited-collection";
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
 import { FirebaseApp } from "firebase/app";
 import * as React from "react";
 
@@ -23,7 +23,7 @@ export const FirestoreCollection = (params: IFireStoreCollectionParams) => {
         {values && (
           <div>
             Collection:
-            {values.map((d) => {
+            {values.map((d:any) => {
               return(
                 <React.Fragment key={d.id}>
                   {JSON.stringify(d)}

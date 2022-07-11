@@ -6,10 +6,9 @@ import { useInitMessage, setSupportedFeatures } from "@concord-consortium/lara-i
 import { AuthoringComponent } from "./authoring";
 // import { ReportComponent } from "./report";
 import { RuntimeComponent } from "./runtime";
-import { IAuthoredState } from "../common/types";
+import { IAuthoredState, IInteractiveState } from "../common/types";
 
 interface Props {}
-interface IInteractiveState {}
 
 export const AppComponent = (props:Props) => {
   const initMessage = useInitMessage<IInteractiveState, IAuthoredState>();
