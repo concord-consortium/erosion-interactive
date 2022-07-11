@@ -45,8 +45,6 @@ export const ThreeDView = (params: ThreeDViewParams) => {
 
   const cameraPos: [number, number, number] = [-60, 20, 10];
   return (
-    <>
-    <div className="data-text">{JSON.stringify(data,null,2)}</div>
     <div className="canvas-container">
       <Canvas camera={{ fov: 33, position: cameraPos, near: 0.1 }}>
         <CameraController/>
@@ -56,6 +54,5 @@ export const ThreeDView = (params: ThreeDViewParams) => {
         <Terrain data={data} />
       </Canvas>
     </div>
-    </>
   );
 };
