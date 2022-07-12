@@ -41,11 +41,15 @@ export const ReadOnlyDataTable = (params: {data: ErosionData}) => {
       </div>
       <div className={className}>
         <table>
-          <tr>
-            <th key="point"></th>
-            {Transects.map( (t) => <th key={t} scope="col">{t}</th>) }
-          </tr>
-          {rows}
+          <thead>
+            <tr>
+              <th key="point"></th>
+              {Transects.map( (t) => <th key={t} scope="col">{t}</th>) }
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
         </table>
       </div>
     </div>
