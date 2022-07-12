@@ -1,15 +1,49 @@
 
-.data-table {
-  td {
-    font-family: monospace;
-    border: 1px solid black;
-    width: 7em;
-    .key {
-      font-weight: 100;
+.read-only-data-table {
+  margin: 1em;
+  text-align: center;
+
+  table {
+    display: table;
+    border-spacing: 0px;
+    border-radius: 10px;
+    tr {
+      margin: 0.5em;
+      padding: 0.5em;
     }
-    .value {
-      text-align: right;
-      font-weight: bold;
+    td, th {
+      text-align: end;
+      font-family: monospace;
+      width: 7em;
+      padding: 0.2em
+    }
+    th {
+      color: hsl(0,0,30);
+      font-family: Arial, Helvetica, sans-serif;
     }
   }
+  .key {
+    font-weight: 100;
+  }
+
+  .toggler {
+    color: hsl(0,0,60);
+    cursor: pointer;
+    font-size: 10pt;
+    margin: 1em;
+  }
+
+  .debugging-section {
+    background-color: #c5e8f0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
+  }
+  .hidden {
+    display: none;
+  }
 }
+
