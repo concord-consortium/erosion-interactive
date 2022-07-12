@@ -26,7 +26,6 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const {app, collectionPath, platformUserId, docPath} = params;
   const fireStore = getFirestore(app);
 
-  console.warn(docPath);
   const initialEmptyState: IErosionDoc = useMemo(() => {
     return {
       text:"",
@@ -40,14 +39,17 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   React.useEffect( () => {
     getDoc(doc(fireStore, docPath)).then(d => {
       const document: IErosionDoc = d.data() as IErosionDoc;
-      setEditorState(document || initialEmptyState);
+      setEditorState({...document} || {...initialEmptyState});
+      setSelectedTransect(document.transect);
     });
   }, [docPath, fireStore, initialEmptyState]);
 
   const [selectedTransect, setSelectedTransect] = useState<string>();
 
   const handleSelectTransect = (e: any) => {
-    setSelectedTransect(e.target.value);
+    const transect: string = e.target.value;
+    setSelectedTransect(transect);
+    updateFirestore({transect});
   };
 
   const handleInput = (e: any) => {

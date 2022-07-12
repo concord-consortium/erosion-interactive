@@ -21,7 +21,7 @@ const Transect = (props: {
   if(handleSelect !== undefined) {
     return(
       <div className="selector">
-        <select defaultValue={"DEFAULT"} onChange={handleSelect}>
+        <select value={selected} defaultValue={"DEFAULT"} onChange={handleSelect}>
           <option value="DEFAULT" disabled>Choose a transect ...</option>
           {transects.map((t) => {
             return <option key={t} value={t}>{`Transect ${t}`}</option>;
