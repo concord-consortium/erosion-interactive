@@ -40,7 +40,6 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     getDoc(doc(fireStore, docPath)).then(d => {
       const document: IErosionDoc = d.data() as IErosionDoc;
       setEditorState({...document} || {...initialEmptyState});
-      console.log(document.transect);
       setSelectedTransect(document.transect);
     });
   }, [docPath, fireStore, initialEmptyState]);
