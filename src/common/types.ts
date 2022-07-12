@@ -36,3 +36,8 @@ export interface ITerrainVert {
   y: number,
   z: number
 }
+
+export interface I3DIpadVert {
+  x: number,
+  y: number
+}

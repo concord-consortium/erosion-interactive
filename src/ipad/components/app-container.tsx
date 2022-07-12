@@ -16,6 +16,8 @@ export const AppContainer = (props: IContainerProps) => {
 
   const [selectedTab, setSelectedTab] = useState<string>("measurement");
   const [screenMode, setScreenMode] = useState<string>("default");
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [cameraDirection, setCameraDirection] = useState<string>("");
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
@@ -44,14 +46,22 @@ export const AppContainer = (props: IContainerProps) => {
     setSelectedTab(e.target.value);
   };
 
+  const handleSelectedLocation: (location: string) => void = location => {
+    setSelectedLocation(location);
+  }
+
+  const handleDirection: (direction: string) => void = direction => {
+    setCameraDirection(direction);
+  }
+
   return (
     <div id="container" className={"app-container"}>
       {screenMode === "fullScreen" && <NavigationBar handleExit={handleFullScreen}/>}
       <Tabs handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
-        <Position selectedBeach={selectedBeach}/> :
-        <Immersive selectedBeach={selectedBeach}/>}
+        <Position selectedBeach={selectedBeach} handleSetSelectedLocation={handleSelectedLocation} handleSetDirection={handleDirection}/> :
+        <Immersive location={selectedLocation} direction={cameraDirection} selectedBeach={selectedBeach}/>}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>
             <FullScreenIcon/>
