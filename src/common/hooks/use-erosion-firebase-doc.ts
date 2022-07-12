@@ -40,7 +40,7 @@ interface IErosionAuthInfo {
 }
 
 const getLocalUserId = () => {
-  let localUserId= localStorage.get('localUserId');
+  let localUserId= localStorage.getItem('localUserId');
   if(!localUserId) {
     localUserId = uuidv4();
     localStorage.setItem('localUserId',localUserId);
@@ -80,27 +80,29 @@ export const useErosionFirebaseDoc = (authoredState: IAuthoredState|null) => {
 
   useEffect(() => {
     if(user) {
-      // If we have accessToken then this is custom Auth from Portal
       if((user as any).accessToken) { // Can show up for custom auth cases
         const accessToken:string  = (user as any).accessToken; // Really
         const claims: ILearnerFireStoreClaims = jwt_decode(accessToken);
         const { class_hash, offering_id, platform_user_id } = claims;
-        const collectionPath = `${rootPath}/${class_hash}/${offering_id}`;
-        setErosionAuthInfo({
-          platformUserId: platform_user_id,
-          collectionPath,
-          documentPath: `${collectionPath}/${platform_user_id}`
-        });
-      }
-      // We are logging in anonymously, create a custom ID and path:
-      else {
-        const platformUserId = getLocalUserId();
-        const collectionPath = `${rootPath}/anonymous/${platformUserId}`;
-        setErosionAuthInfo({
-          platformUserId,
-          collectionPath,
-          documentPath: `${collectionPath}/${platformUserId}`
-        });
+        // platform_user_id indicates that we are logged in from the portal.
+        if(platform_user_id) {
+          const collectionPath = `${rootPath}/${class_hash}/${offering_id}`;
+          setErosionAuthInfo({
+            platformUserId: platform_user_id,
+            collectionPath,
+            documentPath: `${collectionPath}/${platform_user_id}`
+          });
+        }
+        // We are logging in anonymously, create a custom ID and path:
+        else {
+          const platformUserId = getLocalUserId();
+          const collectionPath = `${rootPath}/anonymous/${platformUserId}`;
+          setErosionAuthInfo({
+            platformUserId,
+            collectionPath,
+            documentPath: `${collectionPath}/${platformUserId}`
+          });
+        }
       }
     }
   }, [user]);
