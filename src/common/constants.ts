@@ -27,8 +27,8 @@ for(const x of GridXValues) {
 
 /*** 3D Ipad Grid Vertices ************************/
 
-export const IpadGridXValues = [-15, -5, 5, 15];
-export const IpadGridYValues = [10, 6.66, 3.33, 0, -3.33, -6.66, -10];
+export const IpadGridXValues = [-40, -10, 10, 40];
+export const IpadGridYValues = [40, 25, 10, 0, -10, -25, -40];
 export const IpadGridVerts: I3DIpadVert[] = [];
 
 for (const x of IpadGridXValues){

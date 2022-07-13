@@ -19,8 +19,8 @@ export const AppContainer = (props: IContainerProps) => {
 
   const [selectedTab, setSelectedTab] = useState<string>("measurement");
   const [screenMode, setScreenMode] = useState<string>("default");
-  const [selectedLocation, setSelectedLocation] = useState<string>("A4");
-  const [cameraDirection, setCameraDirection] = useState<string>(SHORELINE);
+  const [selectedLocation, setSelectedLocation] = useState<string>("D1");
+  const [cameraDirection, setCameraDirection] = useState<string>(LAND);
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
