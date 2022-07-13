@@ -45,14 +45,14 @@ export const Immersive = (props: IProps) => {
     <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
-          <PerspectiveCamera ref={cameraRef} makeDefault fov={100} position={[gridLocation.x, 2, gridLocation.y]} near={.1}/>
+          <PerspectiveCamera ref={cameraRef} makeDefault fov={50} position={[gridLocation.x, 2, gridLocation.y]} near={.01} far={1000}/>
           <CameraController gridLocation={gridLocation} direction={direction}/>
           <axesHelper args={[100]} />
           {/* Ruler y-location will depend on whether facing land or beach */}
           <Ruler reference={rulerRef} direction={direction} position={[gridLocation.x, 2, gridLocation.y - 1]}/>
           {/* <Ruler direction={direction} position={[gridLocation.x, 2, gridLocation.y - 5]}/> */}
           <ambientLight />
-          <MeshPanaluu position={[0,0,0]} rotation={[0,0,0]}/>
+          <MeshPanaluu position={[0,0,0]}/>
         </Canvas>
         <div className="controls-overlay">
             {
