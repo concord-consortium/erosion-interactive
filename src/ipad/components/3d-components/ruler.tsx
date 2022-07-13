@@ -12,8 +12,8 @@ export const Ruler = (props: IRulerProps) => {
 
   return (
     <mesh position={position}>
-      <boxGeometry args={[.5, 6, .01]}/>
-      <meshStandardMaterial color={"green"}/>
+      <boxGeometry args={[.25, 3, .01]}/>
+      <meshStandardMaterial color={"brown"}/>
     </mesh>
   )
 }

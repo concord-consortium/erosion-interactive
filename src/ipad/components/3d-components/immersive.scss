@@ -25,7 +25,7 @@
       left: -5%;
       display: flex;
       align-items: center;
-      transform: rotate(90deg);
+      transform: rotate(90deg) scaleX(-1);
       background: $cc-teal-light7;
       border: 1px solid $cc-teal-light4;
       border-radius: 5px;

@@ -25,9 +25,7 @@ export default function Model({ ...props }: JSX.IntrinsicElements["group"]) {
 
   return (
     <group ref={group} {...props} dispose={null}>
-        <mesh name="PunaluuTerrain1" geometry={nodes.PunaluuTerrain1.geometry} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
-          <meshStandardMaterial wireframe/>
-        </mesh>
+        <mesh name="PunaluuTerrain1" geometry={nodes.PunaluuTerrain1.geometry} material={materials.lambert1} rotation={[Math.PI / 2, 0, 0]} scale={0.01}/>
     </group>
   );
 }

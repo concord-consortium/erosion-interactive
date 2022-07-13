@@ -38,9 +38,9 @@ export const Immersive = (props: IProps) => {
     }
   }
 
-  const handleChange = () => {
+  const handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const camera = cameraRef.current;
-    camera?.translateY(1);
+    camera?.position.set(15, Number(e.target.value), -10);
     camera?.updateProjectionMatrix();
   }
 
@@ -51,11 +51,12 @@ export const Immersive = (props: IProps) => {
       <Suspense fallback={<PleaseWait/>}>
         {/*position & rotation of camera will be determined by props*/}
         <Canvas>
-          <PerspectiveCamera ref={cameraRef} makeDefault fov={100} position={[15, 0, -10]} near={.1}/>
+          <PerspectiveCamera ref={cameraRef} makeDefault fov={100} position={[15, 2, -10]} near={.1}/>
           <CameraController gridLocation={gridLocation} direction={direction}/>
           <axesHelper args={[100]} />
           {/*position of ruler will also be determined by props*/}
-          <Ruler direction={direction} position={[-15, 10, -10]}/>
+          <Ruler direction={direction} position={[15, 2, -9]}/>
+          <Ruler direction={direction} position={[15, 2, -5.66]}/>
           {/* if direction is facing land, ruler will be wrapped in transform controls
             <TransformControls>
               <Ruler/>
@@ -65,7 +66,11 @@ export const Immersive = (props: IProps) => {
           <MeshPanaluu position={[0,0,0]} rotation={[0,0,0]}/>
         </Canvas>
         <div className="controls-overlay">
-            {direction === "shoreline" ? <ShoreViewControls handleChange={handleChange}/> : <LandViewControls handleChange={handleChange}/>}
+            {
+              direction === "shoreline" ?
+                <ShoreViewControls handleChange={handleChange}/> :
+                <LandViewControls handleChange={handleChange}/>
+            }
         </div>
       </Suspense>
 
