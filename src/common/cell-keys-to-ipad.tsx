@@ -14,7 +14,7 @@ export const cellToTransectIndx = (cellID: string) => {
 
 // Convert from "0"–"7" to 0-36 for point index
 export const cellToPointIndx = (cellID: string) => {
-  return Number(cellID.slice(0, 1));
+  return Number(cellID.slice(1));
 }
 
 // Convert from "A"–"D" to 15... -15
