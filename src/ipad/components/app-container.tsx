@@ -11,13 +11,16 @@ interface IContainerProps {
   selectedBeach?: string;
 }
 
+const SHORELINE = "shoreline";
+const LAND = "land";
+
 export const AppContainer = (props: IContainerProps) => {
   const selectedBeach = props.selectedBeach;
 
   const [selectedTab, setSelectedTab] = useState<string>("measurement");
   const [screenMode, setScreenMode] = useState<string>("default");
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [cameraDirection, setCameraDirection] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<string>("A4");
+  const [cameraDirection, setCameraDirection] = useState<string>(SHORELINE);
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
