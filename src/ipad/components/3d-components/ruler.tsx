@@ -15,7 +15,6 @@ type GLTFResult = GLTF & {
 
 
 export default function Ruler({ ...props }) {
-  console.log("ruler props", props);
   const { nodes, materials } = useGLTF(rulerFile) as GLTFResult;
 
   return (

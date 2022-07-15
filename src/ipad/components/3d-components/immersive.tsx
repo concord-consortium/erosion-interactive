@@ -1,14 +1,14 @@
 import React, { Ref, Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
+import { PerspectiveCamera } from "@react-three/drei";
 import MeshPanaluu from "./mesh-panaluu";
 import Ruler from "./ruler";
 import { LandViewControls, ShoreViewControls } from "./overlayControls";
 import { CameraController } from "./cameraController";
-
+import { CellKeys} from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
-import { PerspectiveCamera } from "@react-three/drei";
 
 interface IProps {
   selectedBeach?: string;
@@ -35,34 +35,47 @@ export const Immersive = (props: IProps) => {
   const rulerRef = useRef<THREE.Mesh>(null);
 
   const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [cameraLocation, setCameraLocation] = useState<number>(0);
 
   useEffect(() => {
     setSelectedPointInfo(getSelectedLocationData(location));
-
   }, [location])
 
   useEffect(() => {
-    console.log("camera Ref", cameraRef.current);
-  })
+    if (direction === "shoreline") {
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    } else {
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    }
+  }, [location, direction])
+
+  useEffect(() => {
+    if (direction === "shoreline") {
+      const cameraDirection = selectedPointInfo.pointLocation - .5;
+      setCameraLocation(cameraDirection);
+    } else {
+      const cameraDirection = selectedPointInfo.pointLocation + .5;
+      setCameraLocation(cameraDirection);
+    }
+  }, [direction, selectedPointInfo])
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {transectLocation, pointLocation} = selectedPointInfo;
     const camera = cameraRef.current;
-    camera?.position.set(transectLocation, Number(e.target.value), pointLocation);
+    camera?.position.set(transectLocation, Number(e.target.value), pointLocation - .5);
     camera?.updateProjectionMatrix();
-    console.log("Camera", camera);
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {pointLocation} = selectedPointInfo;
     const ruler = rulerRef.current;
-    ruler?.position.set(Number(e.target.value), 2, pointLocation - 1);
+    ruler?.position.set(Number(e.target.value), selectedPointInfo.pointHeight + .5, pointLocation);
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
-
-  // camera={{fov:50, position:[0, 0, 0], rotation:[0, 0, 0], near: .01, far: 1000}}
-  // position={[selectedPointInfo.transectLocation, 5, selectedPointInfo.pointLocation]}
 
   return (
     <div id="immersive" className="canvas-container">
@@ -71,7 +84,7 @@ export const Immersive = (props: IProps) => {
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + 1, selectedPointInfo.pointLocation]}
+            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + 1, cameraLocation]}
             near={.01}
             far={1000}
             makeDefault
@@ -81,12 +94,11 @@ export const Immersive = (props: IProps) => {
             direction={direction}
           />
           <axesHelper args={[100]} />
-          {/* Ruler y-location will depend on whether facing land or beach */}
           <Ruler
             reference={rulerRef}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, selectedPointInfo.pointLocation + .5]}
+            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, selectedPointInfo.pointLocation]}
           />
-          <Ruler position={[selectedPointInfo.transectLocation, 3, selectedPointInfo.pointLocation + 2]}/>
+          <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/>
           <ambientLight />
           <MeshPanaluu/>
         </Canvas>

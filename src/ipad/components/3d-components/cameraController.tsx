@@ -13,8 +13,6 @@ export const CameraController = (props: ICameraControllerProps) => {
   const { gridLocation, direction } = props;
   let y: number;
 
-  console.log("direction", direction);
-
   if (direction === "shoreline") {
     y = 100;
   } else {

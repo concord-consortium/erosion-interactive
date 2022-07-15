@@ -28,7 +28,7 @@ export const ShoreViewControls = (props: IControlProps) => {
 
   return (
       <div className="slider-container shoreline">
-        <input onChange={handleInput} value={cameraHeight} type="range" min={pointHeight} max={pointHeight + 2} className="slider" step="0.10" id="myRange"/>
+        <input onChange={handleInput} value={cameraHeight} type="range" min={pointHeight} max={pointHeight + 2} className="slider" step="0.025" id="myRange"/>
       </div>
   )
 }

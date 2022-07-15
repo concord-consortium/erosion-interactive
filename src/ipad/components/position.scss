@@ -1,49 +1,87 @@
 @import "../../common/vars.scss";
 
-.position-chart {
+.position-container {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  background-color: #F0F9FB;
 
-  .beach-background {
-    height: fit-content;
-  }
-
-  .transects-overlay {
-    width: 100%;
-    height: 100%;
+  .direction {
+    width: 18%;
+    border: 1px solid #93D5E4;
+    border-radius: 10px;
     position: absolute;
-    left: 0;
-    top: 0;
+    top: 5vh;
+    left: 2.5vw;
+    background-color: white;
+    padding: 15px;
+    font-size: 12px;
+
+    select {
+      margin-top: 5px;
+      font-size: 12px;
+    }
   }
 
-  .transect-table {
-    width: 100%;
-    height: 80%;
-    position: relative;
-    top: 17vh;
+  .position-chart {
+    width: 70%;
+    height: 80vh;
+    overflow: hidden;
+    position: absolute;
+    top: 5vh;
+    left: 25vw;
+    border-radius: 15px;
 
-    td {
-      padding: 0px 10%;
+    .ocean {
+      background-color: #93D5E4;
+      height: 20vh;
+    }
 
-      .point-button {
-        border-radius: 25px;
-        padding: 5px;
-        border: 1px solid $cc-teal-light1;
-        background-color: $cc-teal-light5;
-        width: 5vh;
-        height: 5vh;
-        color: $cc-teal-dark2;
-        font-weight: bold;
+    .transects-overlay {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
 
-        &:hover {
-          background-color: $cc-teal-light3;
-        }
-        &:active {
-          background-color: $cc-teal;
-        }
-        &.selected {
-          background-color: $cc-orange-light1;
+    .transect-table {
+      background-color: #FFE6D0;
+      width: 100%;
+      height: 75%;
+      position: relative;
+      top: 20vh;
+
+      td {
+        padding: 0px 10%;
+
+        .point-button {
+          border-radius: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 5px;
+          border: 1px solid $cc-teal-light1;
+          background-color: $cc-teal-light5;
+          width: 4vh;
+          height: 4vh;
+          color: $cc-teal-dark2;
+          font-weight: bold;
+
+          &:disabled {
+            opacity: 50%;
+            background-color: $cc-charcoal-light1;
+          }
+
+          &:hover {
+            background-color: $cc-teal-light3;
+          }
+          &:active {
+            background-color: $cc-teal;
+          }
+          &.selected {
+            border: 1px solid $cc-orange-light1;
+            background-color: $cc-orange-light1;
+          }
         }
       }
     }

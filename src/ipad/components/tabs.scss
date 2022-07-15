@@ -20,12 +20,23 @@
     color: $cc-teal-dark2;
     font-weight: bold;
 
+    span {
+      pointer-events: none;
+    }
+
+    svg {
+      pointer-events: none;
+    }
+
+    &:disabled {
+      opacity: 50%;
+    }
+
     .vertical {
       writing-mode: vertical-lr;
       transform: rotate(180deg);
     }
   }
-
   .measurement {
     background-color: $cc-teal-light6;
   }

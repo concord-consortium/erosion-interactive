@@ -5,8 +5,7 @@ import { hawaiiData, transectPointPositions } from "./hawaii-transect-data";
 
 export const getSelectedLocationData = (cellID: string) => {
   const pointIdx = cellToPointIndx(cellID);
-  const transect = "A";
-  // const transect: string = cellID[0];
+  const transect: string = cellID[0];
 
   const transectLocation = hawaiiData[transect].x;
   const pointLocation = transectPointPositions[pointIdx];

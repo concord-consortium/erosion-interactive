@@ -21,8 +21,6 @@ export default function Model({ ...props }: JSX.IntrinsicElements["group"]) {
   const group = React.useRef<THREE.Group>() as React.RefObject<THREE.Group>;
   const { nodes, materials } = useGLTF(meshFile) as GLTFResult;
 
-  console.log("punaluu ref", group);
-
   return (
     <group ref={group} {...props} dispose={null}>
         <mesh name="PunaluuTerrain1"  geometry={nodes.PunaluuTerrain1.geometry} material={materials.lambert1} rotation={[(90 * Math.PI /180), 0, 0]} scale={0.01}/>
