@@ -1,20 +1,34 @@
 import React from "react";
+import { useGLTF } from "@react-three/drei";
+import { GLTF } from "three-stdlib";
+import rulerFile from "../../assets/3d-assets/ruler-1m.glb";
 
-interface IRulerProps {
-  position: [x: number, y: number, z: number];
-  direction: string;
-  reference?: React.RefObject<THREE.Mesh>|null;
+type GLTFResult = GLTF & {
+  nodes: {
+    Ruler_0: THREE.Mesh
+  }
+  materials: {
+    Material: THREE.MeshStandardMaterial
+    "Ruler_Mat.002": THREE.MeshStandardMaterial
+  }
 }
 
-export const Ruler = (props: IRulerProps) => {
-  const {position, direction, reference} = props;
 
-  // direction props will determine texture applied (ruler view or plain stick)
+export default function Ruler({ ...props }) {
+  console.log("ruler props", props);
+  const { nodes, materials } = useGLTF(rulerFile) as GLTFResult;
 
   return (
-    <mesh position={position} ref={reference}>
-      <boxGeometry args={[.25, 3, .01]}/>
-      <meshStandardMaterial color={"brown"}/>
-    </mesh>
-  )
+    <group ref={props.reference} {...props} dispose={null}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Ruler_0.geometry}
+        material={materials["Ruler_Mat.002"]}
+        rotation={[Math.PI / 2, 0, Math.PI / 2]}
+      />
+    </group>
+  );
 }
+
+useGLTF.preload("/ruler-1m.glb");
