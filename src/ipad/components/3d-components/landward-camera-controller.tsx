@@ -12,6 +12,7 @@ export const LandwardCameraController = (props: ILandwardCameraController) => {
 
   useEffect(
     () => {
+      // camera.lookAt(0, 0, 100)
       camera.position.set(rulerCameraLocation.transectLocation, rulerCameraLocation.pointHeight, rulerCameraLocation.pointLocation);
       camera.updateProjectionMatrix();
     },

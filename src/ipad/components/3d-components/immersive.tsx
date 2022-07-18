@@ -37,11 +37,22 @@ export const Immersive = (props: IProps) => {
 
   const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [rulerCameraLocation, setRulerCameraLocation] = useState<ISelectedPointInformation>(selectedPointInfo);
   const [cameraLocation, setCameraLocation] = useState<number>(0);
 
   useEffect(() => {
-    setSelectedPointInfo(getSelectedLocationData(location));
+    const {transectLocation, pointHeight, pointLocation} = getSelectedLocationData(location);
+    setSelectedPointInfo({transectLocation, pointHeight, pointLocation});
+
+    const rulerInfo = {
+      transectLocation,
+      pointLocation: pointLocation - .5,
+      pointHeight: pointHeight + .5,
+    };
+
+    setRulerCameraLocation(rulerInfo);
   }, [location])
+
 
   useEffect(() => {
     if (direction === "seaward") {
@@ -71,9 +82,10 @@ export const Immersive = (props: IProps) => {
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {pointLocation, pointHeight} = selectedPointInfo;
+    const {pointHeight, pointLocation} = selectedPointInfo;
     const ruler = rulerRef.current;
     ruler?.position.set(Number(e.target.value), pointHeight + .5, pointLocation);
+    setRulerCameraLocation({transectLocation: Number(e.target.value), pointHeight: pointHeight + .5, pointLocation: pointLocation - 25});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -85,20 +97,25 @@ export const Immersive = (props: IProps) => {
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + 1, cameraLocation]}
+            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, cameraLocation]}
             near={.01}
             far={1000}
             makeDefault
           />
-          <SeawardCameraController
-            gridLocation={selectedPointInfo}
-          />
-          <axesHelper args={[100]} />
+          { direction === "seaward" ?
+            <SeawardCameraController
+              gridLocation={selectedPointInfo}
+            /> :
+            <LandwardCameraController
+              rulerCameraLocation={rulerCameraLocation}
+            />
+          }
+          <axesHelper args={[1000]}/>
           <Ruler
             reference={rulerRef}
             position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, selectedPointInfo.pointLocation]}
           />
-          <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/>
+          {/* <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/> */}
           <ambientLight />
           <MeshPanaluu/>
         </Canvas>

@@ -17,6 +17,8 @@ type GLTFResult = GLTF & {
 export default function Ruler({ ...props }) {
   const { nodes, materials } = useGLTF(rulerFile) as GLTFResult;
 
+  console.log("ruler position", props.position);
+
   return (
     <group ref={props.reference} {...props} dispose={null}>
       <mesh
