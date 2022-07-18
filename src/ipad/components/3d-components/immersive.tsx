@@ -44,35 +44,35 @@ export const Immersive = (props: IProps) => {
 
   useEffect(() => {
     if (direction === "shoreline") {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     } else {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     }
   }, [location, direction])
 
   useEffect(() => {
     if (direction === "shoreline") {
-      const cameraDirection = selectedPointInfo.pointLocation - .5;
+      const cameraDirection = selectedPointInfo.pointLocation + .5;
       setCameraLocation(cameraDirection);
     } else {
-      const cameraDirection = selectedPointInfo.pointLocation + .5;
+      const cameraDirection = selectedPointInfo.pointLocation - .5;
       setCameraLocation(cameraDirection);
     }
   }, [direction, selectedPointInfo])
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {transectLocation, pointLocation} = selectedPointInfo;
+    const {transectLocation} = selectedPointInfo;
     const camera = cameraRef.current;
-    camera?.position.set(transectLocation, Number(e.target.value), pointLocation - .5);
+    camera?.position.set(transectLocation, Number(e.target.value), cameraLocation);
     camera?.updateProjectionMatrix();
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {pointLocation} = selectedPointInfo;
+    const {pointLocation, pointHeight} = selectedPointInfo;
     const ruler = rulerRef.current;
-    ruler?.position.set(Number(e.target.value), selectedPointInfo.pointHeight + .5, pointLocation);
+    ruler?.position.set(Number(e.target.value), pointHeight + .5, pointLocation);
   }
 
   const PleaseWait = () => <div>Please wait...</div>;

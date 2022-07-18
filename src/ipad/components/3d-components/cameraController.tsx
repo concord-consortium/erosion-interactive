@@ -14,9 +14,9 @@ export const CameraController = (props: ICameraControllerProps) => {
   let y: number;
 
   if (direction === "shoreline") {
-    y = 100;
-  } else {
     y = -100;
+  } else {
+    y = 100;
   }
 
   useEffect(
