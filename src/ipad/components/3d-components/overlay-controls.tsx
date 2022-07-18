@@ -27,7 +27,7 @@ export const ShoreViewControls = (props: IControlProps) => {
   }
 
   return (
-      <div className="slider-container shoreline">
+      <div className="slider-container seaward">
         <input onChange={handleInput} value={cameraHeight} type="range" min={pointHeight} max={pointHeight + 2} className="slider" step="0.025" id="myRange"/>
       </div>
   )
@@ -48,7 +48,7 @@ export const LandViewControls = (props: ILandControlProps) => {
   }
 
   return (
-    <div className="slider-container land">
+    <div className="slider-container landward">
         <input onChange={handleInput} type="range" value={xValue} min={transectLocation - 1} max={transectLocation + 1} className="slider" step="0.10" id="myLandRange"/>
     </div>
   )

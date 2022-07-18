@@ -11,9 +11,6 @@ interface IContainerProps {
   selectedBeach?: string;
 }
 
-const SHORELINE = "shoreline";
-const LAND = "land";
-
 export const AppContainer = (props: IContainerProps) => {
   const selectedBeach = props.selectedBeach;
 

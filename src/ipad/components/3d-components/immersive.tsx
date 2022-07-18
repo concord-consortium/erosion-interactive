@@ -1,10 +1,11 @@
-import React, { Ref, Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import MeshPanaluu from "./mesh-panaluu";
 import Ruler from "./ruler";
-import { LandViewControls, ShoreViewControls } from "./overlayControls";
-import { CameraController } from "./cameraController";
+import { LandViewControls, ShoreViewControls } from "./overlay-controls";
+import { SeawardCameraController } from "./seaward-camera-controller";
+import { LandwardCameraController } from "./landward-camera-controller";
 import { CellKeys} from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
@@ -43,7 +44,7 @@ export const Immersive = (props: IProps) => {
   }, [location])
 
   useEffect(() => {
-    if (direction === "shoreline") {
+    if (direction === "seaward") {
       const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     } else {
@@ -53,7 +54,7 @@ export const Immersive = (props: IProps) => {
   }, [location, direction])
 
   useEffect(() => {
-    if (direction === "shoreline") {
+    if (direction === "seaward") {
       const cameraDirection = selectedPointInfo.pointLocation + .5;
       setCameraLocation(cameraDirection);
     } else {
@@ -89,9 +90,8 @@ export const Immersive = (props: IProps) => {
             far={1000}
             makeDefault
           />
-          <CameraController
+          <SeawardCameraController
             gridLocation={selectedPointInfo}
-            direction={direction}
           />
           <axesHelper args={[100]} />
           <Ruler
@@ -104,7 +104,7 @@ export const Immersive = (props: IProps) => {
         </Canvas>
         <div className="controls-overlay">
             {
-              direction === "shoreline" ?
+              direction === "seaward" ?
                 <ShoreViewControls handleChange={handleCameraMovement} selectedPointInfo={selectedPointInfo}/> :
                 <LandViewControls selectedPointInfo={selectedPointInfo} handleChange={handleRulerMovement}/>
             }

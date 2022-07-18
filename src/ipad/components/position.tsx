@@ -39,8 +39,8 @@ export const Position = (props: IPositionProps) => {
         You are facing:
         <select disabled={!selectedLocation} value={direction || "DEFAULT"} onChange={handleSelect}>
           <option value="DEFAULT" disabled>Choose a direction...</option>
-          <option disabled={selectedLocation[1] === "7"} value="shoreline">Seaward</option>
-          <option disabled={selectedLocation[1] === "1"} value="land">Landward</option>
+          <option disabled={selectedLocation[1] === "7"} value="seaward">Seaward</option>
+          <option disabled={selectedLocation[1] === "1"} value="landward">Landward</option>
         </select>
       </div>
       <div className="position-chart">

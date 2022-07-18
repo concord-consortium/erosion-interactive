@@ -18,12 +18,12 @@
     top: 0;
     left: 0;
 
-    .shoreline {
+    .seaward {
       transform: rotate(90deg) scaleX(-1);
       top: calc(45vh);
     }
 
-    .land {
+    .landward {
       top: calc(80vh);
       left: calc(50% - 100px);
     }
