@@ -42,7 +42,7 @@ test('transectIndex returns 0-6 for 1-7', () => {
 test('cellToTerrainVert returns vertex for mesh', ()=> {
   // To verify these values look at `constants.ts`
   expect(cellToTerrainVert("A1", 10))
-    .toEqual({x:-40, y:6, z:10});
+    .toEqual({x:-40, y:-6, z:10});
 
   // Generally:
   const cellValue = 10;
@@ -50,10 +50,10 @@ test('cellToTerrainVert returns vertex for mesh', ()=> {
     .toEqual({x:GridXValues[0], y:GridYValues[0], z:cellValue});
 
   expect(cellToTerrainVert("A2", 10))
-    .toEqual({x:-40, y:4, z:10});
+    .toEqual({x:-40, y:-4, z:10});
 
   expect(cellToTerrainVert("A3", 10))
-    .toEqual({x:-40, y:2, z:10});
+    .toEqual({x:-40, y:-2, z:10});
 
   expect(cellToTerrainVert("A4", 10))
     .toEqual({x:-40, y:0, z:10});
@@ -66,9 +66,9 @@ test(`erosionDataToVerts, returns geometry verts for cell records`, () => {
 
   // Z is set by the student cell values
   // from our cells collection above
-  expect(verts[0].z).toEqual(0);
-  expect(verts[4].z).toEqual(1);
-  expect(verts[8].z).toEqual(2);
+  expect(verts[24].z).toEqual(0);
+  expect(verts[20].z).toEqual(1);
+  expect(verts[16].z).toEqual(2);
 
   // X is set by looking up values from GridXValues
   expect(verts[0].x).toEqual(-40);

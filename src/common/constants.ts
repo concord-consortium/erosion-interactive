@@ -16,7 +16,7 @@ for(const letter of Transects) {
 /*** Terrain Grid Vertices *************************/
 
 export const GridXValues = [-40, -20, 0, 20];
-export const GridYValues = [6, 4, 2, 0, -2, -4, -6];
+export const GridYValues = [-6, -4, -2, 0, 2, 4, 6];
 export const GridVerts: ITerrainVert[] = [];
 
 for(const x of GridXValues) {

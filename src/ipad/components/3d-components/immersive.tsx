@@ -1,19 +1,31 @@
-import React, { Ref, Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
+import { PerspectiveCamera } from "@react-three/drei";
 import MeshPanaluu from "./mesh-panaluu";
-import { Ruler } from "./ruler";
-import { LandViewControls, ShoreViewControls } from "./overlayControls";
-import { CameraController } from "./cameraController";
-
-import { translateCellKeyToGridPosition } from "../../../common/cell-keys-to-ipad";
+import Ruler from "./ruler";
+import { LandViewControls, ShoreViewControls } from "./overlay-controls";
+import { CameraController } from "./camera-controller";
+import { CellKeys} from "../../../common/constants";
+import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
-import { PerspectiveCamera } from "@react-three/drei";
 
 interface IProps {
   selectedBeach?: string;
   location: string;
   direction: string;
+}
+
+export interface ISelectedPointInformation {
+  x: number,
+  z: number,
+  y: number
+}
+
+const defaultState: ISelectedPointInformation = {
+  x: 0,
+  z: 0,
+  y: 0
 }
 
 export const Immersive = (props: IProps) => {
@@ -22,21 +34,46 @@ export const Immersive = (props: IProps) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rulerRef = useRef<THREE.Mesh>(null);
 
-  const [gridLocation, setGridLocation] = useState<any>({x: 0, y: 0});
+  const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
 
   useEffect(() => {
-    setGridLocation(translateCellKeyToGridPosition(location));
+    setSelectedPointInfo(getSelectedLocationData(location));
   }, [location])
 
+
+  useEffect(() => {
+    if (direction === "seaward") {
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    } else {
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    }
+  }, [location, direction])
+
+  useEffect(() => {
+    if (direction === "seaward") {
+      const cameraZ = selectedPointInfo.z + 1;
+      setDefaultCameraZ(cameraZ);
+    } else {
+      const cameraZ = selectedPointInfo.z - 1;
+      setDefaultCameraZ(cameraZ);
+    }
+  }, [direction, selectedPointInfo])
+
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
+    const {x} = selectedPointInfo;
     const camera = cameraRef.current;
-    camera?.position.set(gridLocation.x, Number(e.target.value), gridLocation.y);
+    camera?.position.set(x, Number(e.target.value), defaultCameraZ);
     camera?.updateProjectionMatrix();
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
+    const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current;
-    ruler?.position.set(Number(e.target.value), 2, gridLocation.y - 1);
+    ruler?.position.set(Number(e.target.value), y + .5, z);
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -45,25 +82,34 @@ export const Immersive = (props: IProps) => {
     <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
-          <PerspectiveCamera ref={cameraRef} makeDefault fov={100} position={[gridLocation.x, 2, gridLocation.y]} near={.1}/>
-          <CameraController gridLocation={gridLocation} direction={direction}/>
-          <axesHelper args={[100]} />
-          {/* Ruler y-location will depend on whether facing land or beach */}
-          <Ruler reference={rulerRef} direction={direction} position={[gridLocation.x, 2, gridLocation.y - 1]}/>
-          {/* <Ruler direction={direction} position={[gridLocation.x, 2, gridLocation.y - 5]}/> */}
+          <PerspectiveCamera
+            ref={cameraRef}
+            fov={50}
+            position={[selectedPointInfo.x, selectedPointInfo.y + .5, defaultCameraZ]}
+            near={.01}
+            far={1000}
+            makeDefault
+          />
+          <CameraController
+            gridLocation={selectedPointInfo}
+            direction={direction}
+          />
+          <Ruler
+            reference={rulerRef}
+            position={[selectedPointInfo.x, selectedPointInfo.y + .5, selectedPointInfo.z]}
+          />
+          <Ruler position={[nextRulerInfo.x, nextRulerInfo.y + .5, nextRulerInfo.z]}/>
           <ambientLight />
-          <MeshPanaluu position={[0,0,0]} rotation={[0,0,0]}/>
+          <MeshPanaluu/>
         </Canvas>
         <div className="controls-overlay">
             {
-              direction === "shoreline" ?
-                <ShoreViewControls handleChange={handleCameraMovement}/> :
-                <LandViewControls gridLocation={gridLocation} handleChange={handleRulerMovement}/>
+              direction === "seaward" ?
+                <ShoreViewControls handleChange={handleCameraMovement} selectedPointInfo={selectedPointInfo}/> :
+                <LandViewControls selectedPointInfo={selectedPointInfo} handleChange={handleRulerMovement}/>
             }
         </div>
       </Suspense>
-
     </div>
-
   );
 };

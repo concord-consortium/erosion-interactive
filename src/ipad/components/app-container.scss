@@ -25,15 +25,15 @@
     z-index: 100;
     position: relative;
     left: calc(93%);
-    bottom: calc(8%);
-    border: 2px solid $cc-teal-dark2;
-    background-color: $cc-teal-light4;
+    bottom: calc(6%);
+    border: 2px solid $cc-teal-dark1;
+    background-color: $cc-teal-light5;
     border-radius: 2px;
     width: fit-content;
     padding-top: 4px;
 
     svg {
-      fill: $cc-teal-dark2;
+      fill: $cc-teal-dark1;
       width: 15px;
     }
   }

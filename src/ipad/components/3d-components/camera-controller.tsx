@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
+import { ISelectedPointInformation } from "./immersive";
 
 interface ICameraControllerProps {
-  gridLocation: {x: number, y: number}
+  gridLocation: ISelectedPointInformation;
   direction: string;
 }
 
@@ -11,17 +12,18 @@ export const CameraController = (props: ICameraControllerProps) => {
   const { gridLocation, direction } = props;
   let y: number;
 
-  if (direction === "shoreline") {
-    y = 100;
-  } else {
+  if (direction === "seaward") {
     y = -100;
+  } else {
+    y = 100;
   }
 
   useEffect(
     () => {
-      camera.lookAt(gridLocation.x, 1, y)
+      camera.lookAt(gridLocation.x, 0, y);
+      camera.updateProjectionMatrix();
     },
-    [camera, gl, gridLocation, y]
+    [camera, gl, gridLocation, direction, y]
   );
 
   return null;

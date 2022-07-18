@@ -11,16 +11,13 @@ interface IContainerProps {
   selectedBeach?: string;
 }
 
-const SHORELINE = "shoreline";
-const LAND = "land";
-
 export const AppContainer = (props: IContainerProps) => {
   const selectedBeach = props.selectedBeach;
 
-  const [selectedTab, setSelectedTab] = useState<string>("measurement");
+  const [selectedTab, setSelectedTab] = useState<string>("position");
   const [screenMode, setScreenMode] = useState<string>("default");
-  const [selectedLocation, setSelectedLocation] = useState<string>("D1");
-  const [cameraDirection, setCameraDirection] = useState<string>(LAND);
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [direction, setDirection] = useState<string>("");
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
@@ -46,6 +43,8 @@ export const AppContainer = (props: IContainerProps) => {
   }
 
   const handleClick: (event: React.ChangeEvent<HTMLButtonElement>) => void = e => {
+    console.log("e.target.value from clicking on tab", e.target.value);
+    console.log(e.target.value, selectedTab);
     setSelectedTab(e.target.value);
   };
 
@@ -53,18 +52,28 @@ export const AppContainer = (props: IContainerProps) => {
     setSelectedLocation(location);
   }
 
-  const handleDirection: (direction: string) => void = direction => {
-    setCameraDirection(direction);
+  const handleSetDirection: (d: string) => void = d => {
+    setDirection(d);
   }
 
   return (
     <div id="container" className={"app-container"}>
       {screenMode === "fullScreen" && <NavigationBar handleExit={handleFullScreen}/>}
-      <Tabs handleClick={handleClick}/>
+      <Tabs selectedLocation={selectedLocation} selectedDirection={direction} handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
-        <Position selectedBeach={selectedBeach} handleSetSelectedLocation={handleSelectedLocation} handleSetDirection={handleDirection}/> :
-        <Immersive location={selectedLocation} direction={cameraDirection} selectedBeach={selectedBeach}/>}
+        <Position
+          selectedBeach={selectedBeach}
+          selectedLocation={selectedLocation}
+          direction={direction}
+          handleSetSelectedLocation={handleSelectedLocation}
+          handleSetDirection={handleSetDirection}
+        /> :
+        <Immersive
+          location={selectedLocation}
+          direction={direction}
+          selectedBeach={selectedBeach}
+        />}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>
             <FullScreenIcon/>
