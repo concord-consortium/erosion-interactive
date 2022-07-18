@@ -12,7 +12,7 @@ export const SeawardCameraController = (props: ICameraControllerProps) => {
 
   useEffect(
     () => {
-      camera.lookAt(gridLocation.transectLocation, 0, -100);
+      camera.lookAt(gridLocation.transectLocation, 0, 100);
       camera.updateProjectionMatrix();
     },
     [camera, gl, gridLocation]

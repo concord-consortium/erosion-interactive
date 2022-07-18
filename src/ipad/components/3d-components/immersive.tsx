@@ -37,47 +37,52 @@ export const Immersive = (props: IProps) => {
 
   const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
-  const [rulerCameraLocation, setRulerCameraLocation] = useState<ISelectedPointInformation>(selectedPointInfo);
-  const [cameraLocation, setCameraLocation] = useState<number>(0);
+  const [landwardCameraLocation, setLandwardCameraLocation] = useState<ISelectedPointInformation>(selectedPointInfo);
+  const [defaultCameraLocation, setDefaultCameraLocation] = useState<number>(0);
 
   useEffect(() => {
-    const {transectLocation, pointHeight, pointLocation} = getSelectedLocationData(location);
-    setSelectedPointInfo({transectLocation, pointHeight, pointLocation});
-
-    const rulerInfo = {
-      transectLocation,
-      pointLocation: pointLocation - .5,
-      pointHeight: pointHeight + .5,
-    };
-
-    setRulerCameraLocation(rulerInfo);
+    setSelectedPointInfo(getSelectedLocationData(location));
   }, [location])
+
+  useEffect(() => {
+    if (direction === "landward"){
+      const {transectLocation, pointHeight, pointLocation} = getSelectedLocationData(location);
+
+      const landwardCameraPosition = {
+        transectLocation,
+        pointHeight: pointHeight + .5,
+        pointLocation: pointLocation + 1,
+      };
+
+      setLandwardCameraLocation(landwardCameraPosition);
+    }
+  }, [location, direction])
 
 
   useEffect(() => {
     if (direction === "seaward") {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     } else {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     }
   }, [location, direction])
 
   useEffect(() => {
     if (direction === "seaward") {
-      const cameraDirection = selectedPointInfo.pointLocation + .5;
-      setCameraLocation(cameraDirection);
+      const cameraZ = selectedPointInfo.pointLocation - 1;
+      setDefaultCameraLocation(cameraZ);
     } else {
-      const cameraDirection = selectedPointInfo.pointLocation - .5;
-      setCameraLocation(cameraDirection);
+      const cameraZ = selectedPointInfo.pointLocation + 1;
+      setDefaultCameraLocation(cameraZ);
     }
   }, [direction, selectedPointInfo])
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {transectLocation} = selectedPointInfo;
     const camera = cameraRef.current;
-    camera?.position.set(transectLocation, Number(e.target.value), cameraLocation);
+    camera?.position.set(transectLocation, Number(e.target.value), defaultCameraLocation);
     camera?.updateProjectionMatrix();
   }
 
@@ -85,7 +90,7 @@ export const Immersive = (props: IProps) => {
     const {pointHeight, pointLocation} = selectedPointInfo;
     const ruler = rulerRef.current;
     ruler?.position.set(Number(e.target.value), pointHeight + .5, pointLocation);
-    setRulerCameraLocation({transectLocation: Number(e.target.value), pointHeight: pointHeight + .5, pointLocation: pointLocation - 25});
+    setLandwardCameraLocation({transectLocation: Number(e.target.value), pointHeight: pointHeight + .5, pointLocation: pointLocation + 1});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -97,7 +102,7 @@ export const Immersive = (props: IProps) => {
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, cameraLocation]}
+            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, defaultCameraLocation]}
             near={.01}
             far={1000}
             makeDefault
@@ -107,7 +112,7 @@ export const Immersive = (props: IProps) => {
               gridLocation={selectedPointInfo}
             /> :
             <LandwardCameraController
-              rulerCameraLocation={rulerCameraLocation}
+              rulerCameraLocation={landwardCameraLocation}
             />
           }
           <axesHelper args={[1000]}/>
@@ -115,7 +120,7 @@ export const Immersive = (props: IProps) => {
             reference={rulerRef}
             position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, selectedPointInfo.pointLocation]}
           />
-          {/* <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/> */}
+          <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/>
           <ambientLight />
           <MeshPanaluu/>
         </Canvas>

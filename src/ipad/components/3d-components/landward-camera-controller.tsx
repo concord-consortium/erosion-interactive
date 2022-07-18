@@ -10,9 +10,10 @@ export const LandwardCameraController = (props: ILandwardCameraController) => {
   const { camera, gl } = useThree();
   const { rulerCameraLocation } = props;
 
+  console.log("I am landward camera controller, here is my props ", rulerCameraLocation );
+
   useEffect(
     () => {
-      // camera.lookAt(0, 0, 100)
       camera.position.set(rulerCameraLocation.transectLocation, rulerCameraLocation.pointHeight, rulerCameraLocation.pointLocation);
       camera.updateProjectionMatrix();
     },
