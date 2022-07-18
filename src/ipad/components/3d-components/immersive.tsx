@@ -2,10 +2,11 @@ import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import MeshPanaluu from "./mesh-panaluu";
-import Ruler from "./ruler";
+import Water from "./water";
+import { Rulers } from "./rulers";
 import { LandViewControls, ShoreViewControls } from "./overlay-controls";
 import { CameraController } from "./camera-controller";
-import { CellKeys} from "../../../common/constants";
+import { CellKeys } from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
@@ -72,7 +73,7 @@ export const Immersive = (props: IProps) => {
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {y, z} = selectedPointInfo;
-    const ruler = rulerRef.current;
+    const ruler = rulerRef.current!;
     ruler?.position.set(Number(e.target.value), y + .5, z);
   }
 
@@ -82,6 +83,7 @@ export const Immersive = (props: IProps) => {
     <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
+          <ambientLight />
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
@@ -94,13 +96,14 @@ export const Immersive = (props: IProps) => {
             gridLocation={selectedPointInfo}
             direction={direction}
           />
-          <Ruler
+          <Rulers
+            direction={direction}
+            primaryRulerLocation={selectedPointInfo}
+            secondaryRulerLocation={nextRulerInfo}
             reference={rulerRef}
-            position={[selectedPointInfo.x, selectedPointInfo.y + .5, selectedPointInfo.z]}
           />
-          <Ruler position={[nextRulerInfo.x, nextRulerInfo.y + .5, nextRulerInfo.z]}/>
-          <ambientLight />
           <MeshPanaluu/>
+          <Water/>
         </Canvas>
         <div className="controls-overlay">
             {
