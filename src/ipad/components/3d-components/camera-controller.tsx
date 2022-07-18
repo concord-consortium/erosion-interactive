@@ -20,7 +20,7 @@ export const CameraController = (props: ICameraControllerProps) => {
 
   useEffect(
     () => {
-      camera.lookAt(gridLocation.transectLocation, 0, y);
+      camera.lookAt(gridLocation.x, 0, y);
       camera.updateProjectionMatrix();
     },
     [camera, gl, gridLocation, direction, y]

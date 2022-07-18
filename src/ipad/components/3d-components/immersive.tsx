@@ -17,15 +17,15 @@ interface IProps {
 }
 
 export interface ISelectedPointInformation {
-  transectLocation: number,
-  pointLocation: number,
-  pointHeight: number
+  x: number,
+  z: number,
+  y: number
 }
 
 const defaultState: ISelectedPointInformation = {
-  transectLocation: 0,
-  pointLocation: 0,
-  pointHeight: 0
+  x: 0,
+  z: 0,
+  y: 0
 }
 
 export const Immersive = (props: IProps) => {
@@ -36,7 +36,7 @@ export const Immersive = (props: IProps) => {
 
   const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
-  const [defaultCameraLocation, setDefaultCameraLocation] = useState<number>(0);
+  const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
 
   useEffect(() => {
     setSelectedPointInfo(getSelectedLocationData(location));
@@ -55,25 +55,25 @@ export const Immersive = (props: IProps) => {
 
   useEffect(() => {
     if (direction === "seaward") {
-      const cameraZ = selectedPointInfo.pointLocation + 1;
-      setDefaultCameraLocation(cameraZ);
+      const cameraZ = selectedPointInfo.z + 1;
+      setDefaultCameraZ(cameraZ);
     } else {
-      const cameraZ = selectedPointInfo.pointLocation - 1;
-      setDefaultCameraLocation(cameraZ);
+      const cameraZ = selectedPointInfo.z - 1;
+      setDefaultCameraZ(cameraZ);
     }
   }, [direction, selectedPointInfo])
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {transectLocation} = selectedPointInfo;
+    const {x} = selectedPointInfo;
     const camera = cameraRef.current;
-    camera?.position.set(transectLocation, Number(e.target.value), defaultCameraLocation);
+    camera?.position.set(x, Number(e.target.value), defaultCameraZ);
     camera?.updateProjectionMatrix();
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {pointHeight, pointLocation} = selectedPointInfo;
+    const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current;
-    ruler?.position.set(Number(e.target.value), pointHeight + .5, pointLocation);
+    ruler?.position.set(Number(e.target.value), y + .5, z);
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -85,7 +85,7 @@ export const Immersive = (props: IProps) => {
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, defaultCameraLocation]}
+            position={[selectedPointInfo.x, selectedPointInfo.y + .5, defaultCameraZ]}
             near={.01}
             far={1000}
             makeDefault
@@ -94,12 +94,11 @@ export const Immersive = (props: IProps) => {
             gridLocation={selectedPointInfo}
             direction={direction}
           />
-          <axesHelper args={[1000]}/>
           <Ruler
             reference={rulerRef}
-            position={[selectedPointInfo.transectLocation, selectedPointInfo.pointHeight + .5, selectedPointInfo.pointLocation]}
+            position={[selectedPointInfo.x, selectedPointInfo.y + .5, selectedPointInfo.z]}
           />
-          <Ruler position={[nextRulerInfo.transectLocation, nextRulerInfo.pointHeight + .5, nextRulerInfo.pointLocation]}/>
+          <Ruler position={[nextRulerInfo.x, nextRulerInfo.y + .5, nextRulerInfo.z]}/>
           <ambientLight />
           <MeshPanaluu/>
         </Canvas>
@@ -111,8 +110,6 @@ export const Immersive = (props: IProps) => {
             }
         </div>
       </Suspense>
-
     </div>
-
   );
 };

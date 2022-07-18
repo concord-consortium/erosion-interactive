@@ -6,10 +6,10 @@ export const getSelectedLocationData = (cellID: string) => {
   const pointIdx = cellToPointIndx(cellID);
   const transect: string = cellID[0];
 
-  const transectLocation = hawaiiData[transect].x;
-  const pointLocation = transectPointPositions[pointIdx];
-  const pointHeight = hawaiiData[transect].heights[pointIdx]
-  return {transectLocation, pointLocation, pointHeight}
+  const x = hawaiiData[transect].x;
+  const z = transectPointPositions[pointIdx];
+  const y = hawaiiData[transect].heights[pointIdx]
+  return {x, z, y}
 }
 
 
