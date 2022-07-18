@@ -67,7 +67,7 @@ export const Terrain = (props: TerrainProps) => {
     const side = getRef(type).current!;
     const sidePosArray = getPositionArray(side);
 
-    const sideSpecificData = type === "right" ?  getData("x", -40) : type === "left" ? getData("x", 20) : getData("y", 6);
+    const sideSpecificData = type === "right" ?  getData("x", -40) : type === "left" ? getData("x", 20) : getData("y", -6);
 
     for (let i = 0; i < sideSpecificData.length; i++){
       sidePosArray[i * 3 + 1] = sideSpecificData[i].z;
@@ -88,17 +88,18 @@ export const Terrain = (props: TerrainProps) => {
 
   const setWaterElevation = () => {
     const waterArray = getPositionArray(waterRef.current!);
-    const waterData = getData("y", -6);
+    const waterData = getData("y", 6);
 
-    for (let i = 0; i < waterData.length; i++){
-      waterArray[i * 3 + 2] = waterData[i].z - .5;
-    }
+    waterArray[14] = waterData[0].z - .5;
+    waterArray[17] = waterData[1].z - .5;
+    waterArray[20] = waterData[2].z - .5;
+    waterArray[23] = waterData[3].z - .5;
 
     const waterRightSideArray = getPositionArray(waterRightSideRef.current!);
-    waterRightSideArray[1] = waterData[0].z;
+    waterRightSideArray[4] = waterData[0].z;
 
     const waterLeftSideArray = getPositionArray(waterLeftSideRef.current!);
-    waterLeftSideArray[1] = waterData[3].z;
+    waterLeftSideArray[4] = waterData[3].z;
 
     waterRef.current!.attributes.position.needsUpdate = true;
     waterRightSideRef.current!.attributes.position.needsUpdate = true;
@@ -111,12 +112,12 @@ export const Terrain = (props: TerrainProps) => {
       {renderPlane([0, 0, 0], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength, gridWidth, gridLength], sandTexture, beachTerrainRef)}
       {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef!)}
       {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, leftSideRef, THREE.BackSide)}
-      {renderPlane([0, 0, -terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef, THREE.BackSide)}
+      {renderPlane([0, 0, terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef)}
 
-      {renderPlane([0, .5, 9], [-Math.PI / 2, 0, 0], [terrainWidth, waterLength, gridWidth], waterTexture, waterRef)};
-      {renderPlane([-terrainWidth / 2, 0, 9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterRightSideRef)};
-      {renderPlane([terrainWidth / 2, 0, 9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterLeftSideRef, THREE.BackSide)}
-      {renderPlane([0, 0, 11], [0, 0, 0], [terrainWidth, 1], waterTexture)}
+      {renderPlane([0, .5, -9], [-Math.PI / 2, 0, 0], [terrainWidth, waterLength, gridWidth], waterTexture, waterRef)};
+      {renderPlane([-terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterRightSideRef)};
+      {renderPlane([terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterLeftSideRef, THREE.BackSide)}
+      {renderPlane([0, 0, -11], [0, 0, 0], [terrainWidth, 1], waterTexture, null, THREE.BackSide)}
     </>
   );
 };
