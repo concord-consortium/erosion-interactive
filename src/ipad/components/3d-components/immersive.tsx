@@ -4,8 +4,7 @@ import { PerspectiveCamera } from "@react-three/drei";
 import MeshPanaluu from "./mesh-panaluu";
 import Ruler from "./ruler";
 import { LandViewControls, ShoreViewControls } from "./overlay-controls";
-import { SeawardCameraController } from "./seaward-camera-controller";
-import { LandwardCameraController } from "./landward-camera-controller";
+import { CameraController } from "./camera-controller";
 import { CellKeys} from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
@@ -37,44 +36,29 @@ export const Immersive = (props: IProps) => {
 
   const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
-  const [landwardCameraLocation, setLandwardCameraLocation] = useState<ISelectedPointInformation>(selectedPointInfo);
   const [defaultCameraLocation, setDefaultCameraLocation] = useState<number>(0);
 
   useEffect(() => {
     setSelectedPointInfo(getSelectedLocationData(location));
   }, [location])
 
-  useEffect(() => {
-    if (direction === "landward"){
-      const {transectLocation, pointHeight, pointLocation} = getSelectedLocationData(location);
-
-      const landwardCameraPosition = {
-        transectLocation,
-        pointHeight: pointHeight + .5,
-        pointLocation: pointLocation + 1,
-      };
-
-      setLandwardCameraLocation(landwardCameraPosition);
-    }
-  }, [location, direction])
-
 
   useEffect(() => {
     if (direction === "seaward") {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
-      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
-    } else {
       const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
       setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    } else {
+      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
     }
   }, [location, direction])
 
   useEffect(() => {
     if (direction === "seaward") {
-      const cameraZ = selectedPointInfo.pointLocation - 1;
+      const cameraZ = selectedPointInfo.pointLocation + 1;
       setDefaultCameraLocation(cameraZ);
     } else {
-      const cameraZ = selectedPointInfo.pointLocation + 1;
+      const cameraZ = selectedPointInfo.pointLocation - 1;
       setDefaultCameraLocation(cameraZ);
     }
   }, [direction, selectedPointInfo])
@@ -90,7 +74,6 @@ export const Immersive = (props: IProps) => {
     const {pointHeight, pointLocation} = selectedPointInfo;
     const ruler = rulerRef.current;
     ruler?.position.set(Number(e.target.value), pointHeight + .5, pointLocation);
-    setLandwardCameraLocation({transectLocation: Number(e.target.value), pointHeight: pointHeight + .5, pointLocation: pointLocation + 1});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -107,14 +90,10 @@ export const Immersive = (props: IProps) => {
             far={1000}
             makeDefault
           />
-          { direction === "seaward" ?
-            <SeawardCameraController
-              gridLocation={selectedPointInfo}
-            /> :
-            <LandwardCameraController
-              rulerCameraLocation={landwardCameraLocation}
-            />
-          }
+          <CameraController
+            gridLocation={selectedPointInfo}
+            direction={direction}
+          />
           <axesHelper args={[1000]}/>
           <Ruler
             reference={rulerRef}

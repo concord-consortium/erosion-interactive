@@ -4,18 +4,26 @@ import { ISelectedPointInformation } from "./immersive";
 
 interface ICameraControllerProps {
   gridLocation: ISelectedPointInformation;
+  direction: string;
 }
 
-export const SeawardCameraController = (props: ICameraControllerProps) => {
+export const CameraController = (props: ICameraControllerProps) => {
   const { camera, gl } = useThree();
-  const { gridLocation } = props;
+  const { gridLocation, direction } = props;
+  let y: number;
+
+  if (direction === "seaward") {
+    y = -100;
+  } else {
+    y = 100;
+  }
 
   useEffect(
     () => {
-      camera.lookAt(gridLocation.transectLocation, 0, 100);
+      camera.lookAt(gridLocation.transectLocation, 0, y);
       camera.updateProjectionMatrix();
     },
-    [camera, gl, gridLocation]
+    [camera, gl, gridLocation, direction, y]
   );
 
   return null;

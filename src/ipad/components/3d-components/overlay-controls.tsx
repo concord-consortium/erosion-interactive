@@ -49,7 +49,7 @@ export const LandViewControls = (props: ILandControlProps) => {
 
   return (
     <div className="slider-container landward">
-        <input onChange={handleInput} type="range" value={xValue} min={transectLocation - 1} max={transectLocation + 1} className="slider" step="0.10" id="myLandRange"/>
+        <input onChange={handleInput} type="range" value={xValue} min={transectLocation - .5} max={transectLocation + .5} className="slider" step="0.025" id="myLandRange"/>
     </div>
   )
 }

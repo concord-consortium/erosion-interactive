@@ -33,6 +33,18 @@ export const Position = (props: IPositionProps) => {
     handleSetDirection(selectedDirection);
   }
 
+  const isDisabled = (transect: string, point: number) => {
+    if (transect !== "A") {
+      return true;
+    } else if (point === 1 && direction === "landward") {
+      return true;
+    } else if (point === 7 && direction === "seaward") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <div className="position-container">
       <div className="direction">
@@ -58,7 +70,7 @@ export const Position = (props: IPositionProps) => {
                           <button
                             className={`point-button ${isSelected(pointLabel)}`}
                             value={pointLabel}
-                            disabled={transect !== "A"}
+                            disabled={isDisabled(transect, point)}
                             key={pointLabel}
                             onClick={handleClick}>
                               {pointLabel}
