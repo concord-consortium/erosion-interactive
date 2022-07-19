@@ -5,13 +5,13 @@ import { Position } from "./position";
 import { Tabs } from "./tabs";
 import { NavigationBar } from "./navigation-bar";
 import { FullScreenIcon } from "./icons/full-screen";
-import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
+import { getFirestore,  setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { IErosionDoc, ITerrainVert } from "../../common/types";
-
-
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { getAvailableAvatarID } from "./icons/icon-helpers";
 
 import "./app-container.scss";
-import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { useDocument } from "react-firebase-hooks/firestore";
 
 interface IContainerProps {
   app: FirebaseApp;
@@ -25,18 +25,37 @@ export const AppContainer = (props: IContainerProps) => {
   const {app, collectionPath, documentPath, userID} = props;
 
   const fireStore = getFirestore(app);
-  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath, [userID]);
-  const [userLocations, setUserLocations] = useState<Array<string>>([])
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
+  const [snapshot, loading, error] = useDocument(doc(fireStore, documentPath));
 
   const [selectedTab, setSelectedTab] = useState<string>("position");
   const [screenMode, setScreenMode] = useState<string>("default");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [otherUsers, setOtherUsers] = useState<Array<IErosionDoc>>([])
   const [direction, setDirection] = useState<string>("");
 
   useEffect(() => {
-    const locations = docs.filter((d) => d.location !== undefined).map((d) => d.location);
-    setUserLocations(locations as any);
-  },[docs]);
+    const currentUserLocation = snapshot?.data()?.location;
+    if (currentUserLocation) {setSelectedLocation(currentUserLocation);}
+  }, [snapshot])
+
+  useEffect(() => {
+    const currentUserAvatar = docs.filter((d) => {
+      return d.avatar !== undefined && Number(d.id) === Number(userID);
+    });
+    if (!currentUserAvatar?.length){
+      const assignedAvatars = docs.map((d) => d.avatar);
+      const avatar = getAvailableAvatarID(assignedAvatars);
+      updateDoc(doc(fireStore, documentPath), {avatar})
+    }
+  }, [snapshot])
+
+  useEffect(() => {
+    const otherUserDocs = docs.filter((d) => {
+      return d.location !== undefined && Number(d.id) !== Number(userID);
+    })
+    setOtherUsers(otherUserDocs as any);
+  }, [docs, userID]);
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
@@ -68,9 +87,7 @@ export const AppContainer = (props: IContainerProps) => {
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
     // write to firestore the user's selected location
-    if (props.documentPath) {
-      setDoc(doc(fireStore, props.documentPath), {location});
-    }
+    updateDoc(doc(fireStore, documentPath), {location});
   }
 
   const handleSetDirection: (d: string) => void = d => {
@@ -79,17 +96,15 @@ export const AppContainer = (props: IContainerProps) => {
 
   return (
     <div id="container" className={"app-container"}>
-      <div>
-        {userLocations.map((loc) => <p key={loc}>{loc}</p>)}
-      </div>
       {screenMode === "fullScreen" && <NavigationBar handleExit={handleFullScreen}/>}
       <Tabs selectedLocation={selectedLocation} selectedDirection={direction} handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
         <Position
+          snapshot={snapshot}
           selectedLocation={selectedLocation}
           direction={direction}
-          userLocations={userLocations}
+          otherUsers={otherUsers}
           handleSetSelectedLocation={handleSelectedLocation}
           handleSetDirection={handleSetDirection}
         /> :

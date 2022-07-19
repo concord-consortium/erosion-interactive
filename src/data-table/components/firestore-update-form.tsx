@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { FirebaseApp } from "firebase/app";
-import { getFirestore,  setDoc, doc, getDoc } from 'firebase/firestore';
+import { getFirestore,  setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { BarGraphContainer } from "./graph-container";
 import { DataTable } from "./data-table";
 import { ErosionData, IErosionDoc } from "../../common/types";
@@ -20,7 +20,9 @@ interface IFirebaseEditParams<documentInterface> {
 }
 
 const emptyData: ErosionData = {};
-for(const key in CellKeys) { emptyData[key] = null; }
+for(const key of CellKeys) {
+  emptyData[key] = null;
+}
 
 export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const {app, collectionPath, platformUserId, docPath} = params;
@@ -29,7 +31,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   const initialEmptyState: IErosionDoc = useMemo(() => {
     return {
       text:"",
-      platformUserId,
+      id: platformUserId,
       data:emptyData
     }
   }, [platformUserId]);
@@ -65,7 +67,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
 
   const updateFirestore = (nextDoc: Partial<IErosionDoc>) => {
     const update = {...editorState, ...nextDoc};
-    setDoc(doc(fireStore, docPath), update);
+    updateDoc(doc(fireStore, docPath), update);
   }
 
   const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);

@@ -23,7 +23,7 @@ import { CellKeys } from './constants';
 
    docs.forEach( (d) => {
      for(const key of keys) {
-       if(d.data && d.data[key] !== null && d.data[key] !== undefined) {
+       if(d.data?.[key] !== null && d.data?.[key] !== undefined) {
          const status = erosionStatus[key];
          status.count+= 1;
          status.total = status.total! + d.data[key]!;

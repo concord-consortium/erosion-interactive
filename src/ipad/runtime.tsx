@@ -34,6 +34,9 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
     if(documentPath && collectionPath) {
       setInteractiveState({collectionPath, documentPath});
     }
+    // TODO: NP: Not sure how to avoid infinite re-render with setInteractiveState
+    // listed as an effect hook dep here, which eslint would like me to do.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionPath, documentPath]);
 
 

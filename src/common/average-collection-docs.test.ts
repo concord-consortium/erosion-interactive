@@ -3,7 +3,7 @@ import { averageDocs } from "./average-collection-docs";
 
 const docA: IErosionDoc ={
   transect: "A",
-  platformUserId: "1",
+  id: "1",
   data: {
     "A1": 1,
     "A2": 1.2,
@@ -17,7 +17,7 @@ const docA: IErosionDoc ={
 
 const docB: IErosionDoc ={
   transect: "A",
-  platformUserId: "2",
+  id: "2",
   data: {
     "A1": 2,
     "A2": 2.2,
@@ -31,7 +31,7 @@ const docB: IErosionDoc ={
 
 const docC: IErosionDoc ={
   transect: "B",
-  platformUserId: "3",
+  id: "3",
   data: {
     "B1": 1,
     "B2": 1.2,

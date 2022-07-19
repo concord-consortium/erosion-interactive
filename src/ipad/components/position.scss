@@ -67,11 +67,6 @@
           color: $cc-teal-dark2;
           font-weight: bold;
 
-          &:disabled {
-            opacity: 50%;
-            background-color: $cc-charcoal-light1;
-          }
-
           &:hover {
             background-color: $cc-teal-light3;
           }
@@ -81,6 +76,10 @@
           &.selected {
             border: 1px solid $cc-orange-light1;
             background-color: $cc-orange-light1;
+          }
+          &.occupied {
+            border: 1px solid $cc-teal-dark2;
+            background-color: $cc-teal-dark2;
           }
         }
       }
