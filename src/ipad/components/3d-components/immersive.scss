@@ -26,6 +26,7 @@
     .landward {
       top: calc(80vh);
       left: calc(50% - 100px);
+      transform: rotate(180deg);
     }
 
     .slider-container {

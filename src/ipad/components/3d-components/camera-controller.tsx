@@ -10,20 +10,20 @@ interface ICameraControllerProps {
 export const CameraController = (props: ICameraControllerProps) => {
   const { camera, gl } = useThree();
   const { gridLocation, direction } = props;
-  let y: number;
+  let z: number;
 
   if (direction === "seaward") {
-    y = -100;
+    z = -100;
   } else {
-    y = 100;
+    z = 100;
   }
 
   useEffect(
     () => {
-      camera.lookAt(gridLocation.x, 0, y);
+      camera.lookAt(gridLocation.x, 0, z);
       camera.updateProjectionMatrix();
     },
-    [camera, gl, gridLocation, direction, y]
+    [camera, gl, gridLocation, direction, z]
   );
 
   return null;
