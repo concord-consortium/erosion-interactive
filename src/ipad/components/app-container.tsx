@@ -15,26 +15,27 @@ import { useLimitedCollection } from "../../common/hooks/use-limited-collection"
 
 interface IContainerProps {
   app: FirebaseApp;
+  userID: string;
   collectionPath: string;
   documentPath: string;
   selectedBeach?: string;
 }
 
 export const AppContainer = (props: IContainerProps) => {
-  const {app, collectionPath, documentPath} = props;
-  const selectedBeach = props.selectedBeach;
-  const fireStore = getFirestore(props.app);
+  const {app, collectionPath, documentPath, userID} = props;
+
+  const fireStore = getFirestore(app);
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath, [userID]);
+  const [userLocations, setUserLocations] = useState<Array<string>>([])
 
   const [selectedTab, setSelectedTab] = useState<string>("position");
   const [screenMode, setScreenMode] = useState<string>("default");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [direction, setDirection] = useState<string>("");
-  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
-  const [allLocations, setAllLocations] = useState<Array<string>>([])
 
   useEffect(() => {
-    const data = docs.filter((d) => d.location !== undefined).map((d) => d.location);
-    setAllLocations(data as any);
+    const locations = docs.filter((d) => d.location !== undefined).map((d) => d.location);
+    setUserLocations(locations as any);
   },[docs]);
 
   useEffect(() => {
@@ -79,23 +80,22 @@ export const AppContainer = (props: IContainerProps) => {
   return (
     <div id="container" className={"app-container"}>
       <div>
-        {allLocations.map((loc) => <p key={loc}>{loc}</p>)}
+        {userLocations.map((loc) => <p key={loc}>{loc}</p>)}
       </div>
       {screenMode === "fullScreen" && <NavigationBar handleExit={handleFullScreen}/>}
       <Tabs selectedLocation={selectedLocation} selectedDirection={direction} handleClick={handleClick}/>
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
         <Position
-          selectedBeach={selectedBeach}
           selectedLocation={selectedLocation}
           direction={direction}
+          userLocations={userLocations}
           handleSetSelectedLocation={handleSelectedLocation}
           handleSetDirection={handleSetDirection}
         /> :
         <Immersive
           location={selectedLocation}
           direction={direction}
-          selectedBeach={selectedBeach}
         />}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>

@@ -5,6 +5,7 @@ import "./position.scss";
 interface IPositionProps {
   selectedBeach?: string;
   selectedLocation: string;
+  userLocations: Array<string>;
   direction: string;
   handleSetSelectedLocation: (e: any) => void;
   handleSetDirection: (d: string) => void;

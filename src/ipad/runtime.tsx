@@ -4,7 +4,6 @@ import { IAuthoredState } from "./authoring";
 import { AppContainer } from "./components/app-container";
 import { firebaseApp } from "../common/connect-to-firestore";
 import { useErosionFirebaseDoc } from "../common/hooks/use-erosion-firebase-doc";
-import { collection } from "firebase/firestore";
 
 interface IInteractiveState {}
 
@@ -16,7 +15,7 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
   const { interactiveState, setInteractiveState } = useInteractiveState<IInteractiveState>();
   const { authoredState } = initMessage;
-  const {collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
+  const {platformUserId, collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
 
 
   useEffect(() => {
@@ -33,16 +32,17 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
 
   useEffect( () => {
     if(documentPath && collectionPath) {
-      setInteractiveState({collectionPath,documentPath});
+      setInteractiveState({collectionPath, documentPath});
     }
   }, [collectionPath, documentPath]);
 
 
   return (
     <>
-    {collectionPath && documentPath &&
+    {collectionPath && documentPath && platformUserId &&
       <AppContainer
         app={firebaseApp}
+        userID={platformUserId}
         collectionPath={collectionPath}
         documentPath={documentPath}
         selectedBeach={authoredState?.selectedBeach}
