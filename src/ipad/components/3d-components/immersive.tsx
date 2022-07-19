@@ -10,11 +10,13 @@ import { CellKeys } from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
+import { IErosionDoc } from "../../../common/types";
 
 interface IProps {
   selectedBeach?: string;
   location: string;
   direction: string;
+  partnerDoc?: IErosionDoc;
 }
 
 export interface ISelectedPointInformation {
@@ -41,8 +43,7 @@ export const Immersive = (props: IProps) => {
 
   useEffect(() => {
     setSelectedPointInfo(getSelectedLocationData(location));
-  }, [location])
-
+  }, [location]);
 
   useEffect(() => {
     if (direction === "seaward") {

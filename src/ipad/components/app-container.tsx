@@ -6,9 +6,8 @@ import { Tabs } from "./tabs";
 import { NavigationBar } from "./navigation-bar";
 import { FullScreenIcon } from "./icons/full-screen";
 import { getFirestore,  setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { IErosionDoc, ITerrainVert } from "../../common/types";
+import { IErosionDoc } from "../../common/types";
 import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
-import { getAvailableAvatarID } from "./icons/icon-helpers";
 
 import "./app-container.scss";
 import { useDocument } from "react-firebase-hooks/firestore";
@@ -26,36 +25,23 @@ export const AppContainer = (props: IContainerProps) => {
 
   const fireStore = getFirestore(app);
   const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
-  const [snapshot, loading, error] = useDocument(doc(fireStore, documentPath));
 
   const [selectedTab, setSelectedTab] = useState<string>("position");
   const [screenMode, setScreenMode] = useState<string>("default");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [otherUsers, setOtherUsers] = useState<Array<IErosionDoc>>([])
   const [direction, setDirection] = useState<string>("");
+  const [userLocations, setUserLocations] = useState<Array<string>>([]);
+  const [partnerDoc, setPartnerDoc] = useState<IErosionDoc>()
 
   useEffect(() => {
-    const currentUserLocation = snapshot?.data()?.location;
-    if (currentUserLocation) {setSelectedLocation(currentUserLocation);}
-  }, [snapshot])
+    const otherUserLocations = docs.filter(d => Number(d.id) !== Number(userID)).map((d) => d.location||"");
+    setUserLocations(otherUserLocations);
+  }, [docs, userID])
 
   useEffect(() => {
-    const currentUserAvatar = docs.filter((d) => {
-      return d.avatar !== undefined && Number(d.id) === Number(userID);
-    });
-    if (!currentUserAvatar?.length){
-      const assignedAvatars = docs.map((d) => d.avatar);
-      const avatar = getAvailableAvatarID(assignedAvatars);
-      updateDoc(doc(fireStore, documentPath), {avatar})
-    }
-  }, [snapshot])
-
-  useEffect(() => {
-    const otherUserDocs = docs.filter((d) => {
-      return d.location !== undefined && Number(d.id) !== Number(userID);
-    })
-    setOtherUsers(otherUserDocs as any);
-  }, [docs, userID]);
+    const userLocation = docs.filter(d => Number(d.id) === Number(userID)).map((d) => d.location||"");
+    setSelectedLocation(userLocation[0]);
+  }, [docs, userID])
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullScreenChange);
@@ -86,8 +72,13 @@ export const AppContainer = (props: IContainerProps) => {
 
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
-    // write to firestore the user's selected location
-    updateDoc(doc(fireStore, documentPath), {location});
+    const docRef = (doc(fireStore, documentPath));
+    updateDoc(docRef, {location});
+  }
+
+  const handleSetPartner: (p: string) => void = p => {
+    const partnerInfo = docs.filter((d) => d.location === p)[0];
+    setPartnerDoc(partnerInfo);
   }
 
   const handleSetDirection: (d: string) => void = d => {
@@ -101,17 +92,20 @@ export const AppContainer = (props: IContainerProps) => {
       <div className={`window-view ${selectedTab}`}>
         {selectedTab === "position" ?
         <Position
-          snapshot={snapshot}
           selectedLocation={selectedLocation}
+          partnerLocation={partnerDoc?.location}
           direction={direction}
-          otherUsers={otherUsers}
+          userLocations={userLocations}
           handleSetSelectedLocation={handleSelectedLocation}
+          handleSetPartner={handleSetPartner}
           handleSetDirection={handleSetDirection}
         /> :
+        selectedLocation ?
         <Immersive
           location={selectedLocation}
           direction={direction}
-        />}
+          partnerDoc={partnerDoc}
+        /> : <div>Select a location to proceed.</div>}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>
             <FullScreenIcon/>
