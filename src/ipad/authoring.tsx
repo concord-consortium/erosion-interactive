@@ -3,6 +3,7 @@ import { IAuthoringInitInteractive, useAuthoredState } from "@concord-consortium
 
 export interface IAuthoredState {
   selectedBeach: string;
+  firebaseApp?: string;
 }
 
 interface Props {

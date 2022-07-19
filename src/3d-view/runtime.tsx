@@ -13,7 +13,7 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
   const [rawFirebaseJwt, setRawFirebaseJWT] = useState<string>();
   const { interactiveState, setInteractiveState } = useInteractiveState<IInteractiveState>();
   const { authoredState } = initMessage;
- const {collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
+  const {collectionPath, documentPath } = useErosionFirebaseDoc(authoredState);
 
 
   useEffect(() => {
@@ -40,14 +40,6 @@ export const RuntimeComponent: React.FC<Props> = ({initMessage}) => {
   return (
     <div className="padded">
       {collectionPath && <ThreeDView app={firebaseApp} collectionPath={collectionPath}/>}
-      <fieldset>
-        <legend>Runtime Init Message</legend>
-        <div className="padded monospace pre">{JSON.stringify(initMessage, null, 2)}</div>
-      </fieldset>
-      <fieldset>
-        <legend>FirebaseJWT Response</legend>
-        <div className="padded monospace pre">{rawFirebaseJwt}</div>
-      </fieldset>
     </div>
   );
 };

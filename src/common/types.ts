@@ -28,6 +28,7 @@ export interface IErosionDoc {
   text?: string;
   transect?: string;
   platformUserId: string;
+  location?: string;
   data: ErosionData;
 }
 
