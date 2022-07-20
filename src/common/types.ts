@@ -29,6 +29,7 @@ export interface IErosionDoc {
   transect?: string;
   id: string;
   location?: string;
+  locationXYZ?: ITerrainVert;
   data: ErosionData;
   avatar?: string;
 }

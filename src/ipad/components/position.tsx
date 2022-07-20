@@ -1,5 +1,4 @@
 import React from "react";
-import { Transects } from "../../common/constants";
 import { DirectionSelector } from "./direction-selector";
 import { PartnerSelector } from "./partner-selector";
 import "./position.scss";

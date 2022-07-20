@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FirebaseApp } from "firebase/app";
+import { getFirestore,  doc, updateDoc } from 'firebase/firestore';
+import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
+import { getSelectedLocationData } from "../../common/cell-keys-to-ipad";
+import { IErosionDoc } from "../../common/types";
 import { Immersive } from "./3d-components/immersive";
 import { Position } from "./position";
 import { Tabs } from "./tabs";
 import { NavigationBar } from "./navigation-bar";
 import { FullScreenIcon } from "./icons/full-screen";
-import { getFirestore,  setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { IErosionDoc } from "../../common/types";
-import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
 
 import "./app-container.scss";
-import { useDocument } from "react-firebase-hooks/firestore";
 
 interface IContainerProps {
   app: FirebaseApp;
@@ -30,8 +30,8 @@ export const AppContainer = (props: IContainerProps) => {
   const [screenMode, setScreenMode] = useState<string>("default");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [direction, setDirection] = useState<string>("");
+  const [partner, setPartner] = useState<string>("");
   const [userLocations, setUserLocations] = useState<Array<string>>([]);
-  const [partnerDoc, setPartnerDoc] = useState<IErosionDoc>()
 
   useEffect(() => {
     const otherUserLocations = docs.filter(d => Number(d.id) !== Number(userID)).map((d) => d.location||"");
@@ -72,13 +72,12 @@ export const AppContainer = (props: IContainerProps) => {
 
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
-    const docRef = (doc(fireStore, documentPath));
-    updateDoc(docRef, {location});
+    const locationXYZ = getSelectedLocationData(location);
+    updateDoc(doc(fireStore, documentPath), {location, locationXYZ});
   }
 
   const handleSetPartner: (p: string) => void = p => {
-    const partnerInfo = docs.filter((d) => d.location === p)[0];
-    setPartnerDoc(partnerInfo);
+    setPartner(p);
   }
 
   const handleSetDirection: (d: string) => void = d => {
@@ -93,7 +92,7 @@ export const AppContainer = (props: IContainerProps) => {
         {selectedTab === "position" ?
         <Position
           selectedLocation={selectedLocation}
-          partnerLocation={partnerDoc?.location}
+          partnerLocation={partner}
           direction={direction}
           userLocations={userLocations}
           handleSetSelectedLocation={handleSelectedLocation}
@@ -102,9 +101,12 @@ export const AppContainer = (props: IContainerProps) => {
         /> :
         selectedLocation ?
         <Immersive
+          fireStore={fireStore}
+          docs={docs}
+          documentPath={documentPath}
           location={selectedLocation}
           direction={direction}
-          partnerDoc={partnerDoc}
+          partnerLocation={partner}
         /> : <div>Select a location to proceed.</div>}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>

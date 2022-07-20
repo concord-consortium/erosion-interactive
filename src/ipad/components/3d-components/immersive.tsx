@@ -11,12 +11,16 @@ import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
 import { IErosionDoc } from "../../../common/types";
+import { doc, Firestore, updateDoc } from "firebase/firestore";
 
 interface IProps {
+  docs: Array<IErosionDoc>;
+  documentPath: string;
+  fireStore: Firestore;
   selectedBeach?: string;
   location: string;
   direction: string;
-  partnerDoc?: IErosionDoc;
+  partnerLocation: string;
 }
 
 export interface ISelectedPointInformation {
@@ -32,7 +36,7 @@ const defaultState: ISelectedPointInformation = {
 }
 
 export const Immersive = (props: IProps) => {
-  const {selectedBeach, direction, location} = props;
+  const {direction, location, partnerLocation, docs, documentPath, fireStore} = props;
 
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rulerRef = useRef<THREE.Mesh>(null);
@@ -46,14 +50,19 @@ export const Immersive = (props: IProps) => {
   }, [location]);
 
   useEffect(() => {
-    if (direction === "seaward") {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
-      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    if (partnerLocation) {
+      const rulerLoc = docs.filter((d) => d.location === partnerLocation)[0].locationXYZ!;
+      setNextRulerInfo(rulerLoc);
     } else {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
-      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      if (direction === "seaward") {
+        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      } else {
+        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      }
     }
-  }, [location, direction])
+  }, [location, direction, partnerLocation, docs]);
 
   useEffect(() => {
     if (direction === "seaward") {
@@ -75,7 +84,11 @@ export const Immersive = (props: IProps) => {
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current!;
-    ruler?.position.set(Number(e.target.value), y + .5, z);
+
+    const newLocationData = {x: Number(e.target.value), y: y + .5, z};
+    ruler?.position.set(newLocationData.x, newLocationData.y, z);
+
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: newLocationData});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
