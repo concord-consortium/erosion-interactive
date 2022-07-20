@@ -12,7 +12,6 @@ export const getSelectedLocationData = (cellID: string) => {
   return {x, z, y}
 }
 
-
 // Convert from "0"–"7" to 0-36 for point index
 export const cellToPointIndx = (cellID: string) => {
   return Number(cellID.slice(1)) - 1;
