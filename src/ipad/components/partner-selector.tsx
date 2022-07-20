@@ -1,4 +1,5 @@
 import React from "react";
+import { CellKeys } from "../../common/constants";
 
 interface IPartnerProps {
   selectedLocation: string;
@@ -20,7 +21,7 @@ export const PartnerSelector = (props: IPartnerProps) => {
     You are partnered with:
       <select disabled={!selectedLocation} value={partnerLocation || "DEFAULT"} onChange={handleSelectPartner}>
         <option value="DEFAULT" disabled>{`Select your partner...`}</option>
-        {userLocations.map((userLocation) => {
+        {CellKeys.filter((loc) => loc !== selectedLocation).map((userLocation) => {
           return (
             <option key={userLocation} value={userLocation}>{userLocation}</option>
           )
