@@ -27,9 +27,7 @@ export const TransectTable = (props: ITransectTableProps) => {
 
   const isDisabled = (transect: string, point: number) => {
     const transectLabel = transect + point;
-    if (transect !== "A") {
-      return true;
-    } else if (userLocations?.includes(transectLabel)) {
+    if (userLocations?.includes(transectLabel)) {
       return true;
     } else if (point === 1 && direction === "landward") {
       return true;
