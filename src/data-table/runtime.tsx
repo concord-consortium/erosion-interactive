@@ -28,7 +28,6 @@ export const RuntimeComponent = (props: IRuntimeProps) => {
   if (documentPath && collectionPath && platformUserId) {
     return (
       <div className={"main"}>
-        <p>Current User: {platformUserId}</p>
         <FirebaseEditForm
           app={firebaseApp}
           platformUserId={platformUserId}

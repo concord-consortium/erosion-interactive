@@ -55,6 +55,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     } else {
       setEditorState({...initialEmptyState});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docs]);
 
   const [selectedTransect, setSelectedTransect] = useState<string>();

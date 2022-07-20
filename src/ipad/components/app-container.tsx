@@ -72,7 +72,6 @@ export const AppContainer = (props: IContainerProps) => {
 
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
-
     setDoc(doc(fireStore, documentPath), {location}, {merge: true})
 
     // if location is not empty string, get XYZ coordinates
