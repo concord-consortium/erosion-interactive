@@ -51,8 +51,10 @@ export const Immersive = (props: IProps) => {
 
   useEffect(() => {
     if (partnerLocation) {
-      const rulerLoc = docs.filter((d) => d.location === partnerLocation)[0].locationXYZ!;
-      setNextRulerInfo(rulerLoc);
+      const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
+      if ('locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
+        setNextRulerInfo( partnerDoc.locationXYZ);
+      }
     } else {
       if (direction === "seaward") {
         const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
@@ -85,7 +87,7 @@ export const Immersive = (props: IProps) => {
     const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current!;
 
-    const newLocationData = {x: Number(e.target.value), y: y + .5, z};
+    const newLocationData = {x: Number(e.target.value), y, z};
     ruler?.position.set(newLocationData.x, newLocationData.y, z);
 
     updateDoc(doc(fireStore, documentPath), {locationXYZ: newLocationData});
@@ -117,7 +119,7 @@ export const Immersive = (props: IProps) => {
             reference={rulerRef}
           />
           <MeshPanaluu/>
-          <Water/>
+          {/* <Water/> */}
         </Canvas>
         <div className="controls-overlay">
             {

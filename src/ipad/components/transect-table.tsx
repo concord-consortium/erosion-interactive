@@ -13,10 +13,16 @@ interface ITransectTableProps {
 export const TransectTable = (props: ITransectTableProps) => {
   const {selectedLocation, userLocations, direction, handleSetSelectedLocation} = props;
 
-  const [isSelected, setIsSelected] = useState<boolean>();
+  const isSelected = (location: string) => {
+    if (selectedLocation === location) {
+      return "selected";
+    } else {
+      return "";
+    }
+  }
 
-  const isOccupied = ((transectLabel: string) => {
-    return userLocations.includes(transectLabel) ? "occupied" : "";
+  const isOccupied = ((location: string) => {
+    return userLocations.includes(location) ? "occupied" : "";
   })
 
   const isDisabled = (transect: string, point: number) => {
@@ -38,10 +44,8 @@ export const TransectTable = (props: ITransectTableProps) => {
     const location = e.target.value;
 
     if (selectedLocation !== location) {
-      setIsSelected(true);
       handleSetSelectedLocation(location);
     } else {
-      setIsSelected(false);
       handleSetSelectedLocation("");
     }
   }
@@ -57,7 +61,7 @@ export const TransectTable = (props: ITransectTableProps) => {
                 return (
                   <td key={pointLabel}>
                     <button
-                      className={`point-button ${isSelected && "selected"} ${isOccupied(pointLabel)}`}
+                      className={`point-button ${isSelected(pointLabel)} ${isOccupied(pointLabel)}`}
                       value={pointLabel}
                       disabled={isDisabled(transect, point)}
                       key={pointLabel}
