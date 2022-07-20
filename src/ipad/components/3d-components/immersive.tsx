@@ -53,7 +53,7 @@ export const Immersive = (props: IProps) => {
     if (partnerLocation) {
       const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
       if ('locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
-        setNextRulerInfo( partnerDoc.locationXYZ);
+        setNextRulerInfo(partnerDoc.locationXYZ);
       }
     } else {
       if (direction === "seaward") {
@@ -87,10 +87,10 @@ export const Immersive = (props: IProps) => {
     const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current!;
 
-    const newLocationData = {x: Number(e.target.value), y, z};
-    ruler?.position.set(newLocationData.x, newLocationData.y, z);
+    const newX = Number(e.target.value);
+    ruler?.position.set(newX, y + .5, z);
 
-    updateDoc(doc(fireStore, documentPath), {locationXYZ: newLocationData});
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
