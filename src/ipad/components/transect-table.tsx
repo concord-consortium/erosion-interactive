@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Transects } from "../../common/constants";
 
 const Points = [7, 6, 5, 4, 3, 2, 1]
@@ -13,9 +13,7 @@ interface ITransectTableProps {
 export const TransectTable = (props: ITransectTableProps) => {
   const {selectedLocation, userLocations, direction, handleSetSelectedLocation} = props;
 
-  const isSelected = (transectLabel: string) => {
-    return transectLabel === selectedLocation ? "selected" : "";
-  }
+  const [isSelected, setIsSelected] = useState<boolean>();
 
   const isOccupied = ((transectLabel: string) => {
     return userLocations.includes(transectLabel) ? "occupied" : "";
@@ -38,8 +36,16 @@ export const TransectTable = (props: ITransectTableProps) => {
 
   const handleClick: (e: any) => void = e => {
     const location = e.target.value;
-    handleSetSelectedLocation(location);
+
+    if (selectedLocation !== location) {
+      setIsSelected(true);
+      handleSetSelectedLocation(location);
+    } else {
+      setIsSelected(false);
+      handleSetSelectedLocation("");
+    }
   }
+
   return (
     <table className="transect-table">
       <tbody>
@@ -51,7 +57,7 @@ export const TransectTable = (props: ITransectTableProps) => {
                 return (
                   <td key={pointLabel}>
                     <button
-                      className={`point-button ${isSelected(pointLabel)} ${isOccupied(pointLabel)}`}
+                      className={`point-button ${isSelected && "selected"} ${isOccupied(pointLabel)}`}
                       value={pointLabel}
                       disabled={isDisabled(transect, point)}
                       key={pointLabel}

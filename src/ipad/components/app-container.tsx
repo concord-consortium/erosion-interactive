@@ -72,8 +72,14 @@ export const AppContainer = (props: IContainerProps) => {
 
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
-    const locationXYZ = getSelectedLocationData(location);
-    updateDoc(doc(fireStore, documentPath), {location, locationXYZ});
+
+    updateDoc(doc(fireStore, documentPath), {location})
+
+    // if location is not empty string, get XYZ coordinates
+    if (location.length) {
+      const locationXYZ = getSelectedLocationData(location);
+      updateDoc(doc(fireStore, documentPath), {locationXYZ});
+    }
   }
 
   const handleSetPartner: (p: string) => void = p => {
