@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import { getFirestore,  setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { BarGraphContainer } from "./graph-container";
@@ -36,21 +36,26 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     }
   }, [platformUserId]);
 
+  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
+
   const [editorState, setEditorState] = React.useState(initialEmptyState);
 
   React.useEffect( () => {
-    getDoc(doc(fireStore, docPath)).then(d => {
-      const document: IErosionDoc = d.data() as IErosionDoc;
-      if (document) {
-        setEditorState({...document});
-        if ("transect" in document) {
-          setSelectedTransect(document.transect);
-        }
+    const currentUserDoc = docs.filter((d) => Number(d.id) === Number(platformUserId))[0];
+    if (currentUserDoc) {
+      if (!currentUserDoc.data){
+        updateFirestore({data: emptyData});
+        setEditorState({...currentUserDoc, data: emptyData});
       } else {
-        setEditorState({...initialEmptyState});
+        setEditorState({...currentUserDoc});
       }
-    });
-  }, [docPath, fireStore, initialEmptyState]);
+      if ("transect" in currentUserDoc) {
+        setSelectedTransect(currentUserDoc.transect);
+      }
+    } else {
+      setEditorState({...initialEmptyState});
+    }
+  }, [docs]);
 
   const [selectedTransect, setSelectedTransect] = useState<string>();
 
@@ -76,16 +81,15 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
     setDoc(doc(fireStore, docPath), update, {merge: true});
   }
 
-  const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
+  // const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
   const data: ErosionData = docs
     ? averageDocs(docs)
     : {};
-
   return(
     <>
       <div className="container">
         <DataTable
-          data={editorState.data}
+          data={editorState?.data}
           selectedTransect={selectedTransect}
           handleSelectTransect={handleSelectTransect}
           handleDataChange={handleInput}

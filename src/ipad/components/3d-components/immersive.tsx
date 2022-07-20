@@ -52,8 +52,10 @@ export const Immersive = (props: IProps) => {
   useEffect(() => {
     if (partnerLocation) {
       const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
-      if ('locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
+      if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
         setNextRulerInfo(partnerDoc.locationXYZ);
+      } else {
+        setNextRulerInfo(getSelectedLocationData(partnerLocation));
       }
     } else {
       if (direction === "seaward") {
