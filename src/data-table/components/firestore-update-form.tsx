@@ -41,8 +41,14 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
   React.useEffect( () => {
     getDoc(doc(fireStore, docPath)).then(d => {
       const document: IErosionDoc = d.data() as IErosionDoc;
-      setEditorState({...document} || {...initialEmptyState});
-      setSelectedTransect(document.transect);
+      if (document) {
+        setEditorState({...document});
+        if ("transect" in document) {
+          setSelectedTransect(document.transect);
+        }
+      } else {
+        setEditorState({...initialEmptyState});
+      }
     });
   }, [docPath, fireStore, initialEmptyState]);
 
@@ -67,7 +73,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
 
   const updateFirestore = (nextDoc: Partial<IErosionDoc>) => {
     const update = {...editorState, ...nextDoc};
-    updateDoc(doc(fireStore, docPath), update);
+    setDoc(doc(fireStore, docPath), update, {merge: true});
   }
 
   const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);

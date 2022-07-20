@@ -8,10 +8,10 @@ import { LandViewControls, ShoreViewControls } from "./overlay-controls";
 import { CameraController } from "./camera-controller";
 import { CellKeys } from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
-
-import "./immersive.scss";
 import { IErosionDoc } from "../../../common/types";
 import { doc, Firestore, updateDoc } from "firebase/firestore";
+
+import "./immersive.scss";
 
 interface IProps {
   docs: Array<IErosionDoc>;

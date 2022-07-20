@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FirebaseApp } from "firebase/app";
-import { getFirestore,  doc, updateDoc } from 'firebase/firestore';
+import { getFirestore,  doc, setDoc } from 'firebase/firestore';
 import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
 import { getSelectedLocationData } from "../../common/cell-keys-to-ipad";
 import { IErosionDoc } from "../../common/types";
@@ -73,12 +73,12 @@ export const AppContainer = (props: IContainerProps) => {
   const handleSelectedLocation: (location: string) => void = location => {
     setSelectedLocation(location);
 
-    updateDoc(doc(fireStore, documentPath), {location})
+    setDoc(doc(fireStore, documentPath), {location}, {merge: true})
 
     // if location is not empty string, get XYZ coordinates
     if (location.length) {
       const locationXYZ = getSelectedLocationData(location);
-      updateDoc(doc(fireStore, documentPath), {locationXYZ});
+      setDoc(doc(fireStore, documentPath), {locationXYZ}, {merge: true});
     }
   }
 
