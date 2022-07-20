@@ -10,11 +10,17 @@ import { CellKeys } from "../../../common/constants";
 import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 
 import "./immersive.scss";
+import { IErosionDoc } from "../../../common/types";
+import { doc, Firestore, updateDoc } from "firebase/firestore";
 
 interface IProps {
+  docs: Array<IErosionDoc>;
+  documentPath: string;
+  fireStore: Firestore;
   selectedBeach?: string;
   location: string;
   direction: string;
+  partnerLocation: string;
 }
 
 export interface ISelectedPointInformation {
@@ -30,7 +36,7 @@ const defaultState: ISelectedPointInformation = {
 }
 
 export const Immersive = (props: IProps) => {
-  const {selectedBeach, direction, location} = props;
+  const {direction, location, partnerLocation, docs, documentPath, fireStore} = props;
 
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rulerRef = useRef<THREE.Mesh>(null);
@@ -41,18 +47,24 @@ export const Immersive = (props: IProps) => {
 
   useEffect(() => {
     setSelectedPointInfo(getSelectedLocationData(location));
-  }, [location])
-
+  }, [location]);
 
   useEffect(() => {
-    if (direction === "seaward") {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
-      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+    if (partnerLocation) {
+      const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
+      if ('locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
+        setNextRulerInfo(partnerDoc.locationXYZ);
+      }
     } else {
-      const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
-      setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      if (direction === "seaward") {
+        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
+        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      } else {
+        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
+        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
+      }
     }
-  }, [location, direction])
+  }, [location, direction, partnerLocation, docs]);
 
   useEffect(() => {
     if (direction === "seaward") {
@@ -74,7 +86,11 @@ export const Immersive = (props: IProps) => {
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {y, z} = selectedPointInfo;
     const ruler = rulerRef.current!;
-    ruler?.position.set(Number(e.target.value), y + .5, z);
+
+    const newX = Number(e.target.value);
+    ruler?.position.set(newX, y + .5, z);
+
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
   }
 
   const PleaseWait = () => <div>Please wait...</div>;
@@ -103,7 +119,7 @@ export const Immersive = (props: IProps) => {
             reference={rulerRef}
           />
           <MeshPanaluu/>
-          <Water/>
+          {/* <Water/> */}
         </Canvas>
         <div className="controls-overlay">
             {

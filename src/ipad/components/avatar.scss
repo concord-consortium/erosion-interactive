@@ -1,0 +1,96 @@
+
+  @import "../../common/vars.scss";
+
+  .current-user {
+    background-color: $cc-orange-light1;
+  }
+
+  .avatar {
+    width: 35px;
+    height: 35px;
+    background-color: $cc-teal-dark2;
+  }
+
+  .crab {
+    mask: url('../assets/avatar-icons/crab-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .dolphin {
+    background-image: url('../assets/avatar-icons/dolphin-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .fish {
+    background-image: url('../assets/avatar-icons/fish-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .jellyfish {
+    background-image: url('../assets/avatar-icons/jellyfish-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .octopus {
+    background-image: url('../assets/avatar-icons/octopus-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .seagull {
+    background-image: url('../assets/avatar-icons/seagull-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .seahorse {
+    background-image: url('../assets/avatar-icons/seahorse-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .seal {
+    background-image: url('../assets/avatar-icons/seal-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .seashell {
+    background-image: url('../assets/avatar-icons/seashell-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .shark {
+    background-image: url('../assets/avatar-icons/shark-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .shrimp {
+    background-image: url('../assets/avatar-icons/shrimp-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .starfish {
+    background-image: url('../assets/avatar-icons/starfish-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .turtle {
+    background-image: url('../assets/avatar-icons/turtle-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .whale {
+    background-image: url('../assets/avatar-icons/whale-icon.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }

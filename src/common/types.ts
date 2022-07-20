@@ -27,8 +27,11 @@ export type ErosionData = Record<string, number|null>;
 export interface IErosionDoc {
   text?: string;
   transect?: string;
-  platformUserId: string;
+  id: string;
+  location?: string;
+  locationXYZ?: ITerrainVert;
   data: ErosionData;
+  avatar?: string;
 }
 
 export interface ITerrainVert {

@@ -30,6 +30,7 @@ import { CellKeys } from './constants';
        }
      }
    });
+
    for(const key of keys) {
      const status = erosionStatus[key];
      // Don't include cells for which we have no data:

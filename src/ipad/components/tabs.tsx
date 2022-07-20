@@ -12,8 +12,8 @@ interface IProps {
 
 export const Tabs = (props: IProps) => {
   const {selectedLocation, selectedDirection, handleClick} = props;
-  const locationIsNotSelected = selectedLocation.length === 0;
-  const directionIsNotSelected = selectedDirection.length === 0;
+  const locationIsNotSelected = selectedLocation?.length === 0;
+  const directionIsNotSelected = selectedDirection?.length === 0;
 
 
   return (
