@@ -6,18 +6,8 @@ export const gridLength = 6;
 export const terrainLength = 14;
 export const waterLength = 4;
 
-export const getData =(data: Array<ITerrainVert>, coord: string, val: number) => {
-  const transectData = [];
-
-  for (let i = 0; i < data.length; i++){
-    const coordinate = coord === "x" ? data[i].x : data[i].y;
-
-    if (coordinate === val){
-      transectData.push(data[i]);
-    }
-  }
-
-  return transectData;
+export const getData = (data: Array<ITerrainVert>, coord: string, val: number) => {
+  return data.filter((d) => coord === "x" ? d.x === val : d.y === val);
 };
 
 export const getPositionArray = (currentObject: THREE.BufferGeometry) => {

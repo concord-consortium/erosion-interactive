@@ -4,6 +4,7 @@ import { renderPlane } from "./planeHelper";
 import { IProps } from "./grid-labels";
 import sand from "../assets/sand.png";
 import * as THREE from "three";
+import { GridXValues, GridYValues } from "../../common/constants";
 
 export const Sand = (props: IProps) => {
   const {data} = props;
@@ -24,7 +25,7 @@ export const Sand = (props: IProps) => {
 
     sideRefs.forEach((ref, idx) => {
       const posArray = getPositionArray(ref.current!);
-      const sideData = idx === 0 ? getData(data, "x", -20) : idx === 1 ? getData(data, "x", 20) : getData(data, "y", -7);
+      const sideData = idx === 0 ? getData(data, "x", GridXValues[0]) : idx === 1 ? getData(data, "x", GridXValues[3]) : getData(data, "y", GridYValues[0]);
 
       for (let i = 0; i < sideData.length; i++){
         posArray[i * 3 + 1] = sideData[i].z;
