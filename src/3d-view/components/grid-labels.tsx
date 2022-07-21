@@ -1,48 +1,43 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import lato from "../assets/lato.json";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { GridXValues } from "../../common/constants";
+import { Transects, Points, GridXValues, GridYValues } from "../../common/constants";
 import { ITerrainVert } from "../../common/types";
-import { gridLength, terrainLength } from "./helpers";
+import { gridLength, terrainLength, getPositionArray, getData } from "./helpers";
 import { renderPlane } from "./planeHelper";
-import green from "../assets/green.png";
+import lato from "../assets/lato.json";
 
-
-interface IProps {
+export interface IProps {
   data: Array<ITerrainVert>;
-  getPositionArray: (refObj: THREE.BufferGeometry) => Array<number>;
-  getData: (coord: string, gridVal: number) => Array<ITerrainVert>;
 }
 
 export const GridLabels = (props: IProps) => {
-  const {data, getPositionArray, getData} = props;
+  const {data} = props;
 
   const transectARef = useRef<THREE.PlaneGeometry>(null);
   const transectBRef = useRef<THREE.PlaneGeometry>(null);
   const transectCRef = useRef<THREE.PlaneGeometry>(null);
   const transectDRef = useRef<THREE.PlaneGeometry>(null);
-
-  const greenTexture = new THREE.TextureLoader().load(green);
+  const transectRefs = [transectARef, transectBRef, transectCRef, transectDRef];
 
   const font = new FontLoader().parse(lato);
-  const textOptions = {font, size: 1.5, height: .25}
-  const textA = new TextGeometry("A", textOptions);
-  const textB = new TextGeometry("B", textOptions);
-  const textC = new TextGeometry("C", textOptions);
-  const textD = new TextGeometry("D", textOptions);
+
+  const textOptions = {font, size: 1.5, height: 0}
+  const smallTextOptions = {font, size: .5, height: 0}
+
+  const tranctLabelGeometries = Transects.map((t) => new TextGeometry(t, textOptions));
+  const pointLabelGeometries = Points.reverse().map((p) => new TextGeometry(String(p), smallTextOptions));
 
   useEffect(() => {
     setTransectLabels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const setTransectLabels = () => {
-    const transectRefs = [transectARef, transectBRef];
-
     transectRefs.forEach((ref, idx) => {
       const posArray = getPositionArray(ref.current!);
-      const transectData = getData("x", GridXValues[idx]);
+      const transectData = getData(data, "x", GridXValues[idx]);
 
       for (let i = 0; i < transectData.length; i++){
         posArray[i * 6 + 2] = transectData[i].z;
@@ -50,32 +45,41 @@ export const GridLabels = (props: IProps) => {
       }
 
       ref.current!.attributes.position.needsUpdate = true;
-
     })
-  }
+  };
 
   return (
     <>
-      {renderPlane([-20, .1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectARef)}
-      {renderPlane([-6.66, .1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectBRef)}
-      {renderPlane([6.66, 4.1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectCRef)}
-      {renderPlane([20, 4.1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectDRef)}
+      {Transects.map((t, idx) => {
+        let xValue = GridXValues[idx];
 
-      <mesh position={[-20, 5, -9]} geometry={textA}>
-        <meshStandardMaterial color={"#0481a0"}/>
-      </mesh>
+        if (idx === 0){
+          xValue += .25;
+        } else if (idx === 3){
+          xValue -= .25;
+        }
+        return (
+          <>
+            {renderPlane([xValue, .1, 0], [-Math.PI / 2, 0, 0], [.5, terrainLength - .15, 1, gridLength], null, "#eeeeee", transectRefs[idx])}
+          </>
+        )
+      })}
 
-      <mesh position={[-6.66, 5, -9]} geometry={textB}>
-        <meshStandardMaterial color={"#0481a0"}/>
-      </mesh>
+      {tranctLabelGeometries.map((geo, idx) => {
+        return (
+          <mesh key={idx} position={[GridXValues[idx] +.25, 5, -11]} geometry={geo}>
+            <meshStandardMaterial color={"#93d5e4"}/>
+          </mesh>
+        )
+      })}
 
-      <mesh position={[6.66, 5, -9]} geometry={textC}>
-        <meshStandardMaterial color={"#0481a0"}/>
-      </mesh>
-
-      <mesh position={[20, 5, -9]} geometry={textD}>
-        <meshStandardMaterial color={"#0481a0"}/>
-      </mesh>
+      {pointLabelGeometries.map((geo, idx) => {
+        return (
+          <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[-21.5, 3, GridYValues[idx]]} geometry={geo}>
+            <meshStandardMaterial color={"#016082"}/>
+          </mesh>
+        )
+      })}
     </>
   )
 }
