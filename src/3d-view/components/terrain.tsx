@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { renderPlane } from "./planeHelper";
-import { terrainWidth, terrainLength, gridLength, gridWidth, waterLength } from "./helpers";
+import { terrainLength, gridLength } from "./helpers";
 import { ITerrainVert } from "../../common/types";
-import sand from "../assets/sand.png";
-import water from "../assets/water.png";
-import { useFrame } from "@react-three/fiber";
+import green from "../assets/green.png";
+import { Sand } from "./sand";
+import { Water } from "./water";
+import { GridXValues } from "../../common/constants";
 
 interface TerrainProps {
   data: Array<ITerrainVert>
@@ -22,28 +23,19 @@ export const Terrain = (props: TerrainProps) => {
   const waterRef = useRef<THREE.PlaneGeometry>(null);
   const waterRightSideRef = useRef<THREE.PlaneGeometry>(null);
   const waterLeftSideRef = useRef<THREE.PlaneGeometry>(null);
+  const greenTexture = new THREE.TextureLoader().load(green);
 
-  const sandTexture = new THREE.TextureLoader().load(sand);
-  const waterTexture = new THREE.TextureLoader().load(water);
+  const transectARef = useRef<THREE.PlaneGeometry>(null);
+  const transectBRef = useRef<THREE.PlaneGeometry>(null);
+  const transectCRef = useRef<THREE.PlaneGeometry>(null);
+  const transectDRef = useRef<THREE.PlaneGeometry>(null);
 
-  useFrame(() => {
+  useEffect(() => {
     setTerrainElevation();
-    setSideElevation("right");
-    setSideElevation("left");
-    setSideElevation("back");
+    setSideElevation();
     setWaterElevation();
-  });
-
-
-  const getRef = (type: string) => {
-    if (type === "right") {
-      return rightSideRef;
-    } else if (type === "left") {
-      return leftSideRef;
-    } else {
-      return backSideRef;
-    }
-  };
+    setTransectLabels();
+  }, [data]);
 
   const getData =(coord: string, val: number) => {
     const transectData = [];
@@ -63,17 +55,19 @@ export const Terrain = (props: TerrainProps) => {
     return currentObject.attributes.position.array as number[];
   };
 
-  const setSideElevation = (type: string) => {
-    const side = getRef(type).current!;
-    const sidePosArray = getPositionArray(side);
+  const setSideElevation = () => {
+    const sideRefs = [rightSideRef, leftSideRef, backSideRef];
 
-    const sideSpecificData = type === "right" ?  getData("x", -40) : type === "left" ? getData("x", 20) : getData("y", -6);
+    sideRefs.forEach((ref, idx) => {
+      const posArray = getPositionArray(ref.current!);
+      const sideData = idx === 0 ? getData("x", -40) : idx === 1 ? getData("x", 20) : getData("y", -6);
 
-    for (let i = 0; i < sideSpecificData.length; i++){
-      sidePosArray[i * 3 + 1] = sideSpecificData[i].z;
-    }
+      for (let i = 0; i < sideData.length; i++){
+        posArray[i * 3 + 1] = sideData[i].z;
+      }
 
-    side.attributes.position.needsUpdate = true;
+      ref.current!.attributes.position.needsUpdate = true;
+    })
   };
 
   const setTerrainElevation = () => {
@@ -88,36 +82,54 @@ export const Terrain = (props: TerrainProps) => {
 
   const setWaterElevation = () => {
     const waterArray = getPositionArray(waterRef.current!);
+    const waterRightSideArray = getPositionArray(waterRightSideRef.current!);
+    const waterLeftSideArray = getPositionArray(waterLeftSideRef.current!);
+    const waterRefs = [waterRef, waterRightSideRef, waterLeftSideRef];
+
     const waterData = getData("y", 6);
 
-    waterArray[14] = waterData[0].z - .5;
-    waterArray[17] = waterData[1].z - .5;
-    waterArray[20] = waterData[2].z - .5;
-    waterArray[23] = waterData[3].z - .5;
+    for (let i = 0; i < data.length; i++){
+      waterArray[14 + (i * 3)] = data[i].z -.5;
+    }
 
-    const waterRightSideArray = getPositionArray(waterRightSideRef.current!);
     waterRightSideArray[4] = waterData[0].z;
-
-    const waterLeftSideArray = getPositionArray(waterLeftSideRef.current!);
     waterLeftSideArray[4] = waterData[3].z;
 
-    waterRef.current!.attributes.position.needsUpdate = true;
-    waterRightSideRef.current!.attributes.position.needsUpdate = true;
-    waterLeftSideRef.current!.attributes.position.needsUpdate = true;
-
+    waterRefs.forEach(ref => ref.current!.attributes.position.needsUpdate = true);
   };
+
+  const setTransectLabels = () => {
+    const transectRefs = [transectARef, transectBRef];
+
+    transectRefs.forEach((ref, idx) => {
+      const posArray = getPositionArray(ref.current!);
+      const transectData = getData("x", GridXValues[idx]);
+
+      for (let i = 0; i < transectData.length; i++){
+        posArray[i * 6 + 2] = transectData[i].z;
+        posArray[i * 6 + 5] = transectData[i].z;
+      }
+
+      ref.current!.attributes.position.needsUpdate = true;
+
+    })
+  }
 
   return (
     <>
-      {renderPlane([0, 0, 0], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength, gridWidth, gridLength], sandTexture, beachTerrainRef)}
-      {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, rightSideRef!)}
-      {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, leftSideRef, THREE.BackSide)}
-      {renderPlane([0, 0, terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, backSideRef)}
+      <Sand
+        refs={{beachTerrainRef, rightSideRef, leftSideRef, backSideRef}}
+      />
+      <Water
+        refs={{waterRef, waterRightSideRef, waterLeftSideRef}}
+      />
 
-      {renderPlane([0, .5, -9], [-Math.PI / 2, 0, 0], [terrainWidth, waterLength, gridWidth], waterTexture, waterRef)};
-      {renderPlane([-terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterRightSideRef)};
-      {renderPlane([terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, waterLeftSideRef, THREE.BackSide)}
-      {renderPlane([0, 0, -11], [0, 0, 0], [terrainWidth, 1], waterTexture, null, THREE.BackSide)}
+      {/* terrain grid overlay */}
+      {renderPlane([-20, .1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectARef)}
+      {renderPlane([-6.66, .1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectBRef)}
+      {renderPlane([6.66, 4.1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectCRef)}
+      {renderPlane([20, 4.1, 0], [-Math.PI / 2, 0, 0], [.25, terrainLength, 1, gridLength], greenTexture, transectDRef)}
+
     </>
   );
 };

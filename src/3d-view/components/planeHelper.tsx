@@ -14,7 +14,7 @@ export const renderPlane = (
   meshPositions: VertexArray,
   rotation: VertexArray,
   args: GridDimensions,
-  texture: THREE.Texture,
+  texture?: THREE.Texture,
   ref?: Ref<THREE.PlaneGeometry> | null,
   side?: THREE.Side) => {
   return (
@@ -33,7 +33,7 @@ export const renderPlane = (
         flatShading={true}
         roughness={1}
         emissive={0}
-        // flatShading
+        // wireframe
       />
     </mesh>
   );
