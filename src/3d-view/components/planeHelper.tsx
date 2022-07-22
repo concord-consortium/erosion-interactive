@@ -9,12 +9,12 @@ export type GridDimensions = [
   heightSegments?: number | undefined
 ];
 
-
 export const renderPlane = (
   meshPositions: VertexArray,
   rotation: VertexArray,
   args: GridDimensions,
-  texture: THREE.Texture,
+  texture: THREE.Texture|null,
+  color: string|null,
   ref?: Ref<THREE.PlaneGeometry> | null,
   side?: THREE.Side) => {
   return (
@@ -30,10 +30,11 @@ export const renderPlane = (
       <meshStandardMaterial
         side={side || THREE.FrontSide}
         map={texture}
+        color={color||""}
         flatShading={true}
         roughness={1}
         emissive={0}
-        // flatShading
+        // wireframe
       />
     </mesh>
   );

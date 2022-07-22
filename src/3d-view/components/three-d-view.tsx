@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { Terrain } from "./terrain";
 import { FirebaseApp } from "firebase/app";
-
-import "./three-d-view.scss";
 import { useLimitedCollection } from "../../common/hooks/use-limited-collection";
 import { averageDocs } from "../../common/average-collection-docs";
-import { IErosionDoc, ITerrainVert } from "../../common/types";
+import { IErosionDoc } from "../../common/types";
 import { erosionDataToVerts } from "../data/cell-data-helpers";
+import { GridLabels } from "./grid-labels";
+import { Sand } from "./sand";
+import { Water } from "./water";
+
+import "./three-d-view.scss";
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -51,7 +53,9 @@ export const ThreeDView = (params: ThreeDViewParams) => {
         <color attach="background" args={["white"]}/>
         <directionalLight color="white" position={[80, 40, 0]} intensity={1.75} />
         <ambientLight intensity={0.1}/>
-        <Terrain data={data} />
+        <Sand data={data}/>
+        <Water data={data}/>
+        <GridLabels data={data}/>
       </Canvas>
     </div>
   );
