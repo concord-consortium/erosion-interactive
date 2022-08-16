@@ -101,6 +101,7 @@ export const Immersive = (props: IProps) => {
     <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
+          <color attach="background" args={["#D4F2FD"]} />
           <ambientLight />
           <PerspectiveCamera
             ref={cameraRef}
@@ -121,7 +122,7 @@ export const Immersive = (props: IProps) => {
             reference={rulerRef}
           />
           <MeshPanaluu/>
-          {/* <Water/> */}
+          <Water/>
         </Canvas>
         <div className="controls-overlay">
             {
