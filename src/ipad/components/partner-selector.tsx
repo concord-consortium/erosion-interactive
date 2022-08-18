@@ -18,15 +18,18 @@ export const PartnerSelector = (props: IPartnerProps) => {
 
   return (
     <div className="partner-selector">
-    You are partnered with:
-      <select disabled={!selectedLocation} value={partnerLocation || "DEFAULT"} onChange={handleSelectPartner}>
-        <option value="DEFAULT" disabled>{`Select your partner...`}</option>
-        {CellKeys.filter((loc) => loc !== selectedLocation).map((userLocation) => {
-          return (
-            <option key={userLocation} value={userLocation}>{userLocation}</option>
-          )
-        })}
-      </select>
+      <div className="title">Choose Your Partner</div>
+      <div className="content">
+        You are partnered with:
+          <select disabled={!selectedLocation} value={partnerLocation || "DEFAULT"} onChange={handleSelectPartner}>
+            <option value="DEFAULT" disabled>{`Select your partner...`}</option>
+            {CellKeys.filter((loc) => loc !== selectedLocation).map((userLocation) => {
+              return (
+                <option key={userLocation} value={userLocation}>{userLocation}</option>
+              )
+            })}
+          </select>
+      </div>
     </div>
   )
 }
