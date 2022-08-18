@@ -18,17 +18,17 @@ export const Rulers = (props: IRulersProps) => {
       { direction === "seaward" ?
         <>
           <SeawardRuler
-            position={[primaryRulerLocation.x, primaryRulerLocation.y + .5, primaryRulerLocation.z]}
+            position={[primaryRulerLocation.x, primaryRulerLocation.y, primaryRulerLocation.z]}
           />
-          <LandwardRuler position={[secondaryRulerLocation.x, secondaryRulerLocation.y + .5, secondaryRulerLocation.z]}/>
+          <LandwardRuler position={[secondaryRulerLocation.x, secondaryRulerLocation.y, secondaryRulerLocation.z]}/>
         </> :
         <>
           <LandwardRuler
             reference={reference}
-            position={[primaryRulerLocation.x, primaryRulerLocation.y + .5, primaryRulerLocation.z]}
+            position={[primaryRulerLocation.x, primaryRulerLocation.y, primaryRulerLocation.z]}
           />
           <SeawardRuler
-            position={[secondaryRulerLocation.x, secondaryRulerLocation.y + .5, secondaryRulerLocation.z]}
+            position={[secondaryRulerLocation.x, secondaryRulerLocation.y, secondaryRulerLocation.z]}
           />
         </>
       }

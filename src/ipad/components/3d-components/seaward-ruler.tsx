@@ -5,11 +5,11 @@ import seawardRuler from "../../assets/3d-assets/seaward-ruler.glb";
 
 type GLTFResult = GLTF & {
   nodes: {
-    ruler_10cm_marker: THREE.Mesh
+    Ruler_150cm: THREE.Mesh
   }
   materials: {
     Material: THREE.MeshStandardMaterial
-    "Ruler_Mat3": THREE.MeshStandardMaterial
+    "Ruler_1_5m_big_text": THREE.MeshStandardMaterial
   }
 }
 
@@ -22,8 +22,8 @@ export default function SeawardRuler({ ...props }) {
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.ruler_10cm_marker.geometry}
-        material={materials.Ruler_Mat3}
+        geometry={nodes.Ruler_150cm.geometry}
+        material={materials.Ruler_1_5m_big_text}
         rotation={[Math.PI / 2, 0, 0]}
       />
     </group>
