@@ -75,7 +75,7 @@ export const GridLabels = (props: IProps) => {
 
       {pointLabelGeometries.map((geo, idx) => {
         return (
-          <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[-21.5, 3, GridYValues[idx]]} geometry={geo}>
+          <mesh key={idx} rotation={[0, Math.PI / 2, 0]} position={[-21.5, 4, GridYValues[idx]]} geometry={geo}>
             <meshStandardMaterial color={"#016082"}/>
           </mesh>
         )
