@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { gridLength, gridWidth, terrainLength, terrainWidth, getPositionArray, getData } from "./helpers";
+import { gridLength, gridWidth, terrainLength, terrainWidth, getPositionArray, getData, waterLength } from "./helpers";
 import { renderPlane } from "./planeHelper";
 import { IProps } from "./grid-labels";
 import sand from "../assets/sand.png";
@@ -54,6 +54,7 @@ export const Sand = (props: IProps) => {
       {renderPlane([-terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, null, rightSideRef!)}
       {renderPlane([terrainWidth / 2, 0, 0], [0, -Math.PI / 2, 0], [terrainLength, 1, gridLength], sandTexture, null, leftSideRef, THREE.BackSide)}
       {renderPlane([0, 0, terrainLength / 2], [0, 0, 0], [terrainWidth, 1, gridWidth], sandTexture, null, backSideRef)}
+      {renderPlane([0, -.25, -2], [-Math.PI / 2, 0, 0], [terrainWidth, terrainLength + waterLength], sandTexture, null, null, THREE.BackSide)}
     </>
   )
 }
