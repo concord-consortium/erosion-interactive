@@ -6,10 +6,9 @@ import Water from "./water";
 import { Rulers } from "./rulers";
 import { LandViewControls, ShoreViewControls } from "./overlay-controls";
 import { CameraController } from "./camera-controller";
-import { CellKeys } from "../../../common/constants";
-import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
+import { getRandomX, getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 import { IErosionDoc } from "../../../common/types";
-import { doc, Firestore, updateDoc } from "firebase/firestore";
+import { deleteField, doc, Firestore, updateDoc } from "firebase/firestore";
 
 import "./immersive.scss";
 
@@ -37,60 +36,59 @@ const defaultState: ISelectedPointInformation = {
 
 export const Immersive = (props: IProps) => {
   const {direction, location, partnerLocation, docs, documentPath, fireStore} = props;
+  const selectedLocationData = getSelectedLocationData(location);
 
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rulerRef = useRef<THREE.Mesh>(null);
 
-  const [selectedPointInfo, setSelectedPointInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [currentLocation, setCurrentLocation] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
   const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
 
   useEffect(() => {
-    setSelectedPointInfo(getSelectedLocationData(location));
-  }, [location]);
+    if (direction === "landward") {
+      const randomX = getRandomX(selectedLocationData.x)
+      setCurrentLocation({x: randomX, y: selectedLocationData.y, z: selectedLocationData.z})
+    } else {
+      setCurrentLocation(selectedLocationData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, direction]);
 
   useEffect(() => {
-    if (partnerLocation) {
-      const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
-      if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
-        setNextRulerInfo(partnerDoc.locationXYZ);
-      } else {
-        setNextRulerInfo(getSelectedLocationData(partnerLocation));
-      }
+    const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
+    if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
+      setNextRulerInfo(partnerDoc.locationXYZ);
     } else {
-      if (direction === "seaward") {
-        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) + 1];
-        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
-      } else {
-        const nextRulerLocation = CellKeys[CellKeys.indexOf(location) - 1];
-        setNextRulerInfo(getSelectedLocationData(nextRulerLocation));
-      }
+      setNextRulerInfo(getSelectedLocationData(partnerLocation));
     }
   }, [location, direction, partnerLocation, docs]);
 
   useEffect(() => {
-    if (direction === "seaward") {
-      const cameraZ = selectedPointInfo.z + 1;
-      setDefaultCameraZ(cameraZ);
-    } else {
-      const cameraZ = selectedPointInfo.z - 1;
-      setDefaultCameraZ(cameraZ);
+    return () => {
+      updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
     }
-  }, [direction, selectedPointInfo])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const cameraZ = direction === "seaward" ? currentLocation.z + 1 : currentLocation.z - 1;
+    setDefaultCameraZ(cameraZ);
+  }, [direction, currentLocation])
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {x} = selectedPointInfo;
+    const {x} = currentLocation;
     const camera = cameraRef.current;
     camera?.position.set(x, Number(e.target.value), defaultCameraZ);
     camera?.updateProjectionMatrix();
   }
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {y, z} = selectedPointInfo;
+    const {y, z} = currentLocation;
     const ruler = rulerRef.current!;
 
     const newX = Number(e.target.value);
-    ruler?.position.set(newX, y + .5, z);
+    ruler?.position.set(newX, y, z);
 
     updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
   }
@@ -106,18 +104,18 @@ export const Immersive = (props: IProps) => {
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
-            position={[selectedPointInfo.x, selectedPointInfo.y + .5, defaultCameraZ]}
+            position={[selectedLocationData.x, selectedLocationData.y + .5, defaultCameraZ]}
             near={.01}
             far={1000}
             makeDefault
           />
           <CameraController
-            gridLocation={selectedPointInfo}
+            gridLocation={selectedLocationData}
             direction={direction}
           />
           <Rulers
             direction={direction}
-            primaryRulerLocation={selectedPointInfo}
+            primaryRulerLocation={currentLocation}
             secondaryRulerLocation={nextRulerInfo}
             reference={rulerRef}
           />
@@ -127,8 +125,8 @@ export const Immersive = (props: IProps) => {
         <div className="controls-overlay">
             {
               direction === "seaward" ?
-                <ShoreViewControls handleChange={handleCameraMovement} selectedPointInfo={selectedPointInfo}/> :
-                <LandViewControls selectedPointInfo={selectedPointInfo} handleChange={handleRulerMovement}/>
+                <ShoreViewControls handleChange={handleCameraMovement} currentLocation={currentLocation}/> :
+                <LandViewControls selectedLocationData={selectedLocationData} handleChange={handleRulerMovement}/>
             }
         </div>
       </Suspense>

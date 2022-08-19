@@ -22,7 +22,20 @@ export const Position = (props: IPositionProps) => {
 
   return (
     <div className="position-container">
-      <div className="direction">
+      <div className="controls">
+        <div className="legend">
+          <div className="title">Legend</div>
+          <div className="content">
+            <div className="sub">
+              You:
+              <div className="color you"></div>
+            </div>
+            <div className="sub">
+              Other users:
+              <div className="color others"></div>
+            </div>
+          </div>
+        </div>
         <DirectionSelector
           selectedLocation={selectedLocation}
           direction={direction}

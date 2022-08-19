@@ -5,12 +5,12 @@ import landwardRuler from "../../assets/3d-assets/landward-ruler.glb";
 
 type GLTFResult = GLTF & {
   nodes: {
-    pSphere1: THREE.Mesh,
-    ruler_marker: THREE.Mesh
+    pSphere2: THREE.Mesh,
+    Ruler_150cm1: THREE.Mesh
   }
   materials: {
-    "Ruler_Mat4.001": THREE.MeshStandardMaterial,
-    "RED_Mat5.001": THREE.MeshStandardMaterial
+    "YellowMat": THREE.MeshStandardMaterial,
+    "RED_Mat5": THREE.MeshStandardMaterial
   }
 }
 
@@ -25,15 +25,15 @@ export default function LandwardRuler({ ...props }) {
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes.pSphere1.geometry}
-            material={materials["RED_Mat5.001"]}
-            position={[0, 0, -.5]}
+            geometry={nodes.pSphere2.geometry}
+            material={materials.RED_Mat5}
+            position={[0, 0, -1.45]}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes.ruler_marker.geometry}
-            material={materials["Ruler_Mat4.001"]}
+            geometry={nodes.Ruler_150cm1.geometry}
+            material={materials.YellowMat}
           />
         </group>
     </group>

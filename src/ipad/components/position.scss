@@ -5,20 +5,72 @@
   height: 100%;
   background-color: #F0F9FB;
 
-  .direction {
-    width: 18%;
-    border: 1px solid #93D5E4;
-    border-radius: 10px;
+  .controls {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
     position: absolute;
     top: 5vh;
     left: 2.5vw;
-    background-color: white;
-    padding: 15px;
-    font-size: 12px;
 
-    select {
-      margin-top: 5px;
-      font-size: 12px;
+    .legend, .direction, .partner-selector {
+      margin-bottom: 10px;
+      width: 100%;
+      border: 2px solid $cc-orange-light5;
+      border-radius: 10px;
+      background-color: white;
+      font-size: 14px;
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $cc-orange-light5;
+        height: 18px;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+        padding-top: 5px;
+        color: $cc-charcoal;
+        padding-bottom: 5px;
+        border-radius: 10px 10px 0px 0px;
+        overflow: hide;
+        border-bottom: 2px solid $cc-orange-light5;
+      }
+
+      .content {
+        padding: 15px;
+      }
+    }
+
+    .legend {
+      .sub {
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+        margin-bottom: 5px;
+      }
+
+      .color{
+        width: 15px;
+        height: 15px;
+        border-radius: 5px;
+        margin-bottom: 1px;
+        &.you {
+          background-color: $cc-orange-light1;
+        }
+        &.others {
+          background-color: $cc-teal-dark2;
+        }
+      }
+    }
+
+    .direction, .partner-selector {
+      select {
+        margin-top: 5px;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
     }
   }
 
@@ -78,8 +130,9 @@
             background-color: $cc-orange-light1;
           }
           &.occupied {
-            border: 1px solid green;
-            background-color: green;
+            border: 1px solid #016082;
+            background-color: #016082;
+            color: $cc-teal-light5;
           }
         }
       }

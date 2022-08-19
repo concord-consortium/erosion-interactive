@@ -104,7 +104,7 @@ export const AppContainer = (props: IContainerProps) => {
           handleSetPartner={handleSetPartner}
           handleSetDirection={handleSetDirection}
         /> :
-        selectedLocation ?
+        selectedLocation && partner ?
         <Immersive
           fireStore={fireStore}
           docs={docs}

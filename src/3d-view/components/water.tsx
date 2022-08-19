@@ -26,9 +26,11 @@ export const Water = (props: IProps) => {
     const waterData = getData(data, "y", 7);
 
     for (let i = 0; i < data.length; i++){
-      waterArray[14 + (i * 3)] = data[i].z -.5;
+      waterArray[14 + (i * 3)] = data[i].z === 0 ? 0 : data[i].z;
     }
 
+    waterRightSideArray[1] = 0;
+    waterLeftSideArray[1] = 0;
     waterRightSideArray[4] = waterData[0].z;
     waterLeftSideArray[4] = waterData[3].z;
 
@@ -40,10 +42,10 @@ export const Water = (props: IProps) => {
 
   return (
     <>
-      {renderPlane([0, .5, -9], [-Math.PI / 2, 0, 0], [terrainWidth, waterLength, gridWidth], waterTexture, null, waterRef)};
+      {renderPlane([0, 0, -9], [-Math.PI / 2, 0, 0], [terrainWidth, waterLength, gridWidth], waterTexture, null, waterRef)};
       {renderPlane([-terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, null, waterRightSideRef)};
       {renderPlane([terrainWidth / 2, 0, -9], [0, -Math.PI / 2, 0], [waterLength, 1], waterTexture, null, waterLeftSideRef, THREE.BackSide)}
-      {renderPlane([0, 0, -11], [0, 0, 0], [terrainWidth, 1], waterTexture, null, null, THREE.BackSide)}
+      {renderPlane([0, -.25, -11], [0, 0, 0], [terrainWidth, .5], waterTexture, null, null, THREE.BackSide)}
 
     </>
   )

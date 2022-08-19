@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { ISelectedPointInformation } from "./immersive";
 
 interface IControlProps {
-  selectedPointInfo: ISelectedPointInformation;
+  currentLocation: ISelectedPointInformation;
   handleChange: (e: any) => void;
 }
 
 interface ILandControlProps {
   handleChange: (e: any) => void;
-  selectedPointInfo: ISelectedPointInformation;
+  selectedLocationData: ISelectedPointInformation;
 }
 
 export const ShoreViewControls = (props: IControlProps) => {
-  const {handleChange, selectedPointInfo} = props;
-  const {y} = selectedPointInfo;
+  const {handleChange, currentLocation} = props;
+  const {y} = currentLocation;
 
   const [cameraHeight, setCameraHeight] = useState<number>(y + 1);
 
@@ -34,8 +34,8 @@ export const ShoreViewControls = (props: IControlProps) => {
 }
 
 export const LandViewControls = (props: ILandControlProps) => {
-  const {handleChange, selectedPointInfo} = props;
-  const {x} = selectedPointInfo;
+  const {handleChange, selectedLocationData} = props;
+  const {x} = selectedLocationData;
   const [xValue, setXValue] = useState<number>(x);
 
   useEffect(() => {

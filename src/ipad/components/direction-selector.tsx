@@ -15,13 +15,16 @@ export const DirectionSelector = (props: IDirectionProps) => {
   }
 
   return (
-    <div>
-    You are facing:
-    <select disabled={!selectedLocation} value={direction || "DEFAULT"} onChange={handleSelectDirection}>
-      <option value="DEFAULT" disabled>Choose a direction...</option>
-      <option disabled={selectedLocation?.[1] === "7"} value="seaward">Seaward</option>
-      <option disabled={selectedLocation?.[1] === "1"} value="landward">Landward</option>
-    </select>
+    <div className="direction">
+      <div className="title">Choose Your Direction</div>
+      <div className="content">
+        You are facing:
+        <select disabled={!selectedLocation} value={direction || "DEFAULT"} onChange={handleSelectDirection}>
+          <option value="DEFAULT" disabled>Choose a direction...</option>
+          <option disabled={selectedLocation?.[1] === "7"} value="seaward">towards the sea</option>
+          <option disabled={selectedLocation?.[1] === "1"} value="landward">towards land</option>
+        </select>
+      </div>
     </div>
   )
 }
