@@ -1,7 +1,8 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
-import MeshPanaluu from "./mesh-panaluu";
+import Utgiagvik from "./utqiagvik";
+import Waipio from "./waipio";
 import Water from "./water";
 import { Rulers } from "./rulers";
 import { LandViewControls, ShoreViewControls } from "./overlay-controls";
@@ -35,8 +36,8 @@ const defaultState: ISelectedPointInformation = {
 }
 
 export const Immersive = (props: IProps) => {
-  const {direction, location, partnerLocation, docs, documentPath, fireStore} = props;
-  const selectedLocationData = getSelectedLocationData(location);
+  const {direction, location, partnerLocation, docs, documentPath, fireStore, selectedBeach} = props;
+  const selectedLocationData = getSelectedLocationData(location, selectedBeach);
 
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rulerRef = useRef<THREE.Mesh>(null);
@@ -46,12 +47,16 @@ export const Immersive = (props: IProps) => {
   const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
 
   useEffect(() => {
-    if (direction === "landward") {
-      const randomX = getRandomX(selectedLocationData.x)
-      setCurrentLocation({x: randomX, y: selectedLocationData.y, z: selectedLocationData.z})
-    } else {
-      setCurrentLocation(selectedLocationData);
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
+    return () => {
+      updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const x = direction === "landward" ? getRandomX(selectedLocationData.x): selectedLocationData.x
+    setCurrentLocation({x, y: selectedLocationData.y, z: selectedLocationData.z})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, direction]);
 
@@ -60,16 +65,9 @@ export const Immersive = (props: IProps) => {
     if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
       setNextRulerInfo(partnerDoc.locationXYZ);
     } else {
-      setNextRulerInfo(getSelectedLocationData(partnerLocation));
+      setNextRulerInfo(getSelectedLocationData(partnerLocation, selectedBeach));
     }
-  }, [location, direction, partnerLocation, docs]);
-
-  useEffect(() => {
-    return () => {
-      updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [location, direction, partnerLocation, docs, selectedBeach]);
 
   useEffect(() => {
     const cameraZ = direction === "seaward" ? currentLocation.z + 1 : currentLocation.z - 1;
@@ -88,12 +86,16 @@ export const Immersive = (props: IProps) => {
     const ruler = rulerRef.current!;
 
     const newX = Number(e.target.value);
+    setNextRulerInfo({x: newX, y, z})
     ruler?.position.set(newX, y, z);
-
     updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
   }
 
-  const PleaseWait = () => <div>Please wait...</div>;
+  const PleaseWait = () => {
+    return (
+      <div>Please wait...</div>
+    )
+  };
 
   return (
     <div id="immersive" className="canvas-container">
@@ -101,6 +103,7 @@ export const Immersive = (props: IProps) => {
         <Canvas>
           <color attach="background" args={["#D4F2FD"]} />
           <ambientLight />
+          <directionalLight intensity={1} position={[5, 100, -120]}/>
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
@@ -119,7 +122,7 @@ export const Immersive = (props: IProps) => {
             secondaryRulerLocation={nextRulerInfo}
             reference={rulerRef}
           />
-          <MeshPanaluu/>
+          { props.selectedBeach === "hawaii" ? <Waipio /> : <Utgiagvik/>}
           <Water/>
         </Canvas>
         <div className="controls-overlay">

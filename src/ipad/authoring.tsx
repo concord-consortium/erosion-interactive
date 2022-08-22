@@ -28,8 +28,8 @@ export const AuthoringComponent: React.FC<Props> = ({initMessage}) => {
           Beach setting:&nbsp;
           <select defaultValue={authoredState?.selectedBeach || "PLACEHOLDER"} onChange={handleBeachSelection}>
             <option disabled value="PLACEHOLDER">Select a location</option>
-            <option>Hawaii</option>
-            <option>Alaska</option>
+            <option value="hawaii">Hawaii</option>
+            <option value="alaska">Alaska</option>
           </select>
         </label>
       </fieldset>

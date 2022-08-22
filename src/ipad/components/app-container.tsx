@@ -21,7 +21,7 @@ interface IContainerProps {
 }
 
 export const AppContainer = (props: IContainerProps) => {
-  const {app, collectionPath, documentPath, userID} = props;
+  const {app, collectionPath, documentPath, userID, selectedBeach} = props;
 
   const fireStore = getFirestore(app);
   const [docs] = useLimitedCollection<IErosionDoc>(app, collectionPath);
@@ -76,7 +76,7 @@ export const AppContainer = (props: IContainerProps) => {
 
     // if location is not empty string, get XYZ coordinates
     if (location.length) {
-      const locationXYZ = getSelectedLocationData(location);
+      const locationXYZ = getSelectedLocationData(location, selectedBeach);
       setDoc(doc(fireStore, documentPath), {locationXYZ}, {merge: true});
     }
   }
@@ -107,12 +107,13 @@ export const AppContainer = (props: IContainerProps) => {
         selectedLocation && partner ?
         <Immersive
           fireStore={fireStore}
+          selectedBeach={selectedBeach}
           docs={docs}
           documentPath={documentPath}
           location={selectedLocation}
           direction={direction}
           partnerLocation={partner}
-        /> : <div>Select a location to proceed.</div>}
+        /> : <div>Please select a location and a partner first.</div>}
         {screenMode === "default" &&
           <button className="fullscreen" onClick={handleFullScreen}>
             <FullScreenIcon/>

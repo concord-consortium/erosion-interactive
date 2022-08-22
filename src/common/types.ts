@@ -44,3 +44,12 @@ export interface I3DIpadVert {
   x: number,
   y: number
 }
+
+export interface ITransectData {
+  x: number,
+  heights: Array<number>
+}
+
+export interface IBeachData {
+  [transect: string]: ITransectData
+}
