@@ -27,7 +27,7 @@ export default function LandwardRuler({ ...props }) {
             receiveShadow
             geometry={nodes.pSphere2.geometry}
             material={materials.RED_Mat5}
-            position={[0, 0, -1.45]}
+            position={[0, 0, -1.425]}
           />
           <mesh
             castShadow
