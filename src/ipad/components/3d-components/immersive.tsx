@@ -1,19 +1,18 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { PerspectiveCamera } from "@react-three/drei";
 import Utgiagvik from "./utqiagvik";
 import Waipio from "./waipio";
 import Water from "./water";
-import { Rulers } from "./rulers";
 import { LandViewControls, ShoreViewControls } from "./overlay-controls";
-import { CameraController } from "./camera-controller";
 import { getRandomX, getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 import { IErosionDoc } from "../../../common/types";
-import { deleteField, doc, Firestore, updateDoc } from "firebase/firestore";
+import { doc, Firestore, updateDoc } from "firebase/firestore";
+import { DynamicComponents } from "./dynamic-components";
+import { Sky } from "./sky";
 
 import "./immersive.scss";
 
-interface IProps {
+export interface IProps {
   docs: Array<IErosionDoc>;
   documentPath: string;
   fireStore: Firestore;
@@ -43,36 +42,32 @@ export const Immersive = (props: IProps) => {
   const rulerRef = useRef<THREE.Mesh>(null);
 
   const [currentLocation, setCurrentLocation] = useState<ISelectedPointInformation>(defaultState);
-  const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
+  const [seawardRulerLocation, setSeawardRulerLocation] = useState<ISelectedPointInformation>(defaultState);
+  const [landwardRulerLocation, setLandwardRulerLocation] = useState<ISelectedPointInformation>(defaultState);
   const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
 
   useEffect(() => {
-    updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
-    return () => {
-      updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    const x = direction === "landward" ? getRandomX(selectedLocationData.x): selectedLocationData.x
-    setCurrentLocation({x, y: selectedLocationData.y, z: selectedLocationData.z})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, direction]);
-
-  useEffect(() => {
-    const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
-    if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
-      setNextRulerInfo(partnerDoc.locationXYZ);
+    setCurrentLocation(selectedLocationData);
+    if (direction === "landward") {
+      const x = getRandomX(selectedLocationData.x);
+      setLandwardRulerLocation({x, y: selectedLocationData.y, z: selectedLocationData.z})
     } else {
-      setNextRulerInfo(getSelectedLocationData(partnerLocation, selectedBeach));
+      setSeawardRulerLocation(selectedLocationData);
     }
-  }, [location, direction, partnerLocation, docs, selectedBeach]);
+  }, [location, direction]);
 
   useEffect(() => {
     const cameraZ = direction === "seaward" ? currentLocation.z + 1 : currentLocation.z - 1;
     setDefaultCameraZ(cameraZ);
   }, [direction, currentLocation])
+
+  const updateRulerLocation = (xyz: ISelectedPointInformation, ruler: string) => {
+    if (ruler === "landward") {
+      setLandwardRulerLocation(xyz);
+    } else {
+      setSeawardRulerLocation(xyz);
+    }
+  }
 
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {x} = currentLocation;
@@ -102,24 +97,22 @@ export const Immersive = (props: IProps) => {
         <Canvas>
           <color attach="background" args={["#7fb2f6"]} />
           <ambientLight />
+          {/* <Sky/> */}
           <directionalLight intensity={1} position={[5, 100, -120]}/>
-          <PerspectiveCamera
-            ref={cameraRef}
-            fov={50}
-            position={[selectedLocationData.x, selectedLocationData.y + .5, defaultCameraZ]}
-            near={.01}
-            far={1000}
-            makeDefault
-          />
-          <CameraController
-            gridLocation={selectedLocationData}
+          <DynamicComponents
+            fireStore={fireStore}
+            documentPath={documentPath}
+            docs={docs}
+            currentLocation={currentLocation}
             direction={direction}
-          />
-          <Rulers
-            direction={direction}
-            primaryRulerLocation={currentLocation}
-            secondaryRulerLocation={nextRulerInfo}
-            reference={rulerRef}
+            partnerLocation={partnerLocation}
+            selectedBeach={selectedBeach}
+            rulerRef={rulerRef}
+            cameraRef={cameraRef}
+            defaultCameraZ={defaultCameraZ}
+            seawardRulerLocation={seawardRulerLocation}
+            landwardRulerLocation={landwardRulerLocation}
+            updateRulerLocation={updateRulerLocation}
           />
           { props.selectedBeach === "hawaii" ? <Waipio /> : <Utgiagvik/>}
           <Water/>
@@ -127,8 +120,8 @@ export const Immersive = (props: IProps) => {
         <div className="controls-overlay">
             {
               direction === "seaward" ?
-                <ShoreViewControls handleChange={handleCameraMovement} currentLocation={currentLocation}/> :
-                <LandViewControls selectedLocationData={selectedLocationData} handleChange={handleRulerMovement}/>
+                <ShoreViewControls currentLocation={seawardRulerLocation} handleChange={handleCameraMovement}/> :
+                <LandViewControls selectedLocationData={currentLocation} landwardRulerLocation={landwardRulerLocation} handleChange={handleRulerMovement}/>
             }
         </div>
       </Suspense>

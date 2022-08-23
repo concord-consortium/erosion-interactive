@@ -5,30 +5,31 @@ import LandwardRuler from "./landward-ruler";
 import SeawardRuler from "./seaward-ruler";
 
 interface IRulersProps {
-  direction: string,
-  reference: RefObject<Mesh<BufferGeometry, Material | Material[]>>,
-  primaryRulerLocation: ISelectedPointInformation,
-  secondaryRulerLocation: ISelectedPointInformation
+  direction: string;
+  reference: RefObject<Mesh<BufferGeometry, Material | Material[]>>;
+  seawardRulerLocation: ISelectedPointInformation;
+  landwardRulerLocation: ISelectedPointInformation;
 }
+
 export const Rulers = (props: IRulersProps) => {
-  const {reference, direction, primaryRulerLocation, secondaryRulerLocation} = props;
+  const {reference, direction, seawardRulerLocation, landwardRulerLocation} = props;
 
   return (
     <>
       { direction === "seaward" ?
         <>
           <SeawardRuler
-            position={[primaryRulerLocation.x, primaryRulerLocation.y, primaryRulerLocation.z]}
+            position={[seawardRulerLocation.x, seawardRulerLocation.y, seawardRulerLocation.z]}
           />
-          <LandwardRuler position={[secondaryRulerLocation.x, secondaryRulerLocation.y, secondaryRulerLocation.z]}/>
+          <LandwardRuler position={[landwardRulerLocation.x, landwardRulerLocation.y, landwardRulerLocation.z]}/>
         </> :
         <>
           <LandwardRuler
             reference={reference}
-            position={[primaryRulerLocation.x, primaryRulerLocation.y, primaryRulerLocation.z]}
+            position={[landwardRulerLocation.x, landwardRulerLocation.y, landwardRulerLocation.z]}
           />
           <SeawardRuler
-            position={[secondaryRulerLocation.x, secondaryRulerLocation.y, secondaryRulerLocation.z]}
+            position={[seawardRulerLocation.x, seawardRulerLocation.y, seawardRulerLocation.z]}
           />
         </>
       }

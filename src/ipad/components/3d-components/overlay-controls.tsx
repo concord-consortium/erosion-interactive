@@ -9,6 +9,7 @@ interface IControlProps {
 interface ILandControlProps {
   handleChange: (e: any) => void;
   selectedLocationData: ISelectedPointInformation;
+  landwardRulerLocation: ISelectedPointInformation;
 }
 
 export const ShoreViewControls = (props: IControlProps) => {
@@ -28,14 +29,14 @@ export const ShoreViewControls = (props: IControlProps) => {
 
   return (
       <div className="slider-container seaward">
-        <input onChange={handleInput} value={cameraHeight} type="range" min={y} max={y + 2} className="slider" step="0.01" id="myRange"/>
+        <input onChange={handleInput} value={cameraHeight} type="range" min={y} max={y + 2} className="slider" step="0.025" id="myRange"/>
       </div>
   )
 }
 
 export const LandViewControls = (props: ILandControlProps) => {
-  const {handleChange, selectedLocationData} = props;
-  const {x} = selectedLocationData;
+  const {handleChange, selectedLocationData, landwardRulerLocation} = props;
+  const {x} = landwardRulerLocation;
   const [xValue, setXValue] = useState<number>(x);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export const LandViewControls = (props: ILandControlProps) => {
 
   return (
     <div className="slider-container landward">
-        <input onChange={handleInput} type="range" value={xValue} min={x - .5} max={x + .5} className="slider" step="0.025" id="myLandRange"/>
+        <input onChange={handleInput} type="range" value={xValue} min={selectedLocationData.x - .5} max={selectedLocationData.x + .5} className="slider" step="0.025" id="myLandRange"/>
     </div>
   )
 }
