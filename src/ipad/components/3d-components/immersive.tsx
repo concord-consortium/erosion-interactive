@@ -86,7 +86,6 @@ export const Immersive = (props: IProps) => {
     const ruler = rulerRef.current!;
 
     const newX = Number(e.target.value);
-    setNextRulerInfo({x: newX, y, z})
     ruler?.position.set(newX, y, z);
     updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
   }
@@ -101,7 +100,7 @@ export const Immersive = (props: IProps) => {
     <div id="immersive" className="canvas-container">
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
-          <color attach="background" args={["#D4F2FD"]} />
+          <color attach="background" args={["#7fb2f6"]} />
           <ambientLight />
           <directionalLight intensity={1} position={[5, 100, -120]}/>
           <PerspectiveCamera
