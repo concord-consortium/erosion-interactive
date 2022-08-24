@@ -19,6 +19,7 @@
     font-size: 16px;
     color: $cc-teal-dark2;
     font-weight: bold;
+    cursor: pointer;
 
     span {
       pointer-events: none;
@@ -30,6 +31,7 @@
 
     &:disabled {
       opacity: 50%;
+      cursor: default;
     }
 
     .vertical {
