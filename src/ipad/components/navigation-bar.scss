@@ -32,14 +32,17 @@
   .exit-button {
     border: 2px solid $cc-teal-light7;
     background-color: $cc-teal-light7;
-    color: $cc-teal-dark2;
+    color: $font-color;
+    font-weight: bold;
     border-radius: 5px;
     margin-right: 10px;
     display: flex;
+    cursor: pointer;
 
     .exit-icon {
       width: 15px;
-      margin-right: 5px;
+      margin-right: 7px;
+      color: $cc-teal-dark2;
     }
   }
 
