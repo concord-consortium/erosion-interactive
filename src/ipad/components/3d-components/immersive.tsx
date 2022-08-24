@@ -61,6 +61,11 @@ export const Immersive = (props: IProps) => {
   }, [location, direction]);
 
   useEffect(() => {
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: currentLocation})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLocation]);
+
+  useEffect(() => {
     const partnerDoc = docs.filter((d) => d.location === partnerLocation)[0];
     if (partnerDoc && 'locationXYZ' in partnerDoc && partnerDoc.locationXYZ){
       setNextRulerInfo(partnerDoc.locationXYZ);
