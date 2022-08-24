@@ -70,6 +70,7 @@
         margin-top: 5px;
         font-size: 12px;
         margin-bottom: 5px;
+        cursor: pointer;
       }
     }
   }
@@ -118,6 +119,7 @@
           height: 4vh;
           color: $cc-teal-dark2;
           font-weight: bold;
+          cursor: pointer;
 
           &:hover {
             background-color: $cc-teal-light3;
@@ -133,6 +135,7 @@
             border: 1px solid #016082;
             background-color: #016082;
             color: $cc-teal-light5;
+            cursor: default;
           }
         }
       }
