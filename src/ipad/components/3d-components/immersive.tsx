@@ -101,8 +101,10 @@ export const Immersive = (props: IProps) => {
       <Suspense fallback={<PleaseWait/>}>
         <Canvas>
           <color attach="background" args={["#7fb2f6"]} />
-          <ambientLight />
-          <directionalLight intensity={1} position={[5, 100, -120]}/>
+          <ambientLight intensity={.25} color={"#ffffff"} position={[0, 100, -30]}/>
+          <directionalLight intensity={1} position={[5, 100, -30]}/>
+          <directionalLight intensity={1} position={[5, 100, 30]}/>
+          <hemisphereLight intensity={1} color={"#00AAFF"} groundColor={"#494949"}/>
           <PerspectiveCamera
             ref={cameraRef}
             fov={50}
