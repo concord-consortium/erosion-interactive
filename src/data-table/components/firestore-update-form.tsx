@@ -68,7 +68,7 @@ export const FirebaseEditForm = (params: IFirebaseEditParams<IErosionDoc>) => {
 
   const handleInput = (e: any) => {
     const pointID = e.target.getAttribute("id");
-    const pointValue = Number(e.target.value);
+    const pointValue = e.target.value ? Number(e.target.value) : null;
 
     const newTransectData = {...editorState.data};
     newTransectData[pointID] = pointValue;
