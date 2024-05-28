@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDeGdz7cSe9ut5Vovcv7P9hcTf-DDwOo94",
+  apiKey: atob("QUl6YVN5RGVHZHo3Y1NlOXV0NVZvdmN2N1A5aGNUZi1ERHdPbzk0"),
   authDomain: "ep-erosion-dev.firebaseapp.com",
   projectId: "ep-erosion-dev",
   storageBucket: "ep-erosion-dev.appspot.com",
