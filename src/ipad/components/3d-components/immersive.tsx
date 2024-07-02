@@ -5,13 +5,26 @@ import Utgiagvik from "./utqiagvik";
 import Waipio from "./waipio";
 import Water from "./water";
 import { Rulers } from "./rulers";
-import { LandViewControls, ShoreViewControls } from "./overlay-controls";
+import { SliderControls } from "./overlay-controls";
 import { CameraController } from "./camera-controller";
-import { getRandomX, getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
+import { getSelectedLocationData } from "../../../common/cell-keys-to-ipad";
 import { IErosionDoc } from "../../../common/types";
 import { deleteField, doc, Firestore, updateDoc } from "firebase/firestore";
 
 import "./immersive.scss";
+
+const getRand = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+}
+
+export const getRandomXForLandwardRuler = (num: number) => {
+  const min = num - 2;
+  const max = num + 2;
+  // get random number that's less than num - 1 OR greater than num + 1
+  const randomNum = Math.random() < 0.5 ? getRand(min, num - 1) : getRand(num + 1, max);
+  // make sure it's divisible by .025 (step of the ruler)
+  return Math.round(randomNum / .025) * .025;
+}
 
 interface IProps {
   docs: Array<IErosionDoc>;
@@ -37,14 +50,11 @@ const defaultState: ISelectedPointInformation = {
 
 export const Immersive = (props: IProps) => {
   const {direction, location, partnerLocation, docs, documentPath, fireStore, selectedBeach} = props;
-  const selectedLocationData = getSelectedLocationData(location, selectedBeach);
 
-  const cameraRef = useRef<THREE.PerspectiveCamera>();
-  const rulerRef = useRef<THREE.Mesh>(null);
-
+  const [selectedLocationData, setSelectedLocationData] = useState<ISelectedPointInformation>(defaultState);
   const [currentLocation, setCurrentLocation] = useState<ISelectedPointInformation>(defaultState);
   const [nextRulerInfo, setNextRulerInfo] = useState<ISelectedPointInformation>(defaultState);
-  const [defaultCameraZ, setDefaultCameraZ] = useState<number>(0);
+  const [cameraPosition, setCameraPosition] = useState<ISelectedPointInformation>(defaultState);
 
   useEffect(() => {
     updateDoc(doc(fireStore, documentPath), {locationXYZ: deleteField()})
@@ -55,13 +65,21 @@ export const Immersive = (props: IProps) => {
   }, [])
 
   useEffect(() => {
-    const x = direction === "landward" ? getRandomX(selectedLocationData.x): selectedLocationData.x
-    setCurrentLocation({x, y: selectedLocationData.y, z: selectedLocationData.z})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, direction]);
+    const data = getSelectedLocationData(location, selectedBeach);
+    const {x, y, z} = data;
+    if (direction === "seaward") {
+      setCameraPosition({x, y: y + .95, z: z + 1});
+      setCurrentLocation({x, y, z});
+    } else {
+      const randomX = getRandomXForLandwardRuler(x);
+      setCameraPosition({x: randomX, y: y + 1, z: z - 2});
+      setCurrentLocation({x: randomX, y, z});
+    }
+    setSelectedLocationData(data);
+  }, [location, direction, selectedBeach]);
 
   useEffect(() => {
-    updateDoc(doc(fireStore, documentPath), {locationXYZ: currentLocation})
+    updateDoc(doc(fireStore, documentPath), {locationXYZ: currentLocation});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
 
@@ -74,25 +92,16 @@ export const Immersive = (props: IProps) => {
     }
   }, [location, direction, partnerLocation, docs, selectedBeach]);
 
-  useEffect(() => {
-    const cameraZ = direction === "seaward" ? currentLocation.z + 1 : currentLocation.z - 1;
-    setDefaultCameraZ(cameraZ);
-  }, [direction, currentLocation])
-
   const handleCameraMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const {x} = currentLocation;
-    const camera = cameraRef.current;
-    camera?.position.set(x, Number(e.target.value), defaultCameraZ);
-    camera?.updateProjectionMatrix();
-  }
+    setCameraPosition({...cameraPosition, y: Number(e.target.value)});
+  };
 
   const handleRulerMovement: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
     const {y, z} = currentLocation;
-    const ruler = rulerRef.current!;
-
     const newX = Number(e.target.value);
-    ruler?.position.set(newX, y, z);
     updateDoc(doc(fireStore, documentPath), {locationXYZ: {x: newX, y, z}});
+    setCurrentLocation({...currentLocation, x: newX});
+    setCameraPosition({...cameraPosition, x: newX});
   }
 
   const PleaseWait = () => {
@@ -111,9 +120,8 @@ export const Immersive = (props: IProps) => {
           <directionalLight intensity={1} position={[5, 100, 30]}/>
           <hemisphereLight intensity={1} color={"#00AAFF"} groundColor={"#494949"}/>
           <PerspectiveCamera
-            ref={cameraRef}
             fov={50}
-            position={[selectedLocationData.x, selectedLocationData.y + .5, defaultCameraZ]}
+            position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
             near={.01}
             far={1000}
             makeDefault
@@ -126,7 +134,6 @@ export const Immersive = (props: IProps) => {
             direction={direction}
             primaryRulerLocation={currentLocation}
             secondaryRulerLocation={nextRulerInfo}
-            reference={rulerRef}
           />
           { props.selectedBeach === "hawaii" ? <Waipio /> : <Utgiagvik/>}
           <Water/>
@@ -134,8 +141,22 @@ export const Immersive = (props: IProps) => {
         <div className="controls-overlay">
             {
               direction === "seaward" ?
-                <ShoreViewControls handleChange={handleCameraMovement} currentLocation={currentLocation}/> :
-                <LandViewControls selectedLocationData={selectedLocationData} handleChange={handleRulerMovement}/>
+                <SliderControls
+                  handleChange={handleCameraMovement}
+                  currentPosition={cameraPosition.y}
+                  min={selectedLocationData.y + 0.1}
+                  max={selectedLocationData.y + 2}
+                  step={0.01}
+                  direction={direction}
+                /> :
+                <SliderControls
+                  handleChange={handleRulerMovement}
+                  currentPosition={currentLocation.x}
+                  min={selectedLocationData.x - 2}
+                  max={selectedLocationData.x + 2}
+                  step={0.025}
+                  direction={direction}
+                />
             }
         </div>
       </Suspense>
